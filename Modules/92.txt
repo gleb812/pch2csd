@@ -1,0 +1,10 @@
+opcode FltClassic, 0, iKKK
+	iRoll, kFreq, kRes, kMod xin
+	ain zar 2; CHANGE
+	kmod zkr 1; CHANGE
+	kPitch zkr 2; CHANGE
+	aout lowresx ain, kFreq+kmod*kMod+kPitch, kRes, iRoll ;Roll = 2,3,4 x6
+	; balance ???
+	; Freq is not in Hz for lowresx
+	zaw aout, 2 ;CHANGE
+endop

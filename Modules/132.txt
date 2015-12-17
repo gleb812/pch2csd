@@ -1,0 +1,13 @@
+opcode DAConv, 0, 0
+	ky0 zkr 1 ; CHANGE 
+	ky1 zkr 2 ; CHANGE 
+	ky2 zkr 1 ; CHANGE 
+	ky3 zkr 2 ; CHANGE 
+	ky4 zkr 1 ; CHANGE 
+	ky5 zkr 2 ; CHANGE 
+	ky6 zkr 1 ; CHANGE 
+	ky7 zkr 2 ; CHANGE
+	kOut = ky0*128+ky1*64+ky2*32+ky3*16+ky4*8+ky5*4+ky6*2+ky7
+	zkw kOut, 1 ; CHANGE 
+	;Normirovka ????
+endop

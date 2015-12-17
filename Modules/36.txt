@@ -1,0 +1,7 @@
+opcode swOnOffM, 0, k   ; MULTIMODE support a/k?
+; THIS opcode is for RT only.. Need to check..
+	kSw xin ;kSw = 0 / 1
+	a1 zar 1 ; CHANGE 
+	zaw a1*kSw, 2 ; CHANGE
+	; poka bez Ctrl 
+endop

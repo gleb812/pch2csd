@@ -1,0 +1,12 @@
+opcode Mix11S, 0, ki   ; MULTIMODE support a/k?
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE 
+	kLev, iSW xin
+	aoutL = a1 + a3*kLev*iSW
+	aoutR = a2 + a4*kLev*iSW
+	zaw aoutL, 2 ; CHANGE 
+	zaw aoutR, 2 ; CHANGE 
+	; LIN vs DB?
+endop

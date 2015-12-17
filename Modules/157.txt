@@ -1,0 +1,49 @@
+opcode LevConv, 0, ii
+	iIn, iOut xin
+	; O4en' Tupo!
+	kin zkr 1 ; CHANGE
+	if (iIn == 0) then
+		if (iOut==0) then
+			kout = kin
+		elseif (iOut==1) then
+			kout = -kin
+		elseif (iOut==2) then
+			kout = (kin+1)*.5
+		elseif (iOut==3) then
+			kout = (-kin+1)*.5
+		elseif (iOut==4) then	
+			kout = (kin+1)*.5
+		elseif (iOut==5) then	
+			kout = -(kin+1)*.5
+		endif
+	elseif (iIn == 1) then
+		if (iOut==0) then
+			kout = 2*kin-1
+		elseif (iOut==1) then
+			kout = -(2*kin-1)
+		elseif (iOut==2) then
+			kout = kin
+		elseif (iOut==3) then
+			kout = 1-kin
+		elseif (iOut==4) then	
+			kout = -kin
+		elseif (iOut==5) then	
+			kout = -1+kin
+		endif
+	elseif (iIn == 2) then
+		if (iOut==0) then
+			kout = 2*kin+1
+		elseif (iOut==1) then
+			kout = -(2*kin+1)
+		elseif (iOut==2) then
+			kout = kin+1
+		elseif (iOut==3) then
+			kout = -kin
+		elseif (iOut==4) then	
+			kout = kin
+		elseif (iOut==5) then	
+			kout = -1+kin
+		endif
+	
+	zkw kout,1 ;CHANGE
+endop

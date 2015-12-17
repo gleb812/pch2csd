@@ -1,0 +1,12 @@
+opcode ADConv, 0, 0
+	kyin zkr 1 ; CHANGE 
+	zkw int(kyin*.5), 1 ; CHANGE 
+	zkw int(kyin*.25), 1 ; CHANGE 
+	zkw int(kyin*.125), 1 ; CHANGE 
+	zkw int(kyin*.0625), 1 ; CHANGE 
+	zkw int(kyin*.03125), 1 ; CHANGE 
+	zkw int(kyin*.015625), 1 ; CHANGE 
+	zkw int(kyin*.0078125), 1 ; CHANGE 
+	zkw int(kyin*.00390625), 1 ; CHANGE
+	;Normirovka ????
+endop

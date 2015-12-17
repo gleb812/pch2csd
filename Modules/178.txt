@@ -1,0 +1,17 @@
+opcode DlyClock, 0, k
+	kDel xin
+	kin zkr 2 ; CHANGE 
+	kClk zkr 1; CHANGE
+	
+	kCount init 0
+	
+	if (kClk != 0) then
+		kCount += 1
+		if (kCount == 1) then 
+			kSample = kin
+		elseif (kCount == kDel)
+			zaw kSample, 2  ; CHANGE
+			kCount = 0
+		endif
+	endif
+endop

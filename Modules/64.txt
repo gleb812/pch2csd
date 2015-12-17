@@ -1,0 +1,43 @@
+opcode Gate, 0, ii
+iType1, iType2 xin
+	ky1 zkr 1 ; CHANGE 
+	ky2 zkr 2 ; CHANGE 
+	ky3 zkr 1 ; CHANGE 
+	ky4 zkr 2 ; CHANGE 
+; FIRST GATE
+	if (iType1 == 0) then ;AND
+		kOut1 = ky1*ky2
+	elseif (iType1 == 1) then ; NAND
+		kOut1 = -ky1*ky2+1
+	elseif (iType1 == 2) then ; OR
+		kOut1 limit ky1+ky2, 0, 1
+	elseif (iType1 == 3) then ; NOR
+		kOut1 limit ky1+ky2, 0, 1
+		kOut1 = -kOut1+1
+	elseif (iType1 == 4) then ; XOR
+		kOut1 = (ky1+ky2)%2
+	elseif (iType1 == 5) then ; XNOR
+		kOut1 = (ky1+ky2)%2
+		kOut1 = -kOut1+1
+	endif
+
+; SECOND GATE
+	if (iType2 == 0) then ;AND
+		kOut2 = ky3*ky4
+	elseif (iType1 == 1) then ; NAND
+		kOut2 = -ky3*ky4+1
+	elseif (iType2 == 2) then ; OR
+		kOut2 limit ky3+ky4, 0, 1
+	elseif (iType2 == 3) then ; NOR
+		kOut2 limit ky3+ky4, 0, 1
+		kOut2 = -kOut2+1
+	elseif (iType2 == 4) then ; XOR
+		kOut2 = (ky3+ky4)%2
+	elseif (iType2 == 5) then ; XNOR
+		kOut2 = (ky3+ky4)%2
+		kOut2 = -kOut2+1
+	endif	
+	
+	zkw kOut1, 1 ; CHANGE
+	zkw kOut2, 2 ; CHANGE
+endop

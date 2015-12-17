@@ -1,0 +1,8 @@
+opcode In2, 0, i ;ii - poka bez FX bus
+	iPad xin
+	aL*iPad, aR*iPad ins 
+	aL zaw 2 ; CHANGE 
+	aR zaw 2 ; CHANGE 
+	; iPad = 2 (+6dB) ili iPad = 1
+	; Nuzhna li knopka ON ? 
+endop 

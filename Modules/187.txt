@@ -1,0 +1,7 @@
+opcode sw21M, 0, k   ; MULTIMODE support a/k?
+; THIS opcode is for RT only.. Need to check..
+	kSw xin ;kSw = 0 / 1
+	a1 zar kSw ; CHANGE 
+	zaw a1, 2 ; CHANGE
+	; poka bez Ctrl 
+endop

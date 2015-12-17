@@ -1,0 +1,7 @@
+opcode DlySingleB, 0, iik
+	iTime, imaxdel, kMod xin
+	ain zar 2 ; CHANGE 
+	adel zar 1 ; CHANGE 
+	aout vdelay ain, iTime+adel*kMod, imaxdel
+	zaw aout, 2  ; CHANGE 
+endop

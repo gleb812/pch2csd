@@ -1,0 +1,8 @@
+opcode Clip, 0, ikk
+	iSW, klimit, kMod xin ; iSW = 0/1 
+	a1 zar 1 ; CHANGE
+	k1 zkr 1 ; CHANGE
+	klimit += kMod*k1
+	aout limit a1, -klimit*iSW-1*(1-iSW), klimit; ??
+	zaw aout, 2 ; CHANGE
+endop

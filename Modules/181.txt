@@ -1,0 +1,20 @@
+opcode DlyEight, 0, i
+	iTime xin
+	ain zar 2 ; CHANGE 
+	a1 delay ain,iTime ; k?
+	a2 delay a1, iTime
+	a3 delay a2, iTime
+	a4 delay a3, iTime
+	a5 delay a4, iTime
+	a6 delay a5, iTime
+	a7 delay a6, iTime
+	a8 delay a7, iTime
+	zaw a1, 2  ; CHANGE 
+	zaw a2, 2  ; CHANGE 
+	zaw a3, 2  ; CHANGE 
+	zaw a4, 2  ; CHANGE 
+	zaw a5, 2  ; CHANGE 
+	zaw a6, 2  ; CHANGE 
+	zaw a7, 2  ; CHANGE 
+	zaw a8, 2  ; CHANGE 
+endop

@@ -1,0 +1,27 @@
+opcode ClkDiv, 0, ii
+	iDivider, iType xin
+	kyClk zkr 1 ; CHANGE 
+	kyRes zkr 2 ; CHANGE 
+	kCounter init 0
+
+	if (kyRes == 1) then
+		kCounter = 0
+		kOut = 0
+	endif
+
+	
+	if (kyClk != 0) then
+		kCounter+= 1
+	endif
+
+	kDiv = kCounter%iDivider
+	
+	if (kDiv == 1) then
+		kOut = 1
+		if (iType == 0) goto run
+		kOut = 0
+	endif
+
+	run:
+	zkw kOut, 1 ; CHANGE
+endop

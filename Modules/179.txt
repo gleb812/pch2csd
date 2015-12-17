@@ -1,0 +1,33 @@
+opcode DlyShiftReg, 0, 0
+	kin zkr 2 ; CHANGE 
+	kClk zkr 1 ; CHANGE
+	
+	k1 init 0
+	k2 init 0
+	k3 init 0
+	k4 init 0
+	k5 init 0
+	k6 init 0
+	k7 init 0
+	k8 init 0
+
+if (kClk != 0) then
+		k8 = k7
+		k7 = k6
+		k6 = k5
+		k5 = k4
+		k4 = k3
+		k3 = k2
+		k2 = k1
+		k1 = kin
+endif 
+
+	zkw k1, 2  ; CHANGE 
+	zkw k2, 2  ; CHANGE 
+	zkw k3, 2  ; CHANGE 
+	zkw k4, 2  ; CHANGE 
+	zkw k5, 2  ; CHANGE 
+	zkw k6, 2  ; CHANGE 
+	zkw k7, 2  ; CHANGE 
+	zkw k8, 2  ; CHANGE 
+endop

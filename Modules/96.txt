@@ -1,0 +1,11 @@
+opcode OscD, 0, KKiiiii
+
+	kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
+	
+	;kPitchM zkr iPitchMod 
+	; Proverit' amplitudu
+	kfine = cent(kFine)
+	
+	aout oscil 0.5, cpsmidinn(kPitch)*kfine 
+	zaw aout, iOut 
+endop

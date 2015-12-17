@@ -1,0 +1,13 @@
+opcode Mix81A, 0, i   ; MULTIMODE support a/k?
+	iPad xin
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE
+	a5 zar 1 ; CHANGE 
+	a6 zar 1 ; CHANGE 
+	a7 zar 1 ; CHANGE 
+	a8 zar 1 ; CHANGE
+	aout = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8)*iPad
+	zaw aout, 2 ; CHANGE 
+endop

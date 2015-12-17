@@ -1,0 +1,14 @@
+opcode shpStatic, 0, i
+	iTable xin 
+	a1 zar 1 ; CHANGE
+	if (iTable == 0) then 
+		aout = 1/(a1*a1*a1)
+	elseif (iTable == 1) then
+		aout = 1/(a1*a1)
+	elseif (iTable == 2) then
+		aout = a1*a1
+	elseif (iTable == 3) then
+		aout = a1*a1*a1
+	endif
+	zaw aout, 2 ; CHANGE
+endop

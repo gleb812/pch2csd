@@ -1,0 +1,11 @@
+opcode NoteDet, 0, k
+	kNote xin
+	iVal notnum
+	iVel veloc
+	iVelR veloc 0,1
+	if (kNote == iVal) then
+		zkw 1, 1 ; CHANGE
+		zkw iVel, 1 ; CHANGE
+		zkw iVelR, 1 ; CHANGE
+	endif
+endop

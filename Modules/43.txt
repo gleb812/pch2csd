@@ -1,0 +1,5 @@
+opcode Constant, 0, k   ; MULTIMODE support a/k?
+	kVal xin
+	; BIPOLAR UNIPOLAR ????
+	zaw kVal, 2 ; CHANGE 
+endop

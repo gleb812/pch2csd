@@ -1,0 +1,9 @@
+opcode Mix41A, 0, iiiii   ; MULTIMODE support a/k?
+	i1, i2, i3, i4, iOut xin
+	a1 zar i1 
+	a2 zar i2  
+	a3 zar i3 
+	a4 zar i4 
+	aout = a1 + a2 + a3 + a4
+	zaw aout, iOut
+endop

@@ -1,0 +1,203 @@
+# depslib dependency file v1.0
+1438156563 source:d:\sources\nord\main.cpp
+	<stdio.h>
+
+1438957297 source:c:\users\grogozinsky\downloads\nord\main.cpp
+	<stdio.h>
+
+1439729621 source:g:\Õ¿” ¿\nord_07_08_2015_finalcut\nord\main.cpp
+	<stdio.h>
+
+1440076768 source:c:\users\grogozinsky\downloads\nord_07_08_2015_finalcut\nord\main.cpp
+	<stdio.h>
+
+1442568438 source:d:\main\ghost_in_the_shell\nord\nord\main.cpp
+	<stdio.h>
+
+1442839510 source:d:\nord\main.cpp
+	<stdio.h>
+
+1444611442 source:f:\nord\main.cpp
+	<stdio.h>
+	<stdbool.h>
+	"CableSort.c"
+	"II2IO.c"
+	"GenZakInit.c"
+	"OpenWrite.c"
+	"OpenTable.c"
+	"OWModule.c"
+	"GenInstrumentContent.c"
+	"GenInstrumentSpace.c"
+	"GenInstruments.c"
+	"NextField.c"
+	"CreatingNewFile.c"
+	"OpenPatchFile.c"
+	"ReadPD.c"
+	"ReadML.c"
+	"ReadMO.c"
+	"ReadPS.c"
+	"ReadCL.c"
+	"ReadMP.c"
+
+1443363809 source:j:\nord\main.cpp
+	<stdio.h>
+
+1444603747 source:f:\nord\cablesort.c
+
+1444595830 source:f:\nord\openwrite.cpp
+
+1444599338 f:\nord\nord.h
+
+1444601602 f:\nord\cablesort.h
+
+1444603747 f:\nord\cablesort.c
+
+1444603442 source:f:\nord\ii2io.cpp
+	<stdio.h>
+
+1444603623 f:\nord\ii2io.cpp
+
+1444603904 source:f:\nord\ii2io.c
+	<stdbool.h>
+
+1444603904 f:\nord\ii2io.c
+	<stdbool.h>
+
+1444604422 source:f:\nord\genzakinit.c
+	<stdio.h>
+
+1444604422 f:\nord\genzakinit.c
+	<stdio.h>
+
+1444604905 f:\nord\openwrite.c
+	<stdio.h>
+	<stdbool.h>
+
+1444604905 source:f:\nord\openwrite.c
+	<stdio.h>
+	<stdbool.h>
+
+1444605358 source:f:\nord\opentable.c
+	<stdio.h>
+
+1444605358 f:\nord\opentable.c
+	<stdio.h>
+
+1444605658 f:\nord\owmodule.c
+	<stdio.h>
+	<stdbool.h>
+
+1444605658 source:f:\nord\owmodule.c
+	<stdio.h>
+	<stdbool.h>
+
+1444607794 f:\nord\geninstrumentcontent.c
+	<stdio.h>
+	<stdbool.h>
+
+1444607794 source:f:\nord\geninstrumentcontent.c
+	<stdio.h>
+	<stdbool.h>
+
+1444608336 source:f:\nord\geninstrumentspace.c
+	<stdio.h>
+	<stdbool.h>
+
+1444608336 f:\nord\geninstrumentspace.c
+	<stdio.h>
+	<stdbool.h>
+
+1444608693 source:f:\nord\geninstruments.c
+	<stdio.h>
+
+1444608693 f:\nord\geninstruments.c
+	<stdio.h>
+
+1444609184 f:\nord\nextfield.c
+	<stdio.h>
+
+1444609184 source:f:\nord\nextfield.c
+	<stdio.h>
+
+1444609413 source:f:\nord\creatingnewfile.c
+	<stdio.h>
+
+1444609413 f:\nord\creatingnewfile.c
+	<stdio.h>
+
+1444609586 source:f:\nord\openpatchfile.c
+	<stdio.h>
+
+1444609586 f:\nord\openpatchfile.c
+	<stdio.h>
+
+1444609981 f:\nord\readpd.c
+	<stdio.h>
+	<stdbool.h>
+
+1444609981 source:f:\nord\readpd.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610420 f:\nord\readml.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610420 source:f:\nord\readml.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610691 f:\nord\readmo.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610691 source:f:\nord\readmo.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610846 source:f:\nord\readps.c
+	<stdio.h>
+	<stdbool.h>
+
+1444610846 f:\nord\readps.c
+	<stdio.h>
+	<stdbool.h>
+
+1444611239 f:\nord\readcl.c
+	<stdio.h>
+	<stdbool.h>
+
+1444611239 source:f:\nord\readcl.c
+	<stdio.h>
+	<stdbool.h>
+
+1444611505 f:\nord\readmp.c
+	<stdio.h>
+	<stdbool.h>
+
+1444611442 source:f:\nord\main.c
+	<stdio.h>
+	<stdbool.h>
+	"CableSort.c"
+	"II2IO.c"
+	"GenZakInit.c"
+	"OpenWrite.c"
+	"OpenTable.c"
+	"OWModule.c"
+	"GenInstrumentContent.c"
+	"GenInstrumentSpace.c"
+	"GenInstruments.c"
+	"NextField.c"
+	"CreatingNewFile.c"
+	"OpenPatchFile.c"
+	"ReadPD.c"
+	"ReadML.c"
+	"ReadMO.c"
+	"ReadPS.c"
+	"ReadCL.c"
+	"ReadMP.c"
+
+1444611505 source:f:\nord\readmp.c
+	<stdio.h>
+	<stdbool.h>
+

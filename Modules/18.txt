@@ -1,0 +1,16 @@
+opcode XFade, 0, kk
+	kMod, kMix xin
+	k1 zkr 1 ;CHANGE
+	k2 zkr 2; CHANGE
+	kmod zkr 3; CHANGE
+	
+	kMix += kMod ;+ limiter?
+	if (iSW != 0) then
+		kout = k1*kMix + k2*(1-kMix)
+		goto run 
+	endif
+	
+	kout = k1*log10(kMix) + k2*log10(1-kMix)
+run:
+	zkw kout, 2 ; CHANGE
+endop

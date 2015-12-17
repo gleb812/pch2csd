@@ -1,0 +1,6 @@
+opcode EqPeak, 0, KKKK
+	kFreq, kGain, kBW, kLev xin ;i  - ON/OFF button?
+	ain zar 2 ; CHANGE 
+	aout pareq ain, kFreq, kGain, kBW
+	zaw aout*kLev, 2  ; CHANGE 
+endop
