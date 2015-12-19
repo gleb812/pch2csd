@@ -20,6 +20,24 @@ Check /Tables to see mapping for module parameter values. Being MIDI compatible,
 
 /IO directory contains module input/output tables. The order of inputs/outputs is strictly fixed. 
 
+Check the Status List to find which modules are implemented and what are the next to-dos by group. 
+The top priorities are oscillators, filters and envelope generators. Any help is welcome.
+
+*************************************************************
+UDO EXAMPLES (to be moved to separate file later)
+
+This is an example of UDO model for Out2 module. Check CSound manual for details on CSound prjgramming
+
+opcode Out2, 0, iiiii                 ; a new UDO definition. 0 - no outputs, iiiii - five inputs/parameters of i-type
+	isource, iMute, iPad, iL, iR xin    ; getting parameter values from the code.
+	                                    ; isource - source selector, iMute - mute toggle
+	                                    ; iPad - padding button, iL,iR - numbers of patch cables for the module
+	aL zar iL                           ; Patching iL cable to audio part of zak space
+	aR zar iR                           ; Patching iR cable to audio part of zak space
+	outs aL, aR                         ; output sound
+endop                                 ; end of UDO definition
+
+***************************************************************
 The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
 
 
