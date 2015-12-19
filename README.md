@@ -35,7 +35,7 @@ opcode Out2, 0, iiiii                 ; a new UDO definition. 0 - no outputs, ii
 	aL zar iL                           ; Patching iL cable to audio part of zak space
 	aR zar iR                           ; Patching iR cable to audio part of zak space
 	outs aL, aR                         ; output sound
-endop                                 ; end of UDO definition
+endop                                 ; end of UDO definition 
 
 ***************************************************************
 The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
