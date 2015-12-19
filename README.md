@@ -26,7 +26,8 @@ The top priorities are oscillators, filters and envelope generators. Any help is
 *************************************************************
 UDO EXAMPLES (to be moved to separate file later)
 
-This is an example of UDO model for Out2 module. Check CSound manual for details on CSound prjgramming
+This is an example of UDO model for Out2 module. Check CSound manual for details on CSound programming
+
 
 opcode Out2, 0, iiiii	; a new UDO definition. 0 - no outputs, iiiii - five inputs/parameters of i-type
 
