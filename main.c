@@ -101,7 +101,7 @@ bool VAFXFlag; //VA=1 FX=0
 
 int main(void)
 {
-    // Nord to CSound parameters mapping
+    // Nord to CSound parameters mapping tables
     OpenTable("Tables/MidiNotes.txt",0);
     OpenTable("Tables/Fine.txt",1);
     OpenTable("Tables/KBT.txt",2);
@@ -140,9 +140,9 @@ int main(void)
 
     OpenWrite(HeadFileName); // Start the new file from header template
     NextField(); // -
-    II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
-    CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
-    GenZakInit(); // Фzakinit creation
+    II2IO4all(); // Cables mapping - serial to star topology
+    CableSort(); // Cable ID transform for zak
+    GenZakInit(); // zakinit initialization
     NextField(); // -
     GenInstruments(); // CSound Instruments
     GenInstrumentSpace(); // Instr parameters

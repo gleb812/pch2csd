@@ -19,13 +19,13 @@ extern unsigned int kIOTable[256][6];// k-cable list
                                 //4-module to;  5-port to;
 
 
-extern unsigned int ParameterCountersVA[128]; // таблица параметров их значений в патче, чтобы их использовать в сисаунде их необходимо провести через таблицу соответствия (Tables[...])
+extern unsigned int ParameterCountersVA[128]; // Mapping tables to map the parameters into Csound values (Tables[...])
                                                 //for VA field
 extern unsigned int ParameterCountersFX[128]; // same for FX field
 
-extern unsigned int MapTablesVA[128][24]; // Таблица содержит в себе для каждого тмпользуемого модуля номера колонок Tables, т.е. Парсер открывает map-файл для соответствующего модуля,
-                                            // где записаны индентификаторы типа используемых параметров, например, 1 - частота
-extern unsigned int MapTablesFX[128][24]; // аналогично
+extern unsigned int MapTablesVA[128][24]; // Containd a column numbers of mapping Tables,so we open the map file for the given module,
+                                            // where parameter IDs are written, i.e. 1 means frequency etc.
+extern unsigned int MapTablesFX[128][24]; // the same
 
 extern unsigned int ParametersVA[128][64]; // VA parameters
 extern unsigned int ParametersFX[128][64]; // FX parameters
@@ -61,7 +61,7 @@ int GenInstrumentContent(unsigned int number)
     unsigned int NIO[50]; // Input = 0; Output = 0;
     unsigned int IOAK[50]; // Audio = 1; Control =0;
     bool FFlag;
-    bool PPflag; // Означает писались ли или нет параметры в строку инструмента, что бы понять стявить или нет запятую
+    bool PPflag; // To understand whether to put a coma between parameters
 
     tempnumber=number;
 
@@ -100,7 +100,7 @@ int GenInstrumentContent(unsigned int number)
     TempFileName[counter+11]=0x74;
     TempFileName[counter+12]=0x0;
 
-     //Mapping file name
+    //Mapping file name
     TempModuleMap[counter+5]=0x2e;
     TempModuleMap[counter+6]=0x74;
     TempModuleMap[counter+7]=0x78;
@@ -117,7 +117,7 @@ int GenInstrumentContent(unsigned int number)
     PPflag=false;
 
 
-    //Из фйала модуля для текущего индекса модуля нам требуется только имя
+    //We need only name of a module
     if((TempFile = fopen(TempFileName,"r")) == NULL)
 	{
 		printf("Error - ");
@@ -159,7 +159,7 @@ int GenInstrumentContent(unsigned int number)
 	}
 	fprintf(NewFile,"\t");
 	//printf("%d\n",NAMELength);
-	// Записали имя в строку сисаундовского файла
+	// Write a name of the module to csd
 	for(i=0;i<NAMELength;i++)
     {
         fprintf(NewFile,"%c",NAME[i]);
@@ -167,9 +167,9 @@ int GenInstrumentContent(unsigned int number)
     fprintf(NewFile," ");
 
 
-    // Подобным образом открываем map-файл и считываем от туда типы параметров для модуля по текущему индексу
-    // Находим для текущего индекса модуля значения параметров, обращаемся для каждого из параметров к таблице соответствия, по уже известным значениям колонок, которые взяты из мап-файла
-    // Записываем параметры в сисаундовский файл
+    // Now we open a map file and read the parameters according to current index
+    // We find the parameter values for the current module index, look for it into a mapping table, since we know the number of column
+    // Write parameters to csd file
     if(VAFXFlag)
     {
 
@@ -240,11 +240,11 @@ int GenInstrumentContent(unsigned int number)
         //fprintf(NewFile,"\n");
     }
 
-    // Ну а теперь самое страшное - коммутация
-    // Аналогичным образов открывается файл IO со входами и выходми и их типами для заданного модуля
+    // Here goes the weirdest thing - patching
+    // The same way we open IO file with inputs, outputs and their types for given module
 
-    // первый столбец вход(0)/выход(1)
-    // второй столбец k(0)/a(1)
+    // first column input(0)/output(1)
+    // second column k(0)/a(1)
 
     if((TempFile = fopen(TempModuleIO,"r")) == NULL)
     {
@@ -309,34 +309,34 @@ int GenInstrumentContent(unsigned int number)
             fprintf(NewFile,", ");
         }
     }
+// Once all inputs and outputs are read and NIO table are created (it carries the numbers of inputs and outputs)
+// we have to check each element of table
+// if we find the value equal to module and port, we create a patch in zak space
+// if the corresponding cable doesn't exsist & it is input, we patch it to zero bus (works like a ground)
+// if it is output, we patch it to bus 1 (a trash bus).
 
-    // После того как были прочитаны входы и выходы и составлена табличка с номерами входов и выходов NIO, где указаны последовательно номера входов и выходв
-    // начинается муторная часть, где производится переборка всей таблицы с проводами по каждому из входов и выходов
-    // как только там находится совпадение с модулем и портом, так производится запись о коммутации в zak-пространстве
-    // если соответствующего провода не найти, то если это вход, то его сажают на нулевой провод - условную землю (gnd)
-    // если же это выход, то на 1 - трешканал
 
-    if(VAFXFlag) //VAArea
+    if(VAFXFlag) //VA Area
     {
         for(i=0;i<IOCount/2;i++)
         {
             FFlag=false;
-            if(IOAK[i]==1) // Тип вывода - звуковой
+            if(IOAK[i]==1) // output type is audio
             {
-                if(IO[i]==0) // Если это вход
+                if(IO[i]==0) // if input
                 {
                     //printf("IN\n");
                     for(j=0;j<CCa;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][4]);
                         //printf("Ports %d %d\n",NIO[i],aIOTable[j][5]);
-                        if(aIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(aIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(aIOTable[j][5]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(aIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Локация должна быть VA
+                                if(aIOTable[j][0]==1) // Should be VA part
                                 {
-                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -348,20 +348,20 @@ int GenInstrumentContent(unsigned int number)
                         }
                     }
                 }
-                else // Если это выход
+                else // if output
                 {
                     //printf("OUT\n");
                     for(j=0;j<CCa;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][2]);
                         //printf("Ports %d %d\n",NIO[i],aIOTable[j][3]);
-                        if(aIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(aIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(aIOTable[j][3]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(aIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Локация должна быть VA
+                                if(aIOTable[j][0]==1) // Should be VA part
                                 {
-                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -375,29 +375,29 @@ int GenInstrumentContent(unsigned int number)
                 }
                 if(FFlag==false)
                 {
-                    fprintf(NewFile,"%d",IO[i]); //если вход то посадить на землю "0"/если выход то в треш "1"
+                    fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
                     if(i!=IOCount/2-1)
                     {
                         fprintf(NewFile,", ");
                     }
                 }
             }
-            else // Тип вывода - управление
+            else // k type
             {
-                if(IO[i]==0) // Если это вход
+                if(IO[i]==0) // if input
                 {
                     printf("IN\n");
                     for(j=0;j<CCk;j++)
                     {
                         printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][4]);
                         printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
-                        if(kIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(kIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(kIOTable[j][5]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(kIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Локация должна быть VA
+                                if(aIOTable[j][0]==1) // Should be VA part
                                 {
-                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -409,20 +409,20 @@ int GenInstrumentContent(unsigned int number)
                         }
                     }
                 }
-                else // Если это выход
+                else // if output
                 {
                     printf("OUT\n");
                     for(j=0;j<CCk;j++)
                     {
                         printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][2]);
                         printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
-                        if(kIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(kIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(kIOTable[j][3]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(kIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Локация должна быть VA
+                                if(aIOTable[j][0]==1) // Should be VA part
                                 {
-                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -436,7 +436,7 @@ int GenInstrumentContent(unsigned int number)
                 }
                 if(FFlag==false)
                 {
-                    fprintf(NewFile,"%d",IO[i]); //если вход то посадить на землю "0"/если выход то в треш "1"
+                    fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
                     if(i!=IOCount/2-1)
                     {
                         fprintf(NewFile,", ");
@@ -445,27 +445,27 @@ int GenInstrumentContent(unsigned int number)
             }
         }
     }
-    else // FXArea
+    else // FX Area
     {
         for(i=0;i<IOCount/2;i++)
         {
             FFlag=false;
-            if(IOAK[i]==1) // Тип вывода - звуковой
+            if(IOAK[i]==1) // audio type
             {
-                if(IO[i]==0) // Если это вход
+                if(IO[i]==0) // if input
                 {
                     //printf("IN\n");
                     for(j=0;j<CCa;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],aIOTable[j][4]);
                         //printf("Ports %d %d\n",NIO[i],aIOTable[j][5]);
-                        if(aIOTable[j][4]==ModuleIndexListFX[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(aIOTable[j][4]==ModuleIndexListFX[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(aIOTable[j][5]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(aIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Локация должна быть FX
+                                if(aIOTable[j][0]==0) // Should be FX part
                                 {
-                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -477,20 +477,20 @@ int GenInstrumentContent(unsigned int number)
                         }
                     }
                 }
-                else // Если это выход
+                else // if output
                 {
                     printf("OUT\n");
                     for(j=0;j<CCa;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],aIOTable[j][2]);
                         //printf("Ports %d %d\n",NIO[i],aIOTable[j][3]);
-                        if(aIOTable[j][2]==ModuleIndexListFX[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(aIOTable[j][2]==ModuleIndexListFX[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(aIOTable[j][3]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(aIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Локация должна быть FX
+                                if(aIOTable[j][0]==0) // Should be FX part
                                 {
-                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -504,29 +504,29 @@ int GenInstrumentContent(unsigned int number)
                 }
                 if(FFlag==false)
                 {
-                    //fprintf(NewFile,"%d",IO[i]); //если вход то посадить на землю "0"/если выход то в треш "1"
+                    //fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
                     if(i!=IOCount/2-1)
                     {
                         fprintf(NewFile,", ");
                     }
                 }
             }
-            else // Тип вывода - управление
+            else // k signal
             {
-                if(IO[i]==0) // Если это вход
+                if(IO[i]==0) // if input
                 {
                     printf("IN\n");
                     for(j=0;j<CCk;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],kIOTable[j][4]);
                         //printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
-                        if(kIOTable[j][4]==ModuleIndexListFX[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(kIOTable[j][4]==ModuleIndexListFX[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(kIOTable[j][5]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(kIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Локация должна быть FX
+                                if(aIOTable[j][0]==0) // Should be FX part
                                 {
-                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -538,20 +538,20 @@ int GenInstrumentContent(unsigned int number)
                         }
                     }
                 }
-                else // Если это выход
+                else // if output
                 {
                     //printf("OUT\n");
                     for(j=0;j<CCk;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],kIOTable[j][2]);
                         //printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
-                        if(kIOTable[j][2]==ModuleIndexListFX[ModuleCounter]) //модуль куда должен совпадать с номером модуля
+                        if(kIOTable[j][2]==ModuleIndexListFX[ModuleCounter]) //module to should be equal to module number
                         {
-                            if(kIOTable[j][3]==NIO[i]) //порт должен совпадать с номером порта из IO файла (т.е. с "i")
+                            if(kIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Локация должна быть FX
+                                if(aIOTable[j][0]==0) // Should be FX part
                                 {
-                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //напечатать в файл номер кабеля
+                                    fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
                                     if(i!=IOCount/2-1)
                                     {
                                         fprintf(NewFile,", ");
@@ -565,7 +565,7 @@ int GenInstrumentContent(unsigned int number)
                 }
                 if(FFlag==false)
                 {
-                    fprintf(NewFile,"%d",IO[i]); //если вход то посадить на землю "0"/если выход то в треш "1"
+                    fprintf(NewFile,"%d",IO[i]); // if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
                     if(i!=IOCount/2-1)
                     {
                         fprintf(NewFile,", ");

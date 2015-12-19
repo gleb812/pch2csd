@@ -1,5 +1,4 @@
-// „итаем патч-фпйл список модулей и заполн€ем ModuleList / ModuleIndexList / ModuleTypeList
-// что за модуль / каков его индекс / —писок уникальных номеров модулей - используетс€ дл€ формировани€ инструментной области с прототипами
+// Reads module IDs from patch file and creates a ModuleList / ModuleIndexList / ModuleTypeList
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -212,8 +211,7 @@ int ReadML(unsigned int position)
         {
             PadBits += 6*Insert;
         }
-        // √де-то здесь хранитс€ тип используемой волны в генераторах, т.к. этот эти данные мен€ютс€ от изменени€ типа волны в редакторе, а в параметрах модул€ генераторов типа используемой волне
-        // нет
+        // Somewhere here a wavetype is hidden from us
     }
 
     printf("ML_Module_Type_List\n");

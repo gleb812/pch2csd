@@ -4,7 +4,7 @@
 // OTHERS are unknown type
 
 // All data are written in IOTable
-// Cable list (inputs and ouputs)
+// Cable list (inputs and outputs)
                                 //0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
                                 //4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
 

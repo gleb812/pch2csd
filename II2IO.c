@@ -30,7 +30,7 @@ int II2IO(void)
             {
                 if(IOTable[j][7]==1) // If cable type is input-to-output
                 {
-                    if(IOTable[j][4]==findModulTo) // совпадает модуль, из которого идет провод, просматриваемого с модулем, куда пришел, текущий
+                    if(IOTable[j][4]==findModulTo) // module from is the same with module to
                     {
                         if(IOTable[j][5]==findPortTo) // Ports checking
                         {
@@ -38,10 +38,10 @@ int II2IO(void)
                             {
                                 findFlag=true;
 
-                                IOTable[i][4]=IOTable[i][2]; // заменяем у текущего значения "куда" для модуля и порта на значения на его старые "откуда"
+                                IOTable[i][4]=IOTable[i][2]; // Old 'to-values' for module and port are substituted for its old 'from-values'
                                 IOTable[i][5]=IOTable[i][3];
 
-                                IOTable[i][2]=IOTable[j][2]; // заменяем у текущего значения "откуда" для модуля и порта на значения "откуда" найденного
+                                IOTable[i][2]=IOTable[j][2]; // Current 'from-values' for module and port are substituted for just found
                                 IOTable[i][3]=IOTable[j][3];
                                 //IOTable[i][1]=IOTable[j][1];
                                 IOTable[i][7]=1;
@@ -52,12 +52,12 @@ int II2IO(void)
 
                     else
                     {
-                        if(IOTable[j][4]==findModulFrom) // совпадает модуль, куда идет провод, просматриваемого с модулем, откуда пришел, текущий
+                        if(IOTable[j][4]==findModulFrom) // module to is the same with module from
                         {
                             if(IOTable[j][5]==findPortFrom) // Ports checking
                             {
                                 findFlag=true;
-                                IOTable[i][2]=IOTable[j][2]; // заменяем у текущего значения "куда" для модуля и порта на значения "куда" найденного
+                                IOTable[i][2]=IOTable[j][2]; // Current 'to-values' for module and port are substituted for just found
                                 IOTable[i][3]=IOTable[j][3];
                                 //IOTable[i][1]=IOTable[j][1];
                                 IOTable[i][7]=1;
