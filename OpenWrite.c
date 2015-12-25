@@ -6,7 +6,7 @@
 extern FILE *TempFile;
 extern FILE *NewFile;
 
-int OpenWrite(char TempFileName[20])
+int OpenWrite(char TempFileName[50])
 {
     char temp;
     if((TempFile = fopen(TempFileName,"r")) == NULL)

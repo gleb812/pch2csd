@@ -3,7 +3,7 @@
 extern FILE *NewFile;
 
 // function that creates a new file
-int CreatingNewFile(char NewFileName[20])
+int CreatingNewFile(char NewFileName[50])
 {
     if((NewFile = fopen(NewFileName,"w+b")) == NULL)
 	{

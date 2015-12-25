@@ -9,7 +9,7 @@ nchnls = 2
 
 ;******************************
 ; Initialize the ZAK space
-zakinit 8, 3
+zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
@@ -34,29 +34,9 @@ opcode OscD, 0, KKiiiii
 	zaw aout, iOut 
 endop
 
-opcode Noise, 0, Kii ;
-	kColor, iMute, iOut  xin
-	aout rand 0.5, 0.1 ; seed value ?
-	;aout tone a1, kColor
-	zaw aout, iOut
-endop
-
-opcode Mix41A, 0, iiiii   ; MULTIMODE support a/k?
-	i1, i2, i3, i4, iOut xin
-	a1 zar i1 
-	a2 zar i2  
-	a3 zar i3 
-	a4 zar i4 
-	aout = a1 + a2 + a3 + a4
-	zaw aout, iOut
-endop
-
 instr 1
-	 Out2 0.000, 1.000, 0.000, 6, 2
-	 OscD 64.000, 0.000, 1.000, 0.000, 1.000, 0, 4
-	 OscD 64.000, 0.000, 1.000, 0.000, 1.000, 0, 5
-	 Noise 0.000, 1.000, 2
-	 Mix41A 4, 5, 0, 2, 6
+	 Out2 0.000, 1.000, 0.000, 0, 0
+	 OscD 22.000, -29.700, 1.000, 0.000, 0.000, 0, 1
 endin
 instr 2
 endin

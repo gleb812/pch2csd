@@ -201,3 +201,159 @@
 	<stdio.h>
 	<stdbool.h>
 
+1450470236 source:d:\nordclaviapch2csd\pch2csd\cablesort.c
+
+1450740278 source:d:\nordclaviapch2csd\pch2csd\creatingnewfile.c
+	<stdio.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\geninstruments.c
+	<stdio.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\genzakinit.c
+	<stdio.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\ii2io.c
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\nextfield.c
+	<stdio.h>
+
+1450740278 source:d:\nordclaviapch2csd\pch2csd\openpatchfile.c
+	<stdio.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\opentable.c
+	<stdio.h>
+
+1450740278 source:d:\nordclaviapch2csd\pch2csd\openwrite.c
+	<stdio.h>
+	<stdbool.h>
+
+1450740278 source:d:\nordclaviapch2csd\pch2csd\owmodule.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readcl.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readml.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readmo.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readmp.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readpd.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 source:d:\nordclaviapch2csd\pch2csd\readps.c
+	<stdio.h>
+	<stdbool.h>
+
+1450742120 source:d:\nordclaviapch2csd\pch2csd\menu.c
+	<stdio.h>
+
+1450741592 source:d:\nordclaviapch2csd\pch2csd\main.cpp
+	<stdio.h>
+	<stdbool.h>
+	"menu.c"
+	"CableSort.c"
+	"II2IO.c"
+	"GenZakInit.c"
+	"OpenWrite.c"
+	"OpenTable.c"
+	"OWModule.c"
+	"GenInstrumentContent.c"
+	"GenInstrumentSpace.c"
+	"GenInstruments.c"
+	"NextField.c"
+	"CreatingNewFile.c"
+	"OpenPatchFile.c"
+	"ReadPD.c"
+	"ReadML.c"
+	"ReadMO.c"
+	"ReadPS.c"
+	"ReadCL.c"
+	"ReadMP.c"
+
+1450742167 d:\nordclaviapch2csd\pch2csd\menu.c
+	<stdio.h>
+	<string.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\cablesort.c
+
+1450470236 d:\nordclaviapch2csd\pch2csd\ii2io.c
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\genzakinit.c
+	<stdio.h>
+
+1450740278 d:\nordclaviapch2csd\pch2csd\openwrite.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\opentable.c
+	<stdio.h>
+
+1450740278 d:\nordclaviapch2csd\pch2csd\owmodule.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\geninstruments.c
+	<stdio.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\nextfield.c
+	<stdio.h>
+
+1450740278 d:\nordclaviapch2csd\pch2csd\creatingnewfile.c
+	<stdio.h>
+
+1450740278 d:\nordclaviapch2csd\pch2csd\openpatchfile.c
+	<stdio.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readpd.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readml.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readmo.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readps.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readcl.c
+	<stdio.h>
+	<stdbool.h>
+
+1450470236 d:\nordclaviapch2csd\pch2csd\readmp.c
+	<stdio.h>
+	<stdbool.h>
+
