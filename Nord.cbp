@@ -86,9 +86,10 @@
 		<Unit filename="ReadPS.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.c">
+		<Unit filename="Welcome.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

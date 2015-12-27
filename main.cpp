@@ -22,6 +22,7 @@
 #include "ReadPS.c"
 #include "ReadCL.c"
 #include "ReadMP.c"
+#include "Welcome.c"
 
 
 
@@ -107,6 +108,7 @@ bool VAFXFlag; //VA=1 FX=0
 
 int main(void)
 {
+    Welcome();
     mcommand=menu();
     if(mcommand==1)
     {
