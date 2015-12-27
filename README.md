@@ -50,6 +50,7 @@ endop                                 ; end of UDO definition
 The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
 
 HOW TO START DEVELOPING:
+
 1. Read Clavia Nord G2 manual to get familiar with Clavia's modules
 
 2. Grab your Clavia Nord Modular G2 or Clavia Nord Modular G2 Engine and wipe off the dust from it
