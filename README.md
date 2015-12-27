@@ -1,10 +1,32 @@
 # pch2csd
 The Clavia Nord Modular G2 Patch Convertor Project
 
-by Gleb G. Rogozinsky and Michael Chesnokov 2015
+(c) Gleb G. Rogozinsky and Michael Chesnokov 2015
+
 gleb.rogozinsky@gmail.com
 
+
+HISTORY
+WHY YOU NEED IT?
+IMPLEMENTATION
+UDO EXAMPLES
+HOW TO START DEVELOPING
+
+HISTORY
+
 We started our project during Summer of 2015. The Project's main objective is to simulate legendary Clavia Nord Modular G2 synthesizer using CSound language. The Project was first presented at the The Third International CSound Conference (2-4 October, St. Petersburg, Russia).
+
+WHY YOU NEED IT?
+
+If you are a Nord Modular fan, this software allows you to have you favourite device ressurected for internal life in the halls of CSound language. You also can improve the precision of models and use the whole world of CSound possibilities together with Clavia
+
+If you are a CSound person, this is a new branch of our journey. This is great to have some hardware digital synths running on CSound. Once the conversion project is done, you are able to use hundreds of patches straigth on CSound
+
+If you discover the world of modular synthesis and algorithmic composition, the system provides a good way to describe the graphic patches of Clavia
+
+If you are a developer of alternative Clavia Nord Modular G2 Editor, you could merge your graphical editor software with the system to produce the sound
+
+IMPLEMENTATION
 
 The main idea behind implementation is to model all the modules of Clavia with CSound UDOs. See /Modules for modules description based on CSound language. The module numbers correspond to original Clavia module IDs.
 
@@ -49,7 +71,7 @@ endop                                 ; end of UDO definition
 ***************************************************************
 The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
 
-HOW TO START DEVELOPING:
+HOW TO START DEVELOPING
 
 1. Read Clavia Nord G2 manual to get familiar with Clavia's modules
 
