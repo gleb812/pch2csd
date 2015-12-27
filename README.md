@@ -49,6 +49,18 @@ endop                                 ; end of UDO definition
 ***************************************************************
 The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
 
+HOW TO START DEVELOPING:
+1. Read Clavia Nord G2 manual to get familiar with Clavia's modules
+2. Grab your Clavia Nord Modular G2 or Clavia Nord Modular G2 Engine and wipe off the dust from it (or install a free Clavia Nord Modular G2 Demo (should fully work on XP and partly on Win7, there is also OS X version available)
+3. Open a patch you would like to convert, or simple make a new one
+4. Use pch2csd utility. 
+5. Run your csd with CSound
+
+If some modules were not converted into CSound UDO's, it means you need to add them to /Modules directory.
+You also need to create input-output routing table for those modules and place it in /IO
+In case there is some parameter error, you need to add a new mapping table and place it in /Maps
+
+Refer to Status List.pdf to discovered which modules are already implemented.
 
 
 More detailed description will appear soon..
