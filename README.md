@@ -6,6 +6,8 @@ The Clavia Nord Modular G2 Patch Convertor Project
 gleb.rogozinsky@gmail.com
 
 
+
+
 HISTORY
 
 WHY YOU NEED IT?
@@ -15,6 +17,8 @@ IMPLEMENTATION
 UDO EXAMPLES
 
 HOW TO START DEVELOPING
+
+
 
 
 HISTORY
