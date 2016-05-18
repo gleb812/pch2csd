@@ -1,0 +1,7 @@
+opcode NoteScaler, 0, K
+; what if a-rate input?
+	kRange xin 	
+
+	kIn zkr 2 ; CHANGE 
+	zkw kIn * kRange, 2; CHANGE
+endop

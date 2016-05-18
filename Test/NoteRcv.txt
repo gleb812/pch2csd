@@ -1,0 +1,11 @@
+opcode NoteRcv, 0, ik
+	
+	iChan, kNote xin 
+
+	kstatus, kchan, kdata1, kdata2 midiin
+
+	if (kstatus == 144) && (kchan == iChan) && (kdata1 == kNote) then
+		zkw kdata2, 2; CHANGE
+		zkw 1, 2; CHANGE  ; GATE RCV
+	endif
+endop

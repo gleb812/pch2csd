@@ -1,0 +1,11 @@
+opcode CtrlRcv, 0, ii
+	
+	iCtrl, iChan xin 
+
+	kstatus, kchan, kdata1, kdata2 midiin
+
+	if (kstatus == 176) && (kchan == iChan) then
+		zkw kdata2, 2; CHANGE
+		zkw 1, 2; CHANGE  ; GATE RCV
+	endif
+endop

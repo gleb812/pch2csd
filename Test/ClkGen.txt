@@ -1,0 +1,31 @@
+opcode ClkGen, 0, kkkk
+; Internal/External + ClkActive  ?
+
+	kSwing, kSync, kTempo, kSource xin 
+	
+	kReset zkr 1; CHANGE
+	aSync = a(kReset)	
+
+	if kSource == 1 then
+		zkw 1, 2 ; CHANGE 
+	endif
+
+	kFreq = kTempo / 60
+
+	
+	phSync, asyncout syncphasor kFreq, aSync ; SYNC
+	aSy	table	aphSync, 10, 1 
+
+	aph96, asyncout syncphasor kFreq*24, aSync ; 1/96
+	a96	table	aph96, 10, 1 	
+
+	aph8, asyncout syncphasor kFreq*2, aSync ; 1/8
+	k8	table	k(aph8), 10, 1
+	k8s	table	k(aph8)+kSwing, 10, 1, 0, 1		
+	k16 = k8 + k8s
+
+	zkw kSy, 1 ; CHANGE
+	zkw k96, 1 ; CHANGE
+	zkw k16, 1 ; CHANGE
+	
+endop

@@ -1,0 +1,60 @@
+opcode SeqEvent, 0, KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+		
+		; v1 without 32 buttons
+	
+	kClk, kCycle, kLen, kReset, kIn1, kIn2, kPark, kA1,kA2,kA3,kA4,kA5,kA6,kA7,kA8,kA9,kA9,kAA,kAB,kAC,kAD,kAE,kAF,kB1,kB2,kB3,kB4,kB5,kB6,kB7,kB8,kB9,kB9,kBA,kBB,kBC,kBD,kBE,kBF   xin
+
+	kLenT changed kLen
+	kRA changed kA1,kA2,kA3,kA4,kA5,kA6,kA7,kA8,kA9,kA9,kAA,kAB,kAC,kAD,kAE,kAF 
+	kRB changed kB1,kB2,kB3,kB4,kB5,kB6,kB7,kB8,kB9,kB9,kBA,kBB,kBC,kBD,kBE,kBF
+	; MAYBE VECTORS ????
+	 
+
+	if kPark == 1 then
+		kParkS = 0
+	endif
+
+	if (kReset == 1) || (kLenT == 1) then
+		kResetS = 0 
+	endif
+
+	if kClk != 0 then 
+		kIndx += kClk * kResetS   ; kReset = 0 resets
+		kIndx = kIndx%kLen
+		if kResetS == 0 then
+			kResetS = 1
+			kParkS = 1
+			kLink = 0
+		endif
+		
+		if (kCycle == 0)&&(kIndx == kLen) then
+			kParkS = 0
+			kLink = 1
+		endif
+	endif
+
+	kSeq1 table kIndx, 15
+	kSeq2 table kIndx, 16
+		; table contains max 16 values
+
+	if (kTG1 == 1) then
+		kSeq1T trigger kSeq1, 0, 1  ; можно просто kClk ... 
+		kOut1 = kIn1 || kSeq1T * kParkS   ; Park strobes Seq output
+		goto NextSeq
+	endif
+
+	kOut1 = kIn1 || kSeq1 * kParkS   ; Park strobes Seq output
+NextSeq:
+	if (kTG2 == 1) then
+		kSeq2T trigger kSeq2, 0, 1
+		kOut2 = kIn2 || kSeq2 * kParkS
+		goto Run
+	endif
+
+	kOut2 = kIn2 || kSeq2 * kParkS
+
+Run:
+	zkw kOut1, 1 ; CHANGE
+	zkw kOut2, 2 ; CHANGE
+	zkw kLink, 3 ; CHANGE
+endop

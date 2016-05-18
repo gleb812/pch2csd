@@ -1,0 +1,26 @@
+opcode EnvH, 0, KK
+; what if a-rate input?
+; how to modulate duration at k-time???
+; AM ?? if it is 0 ??? or not connected
+
+	kH, kPol xin
+ 
+	kIn zkr 2 ; CHANGE
+ 	kAM zkr 2 ; CHANGE
+	kTr zkr 2 ; CHANGE
+	
+	schedkwhen kTr, 0,1, 1, 0, kH
+
+	
+
+	if kPol == 1 then
+		kEnv = 1 - kEnv 
+	elseif kPol == 3 then
+		kEnv = - kEnv
+	elseif kPol == 2 then
+		kEnv = kEnv - 1
+	endif
+	
+	zkw kEnv, 2; CHANGE
+	zkw kEnv*kIn, 2; CHANGE
+endop

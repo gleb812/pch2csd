@@ -1,0 +1,15 @@
+opcode PCSend, 0, iK
+	
+	iChan, kValue xin 
+	
+	kSend zkr 2; CHANGE
+	kstatus = 0
+	if kSend == 0 then goto Halt
+
+	kstatus = 192
+	midiout kstatus, iChan, kValue, 0
+	zkw 1, 1
+
+Halt:
+	
+endop
