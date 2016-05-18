@@ -1,8 +1,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-
-
 #include "menu.c"
 #include "CableSort.c"
 #include "II2IO.c"
@@ -23,6 +21,7 @@
 #include "ReadCL.c"
 #include "ReadMP.c"
 #include "Welcome.c"
+#include "ModuleTableCheck.c"
 
 
 
@@ -95,6 +94,7 @@ unsigned int OtherCableCount=0; // Other Cable Counter (for patch file)
 
 unsigned int ModuleTypeList[1024]; // Module Type list (modules with the same type are listed only once)
 unsigned int ModuleTypeCount=0; // Module type counter
+
 unsigned int ModuleListVA[1024]; // VA module list
 unsigned int ModuleListFX[1024]; // FX module list
 
@@ -148,6 +148,8 @@ int main(void)
                 ReadMP(MPposition+MPlength+3);
             }
         }
+
+        ModuleTableCheck();
 
         OpenWrite(HeadFileName); // Start the new file from header template
         NextField(); // -

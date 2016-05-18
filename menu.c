@@ -29,7 +29,7 @@ int menu(void)
             }
             else
             {
-                fgets(PatchFileName, 20, RecentFile);
+                fgets(PatchFileName, 50, RecentFile);
                 fclose(RecentFile);
             }
             return 1;

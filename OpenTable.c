@@ -29,7 +29,7 @@ int OpenTable(char TempFileName[20],unsigned int TableID)
             else
             {
                 Tables[i][TableID]=value;
-                printf("%f\n",value);
+                //printf("%f\n",value);
             }
 
         }

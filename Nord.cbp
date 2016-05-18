@@ -53,6 +53,9 @@
 		<Unit filename="II2IO.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="ModuleTableCheck.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="NextField.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -90,6 +93,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.cpp" />
+		<Unit filename="menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
