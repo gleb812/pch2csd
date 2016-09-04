@@ -1,0 +1,237 @@
+1	Keyboard
+2
+3	Out4
+4	Out2
+5	Invert
+6
+7	OscB
+8	OscShpB
+9	OscC
+10
+11
+12	Reverb
+13	OscString
+14
+15	Sw81
+16
+17	ValSw1
+18	XFade
+19	Mix41B
+20	EnvADSR
+21	Mux18
+22	PartQuant
+23	ModADSR
+24	LfoC
+25	LfoShpA
+26	LfoA
+27	OscMaster
+28	Saturate
+29	MetNoise
+30	Device
+31	Noise
+32	Eq2Band
+33	Eq3Band
+34	ShpExp
+35
+36	SwOnOffM
+37
+38	Pulse
+39
+40	Mix81B
+41	EnvH
+42	Delay
+43	Constant
+44	LevMult
+45	FltVoice
+46	EnvAHD
+47	Pan
+48	MixStereo
+49	FltMulti
+50	ConstSwT
+51	FltNord
+52	EnvMulti
+53	SH
+54	FltStatic
+55	EnvD
+56	
+57	Automate
+58	DrumSynth
+59	CompLev
+60	Mux81X
+61	Clip
+62	Overdrive
+63	Scratch
+64	Gate
+65
+66	Mix21B
+67
+68	ClkGen
+69	ClkDiv
+70
+71	EnvFollow
+72	NoteScaler
+73
+74	WaveWrap
+75	NoteQuant
+76	SwOnOffT
+77
+78	Sw18
+79	Sw41
+80
+81	LevAmp
+82	Rect
+83	ShpStatic
+84	EnvADR
+85	WindSw
+86	8Counter
+87	FltLP
+88	Sw14
+89	Flanger
+90	Sw12
+91	FlipFlop
+92	FltClassic
+93
+94	StChorus
+95
+96	OscD
+97	OscA
+98	FreqShift
+99
+100	Sw21
+101
+102	FltPhase
+103	EqPeak
+104
+105	ValSw2
+106	OscNoise
+107
+108	Vocoder
+109
+110
+111
+112	LevAdd
+113	Fade1
+114	Fade2
+115	LevScaler
+116	Mix81A
+117	LevMod
+118	Digitizer
+119	EnvADDSR
+120
+121	SeqNote
+122
+123	Mix41C
+124	Mux81
+125	WahWah
+126	Name
+127	FxIn
+128	MinMax
+129
+130	BinCounter
+131	ADConv
+132	DAConv
+133	
+134	FltHP
+135
+136
+137
+138
+139	TH
+140	Mix41S
+141	CtrlSend
+142	PCSend
+143	NoteSend
+144	SeqEvent
+145	SeqVal
+146	SeqLev
+147	CtrlRcv
+148	NoteRcv
+149	NoteZone
+150	Compress
+151
+152	KeyQuant
+153
+154	SeqCtr
+155
+156	NoteDet
+157	LevConv
+158	Glide
+159	CompSig
+160	ZeroCnt
+161	MixFader
+162	FltComb
+163	OscShpA
+164	OscDual
+165	DXRouter
+166
+167	PShift
+168
+169	ModAHD
+170	In2
+171	In4
+172	DlySingleA
+173	DlySingleB
+174	DelayDual
+175	DelayQuad
+176	DelayA
+177	DelayB
+178	DlyClock
+179	DlyShiftReg
+180	Operator
+181	DlyEight
+182	DlyStereo
+183	OscPM
+184	Mix11A
+185	Mix11S
+186	Sw12M
+187	Sw21M
+188	ConstSwM
+189	NoiseGate
+190	LfoB
+191
+192	Phaser
+193	Mix41A
+194	Mix21A
+195	ModAmt
+196	OscPerc
+197	Status
+198	PitchTrack
+199	MonoKey
+200	RandomA
+201
+202	RandomB
+203
+204	RndClkA
+205	RndTrig
+206	RndClkB
+207
+208	RndPattern
+
+
+D:\Csound\Nord\pch2csd\Test.pch2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

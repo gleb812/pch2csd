@@ -13,30 +13,9 @@ zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
-opcode Out2, 0, iiiii
-	isource, iMute, iPad, iL, iR xin
-	aL zar iL 
-	aR zar iR 
-	outs aL, aR
-	;outs aL*iPad, aR*iPad 
-	; iPad = 2 (+6dB) ili iPad = 1
-endop 
-
-opcode OscD, 0, KKiiiii
-
-	kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
-	
-	;kPitchM zkr iPitchMod 
-	; Proverit' amplitudu
-	kfine = cent(kFine)
-	
-	aout oscil 0.5, cpsmidinn(kPitch)*kfine 
-	zaw aout, iOut 
-endop
 
 instr 1
-	 Out2 0.000, 1.000, 0.000, 2, 0
-	 OscD 64.000, 0.000, 1.000, 0.000, 1.000, 0, 2
+
 endin
 instr 2
 endin
