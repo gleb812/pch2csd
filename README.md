@@ -37,7 +37,7 @@ If you are a developer of alternative Clavia Nord Modular G2 Editor, you could m
 
 IMPLEMENTATION
 
-The main idea behind implementation is to model all the modules of Clavia with CSound UDOs. See /Modules for modules description based on CSound language. The module numbers correspond to original Clavia module IDs.
+The main idea behind implementation is to model all the modules of Clavia with CSound UDOs. See /Modules for modules description based on CSound language. The module numbers correspond to original Clavia module IDs. For the IDs table see ModIDNames.xls
 
 The output of our converter is csd file with all used UDO's and two separate instruments (VA and FX).
 
@@ -47,12 +47,12 @@ It allows us to maintain the orbitrary order of modules, where CSound typicaly r
 
 Another remarkable issue is cabling, which is completely different to CSound. 
 
-Check /Tables to see mapping for module parameter values. Being MIDI compatible, Clavia stores all parameters as an 7 bit integers. So it is not possible to know the real value of Hz or dB. For this purpose we manually created the mapping tables looking at values at software editor.
+Check /Tables to see mapping for module parameter values. Being MIDI compatible, Clavia stores all parameters as an 7 bit integers. So it is not possible to know the real value of Hz or dB. For this purpose we manually created the mapping tables looking at values at software editor. For the reference see clavia_maps.xls
 
 /IO directory contains module input/output tables. The order of inputs/outputs is strictly fixed. 
 
-Check the Status List to find which modules are implemented and what are the next to-dos by group. 
-The top priorities are oscillators, filters and envelope generators. Any help is welcome.
+Check the Status List to find which modules are implemented and which are the next to-dos by group. 
+By now the top priorities are oscillators, filters and envelope generators. Any help is very welcome.
 
 *************************************************************
 UDO EXAMPLES (to be moved to separate file later)
@@ -60,17 +60,17 @@ UDO EXAMPLES (to be moved to separate file later)
 This is an example of UDO model for Out2 module. Check CSound manual for details on CSound programming
 
 
-opcode Out2, 0, iiiii	; a new UDO definition. 0 - no outputs, iiiii - five inputs/parameters of i-type
+opcode Out2, 0, iiiii	; a new UDO definition. 0 - no outputs, 					;iiiii - five inputs/parameters of i-type
 
-	isource, iMute, iPad, iL, iR xin    ; getting parameter values from the code.
+	isource, iMute, iPad, iL, iR xin    ; getting parameter      							;values from the code.
 	
-	                                    ; isource - source selector, iMute - mute toggle
+	                                    ; isource - source 							;selector, iMute - mute toggle
 	                                    
-	                                    ; iPad - padding button, iL,iR - numbers of patch cables for the module
+	                                    ; iPad - padding button, 			;iL,iR - numbers of patch cables for the module
 	                                    
-	aL zar iL                           ; Patching iL cable to audio part of zak space
+	aL zar iL                           ; Patching iL cable to 							;audio part of zak space
 	
-	aR zar iR                           ; Patching iR cable to audio part of zak space
+	aR zar iR                           ; Patching iR cable to 							;audio part of zak space
 	
 	outs aL, aR                         ; output sound
 	
@@ -85,8 +85,7 @@ HOW TO START DEVELOPING
 1. Read Clavia Nord G2 manual to get familiar with Clavia's modules
 
 2. Grab your Clavia Nord Modular G2 or Clavia Nord Modular G2 Engine and wipe off the dust from it
-(or install a free Clavia Nord Modular G2 Demo (should fully work on XP and partly on Win7,
-there is also OS X version available)
+(or install a free Clavia Nord Modular G2 Demo (should fully work on XP and partly on Win7, there is also OS X version available)
 
 3. Open a patch you would like to convert, or simple make a new one
 
