@@ -111,7 +111,7 @@ int II2IO4all(void)
     {
         if(IOTable[i][7]==0)
         {
-            printf("Patch has floating currents");
+            printf("Patch has floating currents\n");
             break;
         }
     }

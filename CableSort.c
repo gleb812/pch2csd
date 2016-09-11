@@ -159,13 +159,14 @@ int CableSort(void)
     }
 
     // patching fields size computation
-    printf("k-Cables\n");
+    //printf("k-Cables\n");
     for(i=0;i<CCk;i++)
     {
         if(kzakNumber<kIOTable[i][1])
         {
             kzakNumber+=kIOTable[i][1];
         }
+        /*
         printf("Location = ");
         printf("%d ",kIOTable[i][0]);
         printf("Number = ");
@@ -178,15 +179,17 @@ int CableSort(void)
         printf("%d ",kIOTable[i][4]);
         printf("PT = ");
         printf("%d\n",kIOTable[i][5]);
+        */
     }
 
-    printf("a-Cables\n");
+    //printf("a-Cables\n");
     for(i=0;i<CCa;i++)
     {
         if(azakNumber<aIOTable[i][1])
         {
             azakNumber+=aIOTable[i][1];
         }
+        /*
         printf("Location = ");
         printf("%d ",aIOTable[i][0]);
         printf("Number = ");
@@ -199,6 +202,7 @@ int CableSort(void)
         printf("%d ",aIOTable[i][4]);
         printf("PT = ");
         printf("%d\n",aIOTable[i][5]);
+        */
     }
 
     return 1;

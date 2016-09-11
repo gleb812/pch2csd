@@ -39,7 +39,7 @@ int ModuleTableCheck(void)
     printf("Module  ");
     printf("csd\t");
     printf("Map\t");
-    printf("IO2\t");
+    printf("IO\t");
     printf("Name\n");
 
     for(k=0;k<ModuleTypeCount;k++)
@@ -135,24 +135,29 @@ int ModuleTableCheck(void)
             //Добавление названия модуля, который берется из таблицы имен модулей
             TempFile = fopen(ModuleNamesTable,"r+b");
             NameCount=0;
-            while(true)
+
+            if(ModuleTypeList[k]!=1)
             {
-                if(fread(&tempSymbol,1,1,TempFile)==0x00)
+                while(true)
                 {
-                    break;
-                }
-                else
-                {
-                if(tempSymbol==0x0d)
+                    if(fread(&tempSymbol,1,1,TempFile)==0x00)
                     {
-                        NameCount++;
-                        if(NameCount==ModuleTypeList[k]-1)
+                        break;
+                    }
+                    else
+                    {
+                    if(tempSymbol==0x0d)
                         {
-                            break;
+                            NameCount++;
+                            if(NameCount==ModuleTypeList[k]-1)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
+
 
             while(true)
             {

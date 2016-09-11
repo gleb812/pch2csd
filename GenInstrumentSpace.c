@@ -15,24 +15,24 @@ int GenInstrumentSpace(void)
 {
     printf("Generating instrument \n");
     fprintf(NewFile,"instr 1\n");
-    printf("Modules_List_VA = ");
-    printf("%d\n",ModuleCountVA);
+    //printf("Modules_List_VA = ");
+    //printf("%d\n",ModuleCountVA);
     VAFXFlag=true;
     for(ModuleCounter=0;ModuleCounter<ModuleCountVA;ModuleCounter++)
     {
-        printf("#%d\n",ModuleListVA[ModuleCounter]);
+        //printf("#%d\n",ModuleListVA[ModuleCounter]);
         GenInstrumentContent(ModuleListVA[ModuleCounter]);
         fprintf(NewFile,"\n");
     }
     fprintf(NewFile,"endin\n");
 
     fprintf(NewFile,"instr 2\n");
-    printf("Modules_List_FX = ");
-    printf("%d\n",ModuleCountFX);
+    //printf("Modules_List_FX = ");
+    //printf("%d\n",ModuleCountFX);
     VAFXFlag=false;
     for(ModuleCounter=0;ModuleCounter<ModuleCountFX;ModuleCounter++)
     {
-        printf("#%d\n",ModuleListFX[ModuleCounter]);
+        //printf("#%d\n",ModuleListFX[ModuleCounter]);
         GenInstrumentContent(ModuleListFX[ModuleCounter]);
         fprintf(NewFile,"\n");
     }

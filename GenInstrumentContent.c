@@ -67,7 +67,7 @@ int GenInstrumentContent(unsigned int number)
     tempnumber=number;
 
     //printf("Number = %d\n",number);
-    printf("ModuleCounter = %d\n",ModuleCounter);
+    //printf("ModuleCounter = %d\n",ModuleCounter);
 
     while(true)
     {
@@ -121,9 +121,9 @@ int GenInstrumentContent(unsigned int number)
     //We need only name of a module
     if((TempFile = fopen(TempFileName,"r")) == NULL)
 	{
-		printf("Error - ");
-		printf(TempFileName);
-		printf(" not opened!\n");
+		//printf("Error - ");
+		//printf(TempFileName);
+		//printf(" not opened!\n");
 		return 0;
 	}
 	else
@@ -176,9 +176,9 @@ int GenInstrumentContent(unsigned int number)
 
         if((TempFile = fopen(TempModuleMap,"r")) == NULL)
         {
-            printf("Error - ");
-            printf(TempModuleMap);
-            printf(" not opened!\n");
+            //printf("Error - ");
+            //printf(TempModuleMap);
+            //printf(" not opened!\n");
             return 0;
         }
         else
@@ -192,8 +192,8 @@ int GenInstrumentContent(unsigned int number)
             }
         }
 
-        printf("Parameter count = ");
-        printf("%d\n",ParameterCountersVA[ModuleCounter]);
+        //printf("Parameter count = ");
+        //printf("%d\n",ParameterCountersVA[ModuleCounter]);
 
         for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
         {
@@ -210,9 +210,9 @@ int GenInstrumentContent(unsigned int number)
     {
         if((TempFile = fopen(TempModuleMap,"r")) == NULL)
         {
-            printf("Error - ");
-            printf(TempModuleMap);
-            printf(" not opened!\n");
+            //printf("Error - ");
+            //printf(TempModuleMap);
+            //printf(" not opened!\n");
             return 0;
         }
         else
@@ -226,8 +226,8 @@ int GenInstrumentContent(unsigned int number)
             }
         }
 
-        printf("Parameter count = ");
-        printf("%d\n",ParameterCountersFX[ModuleCounter]);
+        //printf("Parameter count = ");
+        //printf("%d\n",ParameterCountersFX[ModuleCounter]);
 
         for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
         {
@@ -249,9 +249,9 @@ int GenInstrumentContent(unsigned int number)
 
     if((TempFile = fopen(TempModuleIO,"r")) == NULL)
     {
-        printf("Error - ");
-        printf(TempModuleIO);
-        printf(" not opened!\n");
+        //printf("Error - ");
+        //printf(TempModuleIO);
+        //printf(" not opened!\n");
         return 0;
     }
     else
@@ -417,11 +417,11 @@ int GenInstrumentContent(unsigned int number)
             {
                 if(IO[i]==0) // if input
                 {
-                    printf("IN\n");
+                    //printf("IN\n");
                     for(j=0;j<CCk;j++)
                     {
-                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][4]);
-                        printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
+                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][4]);
+                        //printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
                         if(kIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(kIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
@@ -442,11 +442,11 @@ int GenInstrumentContent(unsigned int number)
                 }
                 else // if output
                 {
-                    printf("OUT\n");
+                    //printf("OUT\n");
                     for(j=0;j<CCk;j++)
                     {
-                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][2]);
-                        printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
+                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][2]);
+                        //printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
                         if(kIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(kIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
@@ -510,7 +510,7 @@ int GenInstrumentContent(unsigned int number)
                 }
                 else // if output
                 {
-                    printf("OUT\n");
+                    //printf("OUT\n");
                     for(j=0;j<CCa;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],aIOTable[j][2]);
@@ -546,7 +546,7 @@ int GenInstrumentContent(unsigned int number)
             {
                 if(IO[i]==0) // if input
                 {
-                    printf("IN\n");
+                    //printf("IN\n");
                     for(j=0;j<CCk;j++)
                     {
                         //printf("Moduls %d %d\n",ModuleIndexListFX[ModuleCounter],kIOTable[j][4]);

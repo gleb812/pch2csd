@@ -11,9 +11,11 @@ int OpenWrite(char TempFileName[50])
     char temp;
     if((TempFile = fopen(TempFileName,"r")) == NULL)
 	{
+	    /*
 		printf("Error - ");
 		printf(TempFileName);
 		printf(" not opened!\n");
+		*/
 		return 0;
 	}
 	else

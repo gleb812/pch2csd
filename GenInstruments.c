@@ -15,11 +15,11 @@ int GenInstruments(void)
     printf("Generating instruments list\n");
     fprintf(NewFile,"; Opcode Definitions\n");
 
-    printf("%d\n",ModuleTypeCount);
-    printf("Module_Type_List\n");
+    //printf("%d\n",ModuleTypeCount);
+    //printf("Module_Type_List\n");
     for(i=0;i<ModuleTypeCount;i++)
     {
-        printf("#%d\n",ModuleTypeList[i]);
+        //printf("#%d\n",ModuleTypeList[i]);
         OWModule(ModuleTypeList[i]);
         fprintf(NewFile,"\n");
     }

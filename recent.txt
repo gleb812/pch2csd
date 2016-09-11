@@ -1,1 +1,1 @@
-D:\Csound\Nord\pch2csd\filter.pch2
+D:\NordClaviaPch2Csd\pch2csd\prof.pch2
