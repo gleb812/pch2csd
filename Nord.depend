@@ -539,29 +539,29 @@
 	<stdio.h>
 	<string.h>
 
-1451079738 source:d:\csound\nord\pch2csd\cablesort.c
+1473612114 source:d:\csound\nord\pch2csd\cablesort.c
 
 1451079738 source:d:\csound\nord\pch2csd\creatingnewfile.c
 	<stdio.h>
 
-1473582762 source:d:\csound\nord\pch2csd\geninstrumentcontent.c
+1473612114 source:d:\csound\nord\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
-1451079738 source:d:\csound\nord\pch2csd\geninstruments.c
+1473612114 source:d:\csound\nord\pch2csd\geninstruments.c
 	<stdio.h>
 
-1451079738 source:d:\csound\nord\pch2csd\geninstrumentspace.c
+1473612114 source:d:\csound\nord\pch2csd\geninstrumentspace.c
 	<stdio.h>
 	<stdbool.h>
 
 1451079738 source:d:\csound\nord\pch2csd\genzakinit.c
 	<stdio.h>
 
-1451079738 source:d:\csound\nord\pch2csd\ii2io.c
+1473612114 source:d:\csound\nord\pch2csd\ii2io.c
 	<stdbool.h>
 
-1463485134 source:d:\csound\nord\pch2csd\main.cpp
+1473587578 source:d:\csound\nord\pch2csd\main.cpp
 	<stdio.h>
 	<stdbool.h>
 	"menu.c"
@@ -590,15 +590,15 @@
 	<stdio.h>
 	<string.h>
 
-1451079738 d:\csound\nord\pch2csd\cablesort.c
+1473612114 d:\csound\nord\pch2csd\cablesort.c
 
-1451079738 d:\csound\nord\pch2csd\ii2io.c
+1473612114 d:\csound\nord\pch2csd\ii2io.c
 	<stdbool.h>
 
 1451079738 d:\csound\nord\pch2csd\genzakinit.c
 	<stdio.h>
 
-1451079738 d:\csound\nord\pch2csd\openwrite.c
+1473612114 d:\csound\nord\pch2csd\openwrite.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -609,15 +609,15 @@
 	<stdio.h>
 	<stdbool.h>
 
-1473582762 d:\csound\nord\pch2csd\geninstrumentcontent.c
+1473612114 d:\csound\nord\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
-1451079738 d:\csound\nord\pch2csd\geninstrumentspace.c
+1473612114 d:\csound\nord\pch2csd\geninstrumentspace.c
 	<stdio.h>
 	<stdbool.h>
 
-1451079738 d:\csound\nord\pch2csd\geninstruments.c
+1473612114 d:\csound\nord\pch2csd\geninstruments.c
 	<stdio.h>
 
 1451079738 d:\csound\nord\pch2csd\nextfield.c
@@ -656,7 +656,7 @@
 1463489770 d:\csound\nord\pch2csd\welcome.c
 	<stdio.h>
 
-1473582770 d:\csound\nord\pch2csd\moduletablecheck.c
+1473612114 d:\csound\nord\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -664,7 +664,7 @@
 	<stdio.h>
 	<string.h>
 
-1473582770 source:d:\csound\nord\pch2csd\moduletablecheck.c
+1473612114 source:d:\csound\nord\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -677,7 +677,7 @@
 1463441750 source:d:\csound\nord\pch2csd\opentable.c
 	<stdio.h>
 
-1451079738 source:d:\csound\nord\pch2csd\openwrite.c
+1473612114 source:d:\csound\nord\pch2csd\openwrite.c
 	<stdio.h>
 	<stdbool.h>
 

@@ -1,1 +1,1 @@
-D:\NordClaviaPch2Csd\pch2csd\prof.pch2
+D:\Csound\Nord\pch2csd\prof.pch2
