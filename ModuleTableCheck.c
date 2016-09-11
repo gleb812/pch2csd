@@ -9,23 +9,38 @@ extern unsigned int ModuleTypeList[1024];
 extern char TempFileName[40];
 extern char TempModuleMap[40];
 extern char TempModuleIO[40];
+extern char ModuleNamesTable[40];
 
 int ModuleTableCheck(void)
 {
     unsigned int i,j,k;
     unsigned int tempnumber;
     unsigned int counter;
+    char Name[20];
+    unsigned char tempSymbol;
+    bool NameFlag = false;
+    unsigned int NameCount = 0;
 
     printf("*** Checking Library of Modules ***\n");
+    if((TempFile = fopen(ModuleNamesTable,"r")) == NULL)
+    {
+        printf("Table with names of modules not found");
+        NameFlag = false;
+    }
+    else
+    {
+        NameFlag = true;
+    }
     printf("Number Modules in PatchFile\t%d\n",ModuleTypeCount);
 
     printf("--------------- *** ----------------\n");
     //printf("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n");
     printf("#\t");
-    printf("Modul\t");
+    printf("Module  ");
     printf("csd\t");
     printf("Map\t");
-    printf("IO2\n");
+    printf("IO2\t");
+    printf("Name\n");
 
     for(k=0;k<ModuleTypeCount;k++)
     {
@@ -107,13 +122,75 @@ int ModuleTableCheck(void)
 
         if((TempFile = fopen(TempModuleIO,"r")) == NULL)
         {
-            printf("N\n");
+            printf("N\t");
         }
         else
         {
-            printf("Y\n");
+            printf("Y\t");
             fclose(TempFile);
         }
+
+        if(NameFlag==true)
+        {
+            //Добавление названия модуля, который берется из таблицы имен модулей
+            TempFile = fopen(ModuleNamesTable,"r+b");
+            NameCount=0;
+            while(true)
+            {
+                if(fread(&tempSymbol,1,1,TempFile)==0x00)
+                {
+                    break;
+                }
+                else
+                {
+                if(tempSymbol==0x0d)
+                    {
+                        NameCount++;
+                        if(NameCount==ModuleTypeList[k]-1)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            while(true)
+            {
+                if(fread(&tempSymbol,1,1,TempFile) == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    if(tempSymbol==0x09)
+                    {
+                        break;
+                    }
+
+                }
+            }
+
+            while(true)
+            {
+                if(fread(&tempSymbol,1,1,TempFile) == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    printf("%c",tempSymbol);
+                    if(tempSymbol==0x0d)
+                    {
+                        break;
+                    }
+
+                }
+            }
+            printf("\n");
+
+            fclose(TempFile);
+        }
+
 
     }
     return 1;

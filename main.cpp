@@ -43,6 +43,7 @@ char RecentFileName[50]="recent.txt"; // Txt-file with recent patch-file !!!
 char PatchFileName[50]="Gleb2.pch2"; // Clavia NM2 patch file
 char HeadFileName[50]="Heads/Header.txt"; // Csound header template
 char EndingFileName[50]="Heads/Ending.txt"; // Csound tail template (score and XML ending)
+char ModuleNamesTable[40]="Tables/ModID2Name.txt"; // Table with
 
 float Tables[128][24]; //Tables to map Nord parameters (in MIDI) to Csound parameters
 
@@ -155,7 +156,7 @@ int main(void)
         NextField(); // -
         II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
         CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
-        GenZakInit(); // Фzakinit creation
+        GenZakInit(); // zakinit creation
         NextField(); // -
         GenInstruments(); // CSound Instruments
         GenInstrumentSpace(); // Instr parameters

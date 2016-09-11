@@ -542,7 +542,7 @@
 1451079738 source:d:\csound\nord\pch2csd\creatingnewfile.c
 	<stdio.h>
 
-1451079738 source:d:\csound\nord\pch2csd\geninstrumentcontent.c
+1473582762 source:d:\csound\nord\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -607,7 +607,7 @@
 	<stdio.h>
 	<stdbool.h>
 
-1451079738 d:\csound\nord\pch2csd\geninstrumentcontent.c
+1473582762 d:\csound\nord\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -654,7 +654,7 @@
 1463489770 d:\csound\nord\pch2csd\welcome.c
 	<stdio.h>
 
-1463488848 d:\csound\nord\pch2csd\moduletablecheck.c
+1473582770 d:\csound\nord\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -662,7 +662,7 @@
 	<stdio.h>
 	<string.h>
 
-1463488848 source:d:\csound\nord\pch2csd\moduletablecheck.c
+1473582770 source:d:\csound\nord\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 

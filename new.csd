@@ -13,9 +13,27 @@ zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
+opcode FltLP, 0, iikk
+; KBT !!!!!
+	iKBT, iOrder, kMod, kCF xin ;i  - ON/OFF button?
+	ain zar 2 ; CHANGE 
+	kmod zkr 1 ; CHANGE 
+	aout tonex ain, kCF+kmod*kMOd, iOrder
+	zaw aout, 2  ; CHANGE 
+endop
+
+opcode FltHP, 0, iikk
+; KBT !!!!!
+	iKBT, iOrder, kMod, kCF xin ;i  - ON/OFF button?
+	ain zar 2 ; CHANGE 
+	kmod zkr 1 ; CHANGE 
+	aout atonex ain, kCF+kmod*kMOd, iOrder
+	zaw aout, 2  ; CHANGE 
+endop
 
 instr 1
-
+	 FltLP 
+	 FltHP 
 endin
 instr 2
 endin

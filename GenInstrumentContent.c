@@ -55,7 +55,8 @@ int GenInstrumentContent(unsigned int number)
     float value[64];
     unsigned int IOTemp[100];
     unsigned int IOCount=0;
-    unsigned int IOtemp;
+    unsigned int TempCount=0;
+    unsigned char IOtemp;
     unsigned int IO[50]; // Input = 0; Output = 0;
     unsigned int N;
     unsigned int NIO[50]; // Input = 0; Output = 0;
@@ -255,9 +256,10 @@ int GenInstrumentContent(unsigned int number)
     }
     else
     {
+        IOCount=0;
         while(true)
         {
-            if(fscanf(TempFile, "%d", &IOtemp) == EOF)
+            if(fread(&IOtemp,1,1,TempFile) == 0)
             {
                 break;
                 fclose(TempFile);
@@ -268,21 +270,50 @@ int GenInstrumentContent(unsigned int number)
                 IOCount++;
             }
         }
+        //printf("IN'S AND OUT'S\n");
+        //printf("READING = ");
+        //printf("%d\n",IOCount);
+
+        TempCount=0;
         for(i=0;i<IOCount;i++)
         {
-            if(i%2==0)
+            //printf("%d\n",IOTemp[i]);
+            if(i%4==0)
             {
-                IO[i/2]=IOTemp[i];
+                if(IOTemp[i]==73) // If IN
+                {
+                    IO[TempCount]=0;
+                    if(IOTemp[i+2]==97)
+                    {
+                        IOAK[TempCount]=1; // a
+                    }
+                    if(IOTemp[i+2]==107)
+                    {
+                        IOAK[TempCount]=0; // k
+                    }
+                    TempCount++;
+                }
+                if(IOTemp[i]==79) // If OUT
+                {
+                    IO[TempCount]=0;
+                    if(IOTemp[i+2]==97)
+                    {
+                        IOAK[TempCount]=1; // a
+                    }
+                    if(IOTemp[i+2]==107)
+                    {
+                        IOAK[TempCount]=0; // k
+                    }
+                    TempCount++;
+                }
             }
-            else
-            {
-                IOAK[(i-1)/2]=IOTemp[i];
-            }
-
         }
 
+        //printf("IO = ");
+        //printf("%d\n",TempCount);
+
         N=0;
-        for(i=0;i<IOCount/2;i++)
+        for(i=0;i<TempCount;i++)
         {
             if(IO[i]==0)
             {
@@ -292,7 +323,7 @@ int GenInstrumentContent(unsigned int number)
         }
 
         N=0;
-        for(i=0;i<IOCount/2;i++)
+        for(i=0;i<TempCount;i++)
         {
             if(IO[i]==1)
             {
@@ -302,7 +333,7 @@ int GenInstrumentContent(unsigned int number)
         }
     }
 
-    if(IOCount>0)
+    if(TempCount>0)
     {
         if(PPflag)
         {
@@ -318,7 +349,7 @@ int GenInstrumentContent(unsigned int number)
 
     if(VAFXFlag) //VA Area
     {
-        for(i=0;i<IOCount/2;i++)
+        for(i=0;i<TempCount;i++)
         {
             FFlag=false;
             if(IOAK[i]==1) // output type is audio
@@ -337,7 +368,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -362,7 +393,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -376,7 +407,7 @@ int GenInstrumentContent(unsigned int number)
                 if(FFlag==false)
                 {
                     fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
-                    if(i!=IOCount/2-1)
+                    if(i!=TempCount-1)
                     {
                         fprintf(NewFile,", ");
                     }
@@ -398,7 +429,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -423,7 +454,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -437,7 +468,7 @@ int GenInstrumentContent(unsigned int number)
                 if(FFlag==false)
                 {
                     fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
-                    if(i!=IOCount/2-1)
+                    if(i!=TempCount-1)
                     {
                         fprintf(NewFile,", ");
                     }
@@ -447,7 +478,7 @@ int GenInstrumentContent(unsigned int number)
     }
     else // FX Area
     {
-        for(i=0;i<IOCount/2;i++)
+        for(i=0;i<TempCount;i++)
         {
             FFlag=false;
             if(IOAK[i]==1) // audio type
@@ -466,7 +497,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -491,7 +522,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(aIOTable[j][1]+2)); //Write a number of cable
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -505,7 +536,7 @@ int GenInstrumentContent(unsigned int number)
                 if(FFlag==false)
                 {
                     //fprintf(NewFile,"%d",IO[i]); //if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
-                    if(i!=IOCount/2-1)
+                    if(i!=TempCount-1)
                     {
                         fprintf(NewFile,", ");
                     }
@@ -527,7 +558,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -552,7 +583,7 @@ int GenInstrumentContent(unsigned int number)
                                 if(aIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
-                                    if(i!=IOCount/2-1)
+                                    if(i!=TempCount-1)
                                     {
                                         fprintf(NewFile,", ");
                                     }
@@ -566,7 +597,7 @@ int GenInstrumentContent(unsigned int number)
                 if(FFlag==false)
                 {
                     fprintf(NewFile,"%d",IO[i]); // if it is input, we connect it to 0 bus. If it is input, we use a trash bus 1
-                    if(i!=IOCount/2-1)
+                    if(i!=TempCount-1)
                     {
                         fprintf(NewFile,", ");
                     }
