@@ -25,9 +25,13 @@ int ReadML(unsigned int position)
     unsigned int bytecounter=0;
     bool Data[100240];
     const unsigned int ModulLength=50;
+
     bool Modul[ModulLength];
+    bool Tail[6];
+
     unsigned int i,j;
     bool location;
+    bool LongModul;
     unsigned int ModuleCount;
     unsigned int ModuleType;
     unsigned int ModuleTypeFlag;
@@ -35,6 +39,7 @@ int ReadML(unsigned int position)
     unsigned int HorizontalPosition;
     unsigned int VerticalPosition;
     unsigned int Color;
+    unsigned int WaveForm;
     unsigned int Insert;
     unsigned int PadBits=0;
 
@@ -131,11 +136,17 @@ int ReadML(unsigned int position)
     printf("ML_Module_Count = ");
     printf("%d\n",ModuleCount);
 
-    for(i=0;i<ModuleCount;i++)
+     for(i=0;i<ModuleCount;i++)
     {
+
         for(j=0;j<ModulLength;j++)
         {
             Modul[j]=Data[10+i*ModulLength+j+PadBits];
+        }
+
+        for(j=0;j<6;j++)
+        {
+            Tail[j]=Data[10+i*ModulLength+ModulLength+j+PadBits];
         }
 
         printf("ML_Module_#");
@@ -199,19 +210,47 @@ int ReadML(unsigned int position)
         printf("ML_Color = ");
         printf("%d\n",Color);
 
+        //38-45 - empty
+
         Insert=0x08*Modul[46]+0x04*Modul[47]+0x02*Modul[48]+Modul[49];
 
         printf("ML_Insert = ");
         printf("%d\n",Insert);
-        printf("\n");
+
+        //50-51 - empty
 
         //UNUSUAL SWEDISH PADDING
 
+        LongModul=false;
+
         if (Insert!=0)
         {
+            LongModul=true;
             PadBits += 6*Insert;
         }
+        else
+        {
+            LongModul=false;
+        }
         // Somewhere here a wavetype is hidden from us
+
+        if(LongModul)
+        {
+            WaveForm=0x08*Tail[2]+0x04*Tail[3]+0x02*Tail[4]+Tail[5];
+
+            printf("ML_WaveForm = ");
+            printf("%d\n",WaveForm);
+
+            if(vafx)
+            {
+                ModuleWaveFormListVA[i]=WaveForm;
+            }
+            else
+            {
+                ModuleWaveFormListFX[i]=WaveForm;
+            }
+        }
+        printf("\n");
     }
 
     printf("ML_Module_Type_List\n");

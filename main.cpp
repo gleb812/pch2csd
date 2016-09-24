@@ -99,6 +99,9 @@ unsigned int ModuleTypeCount=0; // Module type counter
 unsigned int ModuleListVA[1024]; // VA module list
 unsigned int ModuleListFX[1024]; // FX module list
 
+unsigned int ModuleWaveFormListVA[1024]; // VA waveforms list
+unsigned int ModuleWaveFormListFX[1024]; // FX waveforms list
+
 unsigned int ModuleIndexListVA[1024]; // VA Module Index list
 unsigned int ModuleIndexListFX[1024]; // FX Module Index list
 
