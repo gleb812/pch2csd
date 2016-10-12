@@ -1,1 +1,3 @@
 INOUT - done
+LOGIC - done  12.10.16
+SHAPER - done 12.10.16
