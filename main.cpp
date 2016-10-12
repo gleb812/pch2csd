@@ -118,10 +118,10 @@ int main(void)
     {
         // Nord to CSound parameters mapping
         OpenTable("Tables/MidiNotes.txt",0);
-        OpenTable("Tables/Fine.txt",1);
-        OpenTable("Tables/KBT.txt",2);
-        OpenTable("Tables/Semi.txt",3);
-        OpenTable("Tables/ActiveMuted.txt",4);
+        OpenTable("Tables/CLA000.txt",1);
+        OpenTable("Tables/BUT002.txt",2);
+        OpenTable("Tables/CLAEXP",3);
+        OpenTable("Tables/BUT003.txt",4);
         OpenTable("Tables/SourceSelect.txt",5);
         OpenTable("Tables/Pad6dB.txt",6);
         OpenTable("Tables/Color.txt",7);

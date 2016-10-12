@@ -240,7 +240,7 @@ int ReadML(unsigned int position)
 
             printf("ML_WaveForm = ");
             printf("%d\n",WaveForm);
-
+/*
             if(vafx)
             {
                 ModuleWaveFormListVA[i]=WaveForm;
@@ -249,6 +249,7 @@ int ReadML(unsigned int position)
             {
                 ModuleWaveFormListFX[i]=WaveForm;
             }
+            */
         }
         printf("\n");
     }
