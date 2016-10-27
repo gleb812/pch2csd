@@ -22,6 +22,7 @@
 #include "ReadMP.c"
 #include "Welcome.c"
 #include "ModuleTableCheck.c"
+#include "TablesReader.c"
 
 
 
@@ -45,7 +46,9 @@ char HeadFileName[50]="Heads/Header.txt"; // Csound header template
 char EndingFileName[50]="Heads/Ending.txt"; // Csound tail template (score and XML ending)
 char ModuleNamesTable[40]="Tables/ModID2Name.txt"; // Table with
 
-float Tables[128][24]; //Tables to map Nord parameters (in MIDI) to Csound parameters
+char NamesMapTables[6][256]; // Six Symbol Name Format - example CLA000
+
+float Tables[128][128]; //Tables to map Nord parameters (in MIDI) to Csound parameters
 
 unsigned int MapTablesVA[128][24]; //VA Module parameter types table (Module number 0-127)
 unsigned int MapTablesFX[128][24]; //FX Module parameter types table (Module number 0-127)
@@ -114,17 +117,14 @@ int main(void)
 {
     Welcome();
     mcommand=menu();
-    if(mcommand==1)
+    if(mcommand==0)
     {
         // Nord to CSound parameters mapping
-        OpenTable("Tables/MidiNotes.txt",0);
-        OpenTable("Tables/CLA000.txt",1);
-        OpenTable("Tables/BUT002.txt",2);
-        OpenTable("Tables/CLAEXP",3);
-        OpenTable("Tables/BUT003.txt",4);
-        OpenTable("Tables/SourceSelect.txt",5);
-        OpenTable("Tables/Pad6dB.txt",6);
-        OpenTable("Tables/Color.txt",7);
+        TablesReader();
+        //OpenTable("Tables/CLA000.txt",1);
+        //OpenTable("Tables/BUT002.txt",2);
+        //OpenTable("Tables/CLAEXP",3);
+        //OpenTable("Tables/BUT003.txt",4);
 
         CreatingNewFile(NewFileName);
         if(OpenPatchFile(PatchFileName)!=0)
@@ -166,10 +166,9 @@ int main(void)
         NextField(); // -
         OpenWrite(EndingFileName); // file formating
     }
-    else
+    if(mcommand==1)
     {
-        printf("Your choice is  ");
-        printf("%d\n", mcommand);
+        printf("See you later!\n");
     }
 
 /*

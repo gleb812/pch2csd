@@ -6,12 +6,13 @@ extern char RecentFileName[50];
 extern char PatchFileName[50];
 
 int menu(void)
-
 {
+    int returnpointnumber;
     int pointnumber;
     printf("Please make a choice of action!\n");
     printf("1. Convert new patch-file\n");
     printf("2. Convert recent patch-file\n");
+    printf("3. Exit\n");
     scanf("%d", &pointnumber);
     switch(pointnumber)
     {
@@ -19,7 +20,8 @@ int menu(void)
         {
             printf("Please write new patch-filename !\n");
             scanf("%s", &PatchFileName);
-            return 1;
+            returnpointnumber=0;
+            break;
         }
         case 2:
         {
@@ -32,9 +34,17 @@ int menu(void)
                 fgets(PatchFileName, 50, RecentFile);
                 fclose(RecentFile);
             }
-            return 1;
+            returnpointnumber=0;
+            break;
+        }
+        case 3:
+        {
+            returnpointnumber=1;
+            break;
         }
     }
+
+    return returnpointnumber;
 
 }
 

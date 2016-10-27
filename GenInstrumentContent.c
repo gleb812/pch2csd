@@ -35,7 +35,7 @@ extern unsigned int ModuleCounter; // Module Counter
 extern unsigned int ModuleIndexListVA[1024]; // VA modules index list
 extern unsigned int ModuleIndexListFX[1024]; // same for FX
 
-extern float Tables[128][24]; // Parameter mapping table
+extern float Tables[128][128]; // Parameter mapping table
 
 extern bool VAFXFlag; // VA or FX flag
 

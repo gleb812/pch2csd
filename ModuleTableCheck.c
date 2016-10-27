@@ -16,7 +16,7 @@ int ModuleTableCheck(void)
     unsigned int i,j,k;
     unsigned int tempnumber;
     unsigned int counter;
-    char Name[20];
+    //char Name[20];
     unsigned char tempSymbol;
     bool NameFlag = false;
     unsigned int NameCount = 0;
@@ -191,11 +191,11 @@ int ModuleTableCheck(void)
 
                 }
             }
-            printf("\n");
 
             fclose(TempFile);
         }
 
+        printf("\n");
 
     }
     return 1;

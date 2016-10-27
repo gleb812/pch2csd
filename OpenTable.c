@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 extern FILE *TempFile;
-extern float Tables[128][24];
+extern float Tables[128][128];
 
 int OpenTable(char TempFileName[20],unsigned int TableID)
 {

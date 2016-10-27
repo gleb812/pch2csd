@@ -206,7 +206,7 @@
 1474733286 source:d:\nordclaviapch2csd\pch2csd\creatingnewfile.c
 	<stdio.h>
 
-1474733286 source:d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+1476394325 source:d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -229,7 +229,7 @@
 1474733286 source:d:\nordclaviapch2csd\pch2csd\openpatchfile.c
 	<stdio.h>
 
-1474733286 source:d:\nordclaviapch2csd\pch2csd\opentable.c
+1476394320 source:d:\nordclaviapch2csd\pch2csd\opentable.c
 	<stdio.h>
 
 1474733286 source:d:\nordclaviapch2csd\pch2csd\openwrite.c
@@ -264,11 +264,11 @@
 	<stdio.h>
 	<stdbool.h>
 
-1474733286 source:d:\nordclaviapch2csd\pch2csd\menu.c
+1476661758 source:d:\nordclaviapch2csd\pch2csd\menu.c
 	<stdio.h>
 	<string.h>
 
-1476298159 source:d:\nordclaviapch2csd\pch2csd\main.cpp
+1476661701 source:d:\nordclaviapch2csd\pch2csd\main.cpp
 	<stdio.h>
 	<stdbool.h>
 	"menu.c"
@@ -292,8 +292,9 @@
 	"ReadMP.c"
 	"Welcome.c"
 	"ModuleTableCheck.c"
+	"TablesReader.c"
 
-1474733286 d:\nordclaviapch2csd\pch2csd\menu.c
+1476661758 d:\nordclaviapch2csd\pch2csd\menu.c
 	<stdio.h>
 	<string.h>
 
@@ -309,14 +310,14 @@
 	<stdio.h>
 	<stdbool.h>
 
-1474733286 d:\nordclaviapch2csd\pch2csd\opentable.c
+1476394320 d:\nordclaviapch2csd\pch2csd\opentable.c
 	<stdio.h>
 
 1474733286 d:\nordclaviapch2csd\pch2csd\owmodule.c
 	<stdio.h>
 	<stdbool.h>
 
-1474733286 d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+1476394325 d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -712,11 +713,23 @@
 1463489770 source:d:\csound\nord\pch2csd\welcome.c
 	<stdio.h>
 
-1474733286 d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
+1476662012 d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 
-1474733286 source:d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
+1476662012 source:d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
+
+1476662653 d:\nordclaviapch2csd\pch2csd\tablesreader.c
+	<stdio.h>
+	<stdbool.h>
+	<sys/types.h>
+	<dirent.h>
+
+1476659909 source:d:\nordclaviapch2csd\pch2csd\tablesreader.c
+	<stdio.h>
+	<stdbool.h>
+	<sys/types.h>
+	<dirent.h>
 

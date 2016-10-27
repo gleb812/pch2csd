@@ -13,18 +13,30 @@ zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
-opcode Mix21A, 0, kkii   ; MULTIMODE support a/k?
-	a1 zar 1 ; CHANGE 
-	a2 zar 1 ; CHANGE 
-	a3 zar 1 ; CHANGE 
-	kLev1, kLev2, iSW1, iSW2 xin ; iSW = 0/1
-	aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
-	zaw aout, 2 ; CHANGE 
-	; LIN vs DB?
+opcode Out2, 0, iiiii
+	isource, iMute, iPad, iL, iR xin
+	aL zar iL 
+	aR zar iR 
+	outs aL, aR
+	;outs aL*iPad, aR*iPad 
+	; iPad = 2 (+6dB) ili iPad = 1
+endop 
+
+opcode OscD, 0, KKiiiii
+
+	kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
+	
+	;kPitchM zkr iPitchMod 
+	; Proverit' amplitudu
+	kfine = cent(kFine)
+	
+	aout oscil 0.5, cpsmidinn(kPitch)*kfine 
+	zaw aout, iOut 
 endop
 
 instr 1
-	 Mix21A 0.305, 1.000, 0.734, 1.000, 1.000, 0, 0, 0, 0
+	 Out2 0.000, 0.000, 0.000, 0, 0
+	 OscD 
 endin
 instr 2
 endin
