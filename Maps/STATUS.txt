@@ -1,3 +1,5 @@
 INOUT - done
 LOGIC - done  12.10.16
 SHAPER - done 12.10.16
+LEVEL - done 13.10.16  ? rename LVLlev to LVLuni? LVLdb0 not exists!
+DELAY - done 13.10.16   DLY135 not exists! Clock!!!! 1/8T
