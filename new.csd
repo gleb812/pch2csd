@@ -13,30 +13,19 @@ zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
-opcode Out2, 0, iiiii
-	isource, iMute, iPad, iL, iR xin
-	aL zar iL 
-	aR zar iR 
-	outs aL, aR
-	;outs aL*iPad, aR*iPad 
-	; iPad = 2 (+6dB) ili iPad = 1
-endop 
-
-opcode OscD, 0, KKiiiii
-
-	kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
-	
-	;kPitchM zkr iPitchMod 
-	; Proverit' amplitudu
-	kfine = cent(kFine)
-	
-	aout oscil 0.5, cpsmidinn(kPitch)*kfine 
-	zaw aout, iOut 
+opcode DelayDual, 0, iiikk
+	iTime1, iTime2, imaxdel, kMod1, kMod2 xin
+	ain1 zar 2 ; CHANGE 
+	adel1 zar 1 ; CHANGE 
+	adel2 zar 1 ; CHANGE
+	aout1 vdelay ain, iTime1+adel1*kMod1, imaxdel
+	aout2 vdelay ain, iTime2+adel2*kMod2, imaxdel
+	zaw aout1, 2  ; CHANGE 
+	zaw aout2, 2  ; CHANGE 
 endop
 
 instr 1
-	 Out2 0.000, 0.000, 0.000, 0, 0
-	 OscD 
+	 DelayDual 3.090, 0.000, 1.550, 0.0940.000, , 0, 0, 0, 0, 0
 endin
 instr 2
 endin

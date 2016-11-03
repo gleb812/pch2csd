@@ -18,6 +18,7 @@ extern unsigned int kIOTable[256][6];// k-cable list
                                 //0-location (VA or FX); 1-cable ID; 2-module from; 3-port from;
                                 //4-module to;  5-port to;
 
+extern char NamesMapTables[6][256]; // Six Symbol Name Format - example CLA000
 
 extern unsigned int ParameterCountersVA[128]; // Mapping tables to map the parameters into Csound values (Tables[...])
                                                 //for VA field
@@ -54,9 +55,15 @@ int GenInstrumentContent(unsigned int number)
     unsigned int mapid;
     float value[64];
     unsigned int IOTemp[100];
+    unsigned int StringCounter;
     unsigned int IOCount=0;
     unsigned int TempCount=0;
     unsigned char IOtemp;
+    unsigned char Maptemp;
+    unsigned char Maptemp6[6];
+    unsigned int SelectorID;
+    unsigned int TablesPointer;
+    unsigned char Nametemp6[6];
     unsigned int IO[50]; // Input = 0; Output = 0;
     unsigned int N;
     unsigned int NIO[50]; // Input = 0; Output = 0;
@@ -171,6 +178,197 @@ int GenInstrumentContent(unsigned int number)
     // Now we open a map file and read the parameters according to current index
     // We find the parameter values for the current module index, look for it into a mapping table, since we know the number of column
     // Write parameters to csd file
+
+
+    if(VAFXFlag)
+    {
+
+        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
+        {
+            return 0;
+        }
+        else
+        {
+            //printf("Number of real parameters =");
+
+            fseek(TempFile, 0, SEEK_SET);
+            StringCounter=0;
+            while(true)
+            {
+                if(fread(&Maptemp,1,1,TempFile)==0)
+                {
+                    break;
+                }
+                if(Maptemp==13)
+                {
+                    StringCounter++;
+                }
+
+            }
+            StringCounter++;
+            //printf("%d\n",StringCounter);
+
+            fseek(TempFile, 0, SEEK_SET);
+
+            //printf("Direct Parameters\n");
+
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                if(Maptemp==0)
+                {
+                    break;
+                }
+
+                if(Maptemp==100)
+                {
+
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    fread(&Maptemp6,1,6,TempFile);
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesVA[ModuleCounter][i]=mapid;
+                            valueINT=ParametersVA[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
+            //printf("Selected Parameters\n");
+
+            fseek(TempFile, 0, SEEK_SET);
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                if(Maptemp==115)
+                {
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    SelectorID=0;
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorID=SelectorID*10+(Maptemp-48);
+                    }
+
+                    TablesPointer=(unsigned int)(value[SelectorID-1]);
+
+                    for(j=0;j<TablesPointer+1;j++)
+                    {
+                        fread(&Maptemp6,1,6,TempFile);
+                        fread(&Maptemp,1,1,TempFile);
+                    }
+
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesVA[ModuleCounter][i]=mapid;
+                            valueINT=ParametersVA[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        for(i=0;i<StringCounter;i++)
+        {
+            mapid=MapTablesVA[ModuleCounter][i];
+
+            for(k=0;k<6;k++)
+            {
+                Nametemp6[k]=NamesMapTables[k][mapid];
+            }
+
+            printf("TableName: ");
+            for(k=0;k<6;k++)
+            {
+                printf("%c",Nametemp6[k]);
+            }
+
+            printf("; ");
+            printf("TableID = ");
+            printf("%d\n",mapid);
+
+            printf("%d",ParametersVA[ModuleCounter][i]);
+            printf(" -> ");
+            printf("%1.3f\n",value[i]);
+
+            fprintf(NewFile,"%1.3f",value[i]);
+            PPflag=true;
+            if(i!=ParameterCountersVA[ModuleCounter]-1)
+            {
+                fprintf(NewFile,", ");
+            }
+        }
+        //fprintf(NewFile,"\n");
+    }
+
+
+    /*
     if(VAFXFlag)
     {
 
@@ -240,6 +438,8 @@ int GenInstrumentContent(unsigned int number)
         }
         //fprintf(NewFile,"\n");
     }
+
+    */
 
     // Here goes the weirdest thing - patching
     // The same way we open IO file with inputs, outputs and their types for given module

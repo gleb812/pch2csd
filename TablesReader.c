@@ -41,7 +41,7 @@ int TablesReader(void)
 
             //printf("%c\n",NameMapTable[0]);
 
-            if(NameMapTable[0]!=0x2E) // if first symbol "."
+            if(NameMapTable[0]!=0x2E) // if first symbol not "."
             {
                 TableNameCount++;
                 //puts(ent->d_name);

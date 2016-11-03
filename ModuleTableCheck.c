@@ -22,7 +22,7 @@ int ModuleTableCheck(void)
     unsigned int NameCount = 0;
 
     printf("*** Checking Library of Modules ***\n");
-    if((TempFile = fopen(ModuleNamesTable,"r")) == NULL)
+    if((TempFile = fopen(ModuleNamesTable,"rb")) == NULL)
     {
         printf("Table with names of modules not found");
         NameFlag = false;
@@ -86,7 +86,7 @@ int ModuleTableCheck(void)
         TempFileName[counter+11]=0x74;
         TempFileName[counter+12]=0x0;
 
-        if((TempFile = fopen(TempFileName,"r")) == NULL)
+        if((TempFile = fopen(TempFileName,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -103,7 +103,7 @@ int ModuleTableCheck(void)
         TempModuleMap[counter+8]=0x74;
         TempModuleMap[counter+9]=0x0;
 
-        if((TempFile = fopen(TempModuleMap,"r")) == NULL)
+        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -120,7 +120,7 @@ int ModuleTableCheck(void)
         TempModuleIO[counter+6]=0x74;
         TempModuleIO[counter+7]=0x0;
 
-        if((TempFile = fopen(TempModuleIO,"r")) == NULL)
+        if((TempFile = fopen(TempModuleIO,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -133,7 +133,7 @@ int ModuleTableCheck(void)
         if(NameFlag==true)
         {
             //Добавление названия модуля, который берется из таблицы имен модулей
-            TempFile = fopen(ModuleNamesTable,"r+b");
+            TempFile = fopen(ModuleNamesTable,"rb");
             NameCount=0;
 
             if(ModuleTypeList[k]!=1)
