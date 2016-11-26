@@ -1,0 +1,7 @@
+opcode LevMult, 0, 0 
+; Need to check..
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	zaw a1*a2, 2 ; CHANGE
+	; normirovka ??
+endop

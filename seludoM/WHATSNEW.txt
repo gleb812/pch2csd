@@ -1,0 +1,15 @@
+26.11.16
+First trouble - if opcode cannot be in red mode!
+ShiftReg based on if.....
+
+Probable solution: local ksmps = 1?
+Same with CompLev 59 
+
+177 DelayB DONE
+112 LevAdd DONE
+157 LevConv DONE - very stupid
+ 44 LevMult DONE
+128 MinMax DONE
+ 36 SwOnOff DONE BUT need check
+ 87 FltLP DONE
+

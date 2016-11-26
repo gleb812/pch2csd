@@ -1,0 +1,17 @@
+opcode DelayB, 0, KKKKKKKK
+	kTime, kFB, kLP, kHP, kDW, aFBmod, aDWmod xin
+	
+	ain zar 2 ; CHANGE
+	aDW = a(kDW)
+	aFB = a(kFB) 
+	aDW += aDWmod
+	aFB += aFBmod
+	
+	abuf delayr 2.7
+	atap deltapi kTime
+	delayw ain+atap*aFB
+	
+	aout tone atap, kLP ; check filter type etc
+	aout atone aout, kHP ; check filter type etc
+	zaw aout*aDW+ain*(1-aDW), 1 ; CHANGE 
+endop

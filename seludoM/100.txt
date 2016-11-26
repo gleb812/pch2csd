@@ -1,0 +1,7 @@
+opcode sw211, 0, k   ; MULTIMODE support a/k?
+; Need to check..
+	kSw xin ;kSw = 0 / 1
+	a1 zar kSw ; CHANGE 
+	zaw a1, 2 ; CHANGE
+	; poka bez Ctrl 
+endop

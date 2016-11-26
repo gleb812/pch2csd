@@ -1,0 +1,14 @@
+opcode Mux81, 0, 0
+	kCtrl zkr 1; CHANGE
+	k1 zkr 1; CHANGE
+	k2 zkr 1; CHANGE
+	k3 zkr 1; CHANGE
+	k4 zkr 1; CHANGE
+	k5 zkr 1; CHANGE
+	k6 zkr 1; CHANGE
+	k7 zkr 1; CHANGE
+	k8 zkr 1; CHANGE
+	
+	; quantize Ctrl and then if ififififif?
+	
+endop

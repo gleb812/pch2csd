@@ -1,0 +1,6 @@
+opcode	Rect, 0, i
+	iTable xin 
+	a1 zar 1 ; CHANGE
+	aout table a1, iTable, 1, .5
+	zaw aout, 2 ; CHANGE
+endop

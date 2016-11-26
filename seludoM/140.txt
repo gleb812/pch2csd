@@ -1,0 +1,18 @@
+opcode Mix41S, 0, kkkkiiii   ; MULTIMODE support a/k?
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE 
+	a5 zar 1 ; CHANGE 
+	a6 zar 1 ; CHANGE 
+	a7 zar 1 ; CHANGE 
+	a8 zar 1 ; CHANGE
+	a9 zar 1 ; CHANGE 
+	a10 zar 1 ; CHANGE
+	kLev1, kLev2, kLev3, kLev4, iSW1, iSW2, iSW3, iSW4 xin 
+	aoutL = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2 +a4*kLev3*iSW4 + a5*kLev4*iSW5
+	aoutR = a6 + a7*kLev1*iSW1+ a8*kLev2*iSW2+ a9*kLev3*iSW4+ a10*kLev4*iSW5
+	zaw aoutL, 2 ; CHANGE 
+	zaw aoutR, 2 ; CHANGE 
+	; LIN vs DB?
+endop

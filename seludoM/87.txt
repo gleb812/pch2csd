@@ -1,0 +1,8 @@
+opcode FltLP, 0, iikk
+; KBT !!!!!
+	iKBT, iOrder, kMod, kCF xin ;i  - ON/OFF button?
+	ain zar 2 ; CHANGE 
+	amod zar 1 ; CHANGE 
+	aout tonex ain, kCF+amod*kMOd, iOrder
+	zaw aout, 2  ; CHANGE 
+endop
