@@ -1,4 +1,4 @@
-opcode Mix81B, 0, kkkkkkkki   ; MULTIMODE support a/k?
+opcode Mix81B, 0, kkkkkkkki
 	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8, iPad xin
 	a1 zar 1 ; CHANGE 
 	a2 zar 1 ; CHANGE 

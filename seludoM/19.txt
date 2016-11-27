@@ -1,4 +1,4 @@
-opcode Mix41B, 0, kkkk   ; MULTIMODE support a/k?
+opcode Mix41B, 0, kkkk
 kLev1, kLev2, kLev3, kLev4 xin 
 	a1 zar 1 ; CHANGE 
 	a2 zar 1 ; CHANGE 

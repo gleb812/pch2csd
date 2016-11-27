@@ -13,3 +13,7 @@ Same with CompLev 59
  36 SwOnOff DONE BUT need check
  87 FltLP DONE
 
+27.11.16
+ 19 Mix41B DONE 
+  5 Invert DONE
+ 40 Mix81B DONE

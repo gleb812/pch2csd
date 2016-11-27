@@ -1,14 +1,14 @@
-opcode Mix81B, 0, kkkkkkkki   ; MULTIMODE support a/k?
+opcode Mix81B, 0, kkkkkkkki 
 	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8, iPad xin
-	a1 zar 1 ; CHANGE 
-	a2 zar 1 ; CHANGE 
-	a3 zar 1 ; CHANGE 
-	a4 zar 1 ; CHANGE
-	a5 zar 1 ; CHANGE 
-	a6 zar 1 ; CHANGE 
-	a7 zar 1 ; CHANGE 
-	a8 zar 1 ; CHANGE
-	a9 zar 1 ; CHANGE
-	aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)*iPad
-	zaw aout, 2 ; CHANGE 
+	k1 zkr 1 ; CHANGE 
+	k2 zkr 1 ; CHANGE 
+	k3 zkr 1 ; CHANGE 
+	k4 zkr 1 ; CHANGE
+	k5 zkr 1 ; CHANGE 
+	k6 zkr 1 ; CHANGE 
+	k7 zkr 1 ; CHANGE 
+	k8 zkr 1 ; CHANGE
+	k9 zkr 1 ; CHANGE
+	kout = a9 + (k1*kLev1+k2*kLev2+k3*kLev3+k4*kLev4+k5*kLev5+k6*kLev6+k7*kLev7+k8*kLev8)*iPad
+	zkw kout, 2 ; CHANGE 
 endop
