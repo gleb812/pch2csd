@@ -19,6 +19,12 @@ extern unsigned int ModuleIndexListFX[1024];
 extern unsigned int ModuleTypeList[1024];
 extern unsigned int ModuleTypeCount;
 
+extern unsigned int HiddenParametersVA[128]; //Table with VA Module hidden parameter value (Module number 0-127)
+extern unsigned int HiddenParametersFX[128]; //Table with FX Module hidden parameter value (Module number 0-127)
+
+extern bool HiddenFlagVA[128]; //Flag VA if Module has the hidden parameter (Module number 0-127)
+extern bool HiddenFlagFX[128]; //Flag FX if Module has the hidden parameter (Module number 0-127)
+
 int ReadML(unsigned int position)
 {
     unsigned char temp;
@@ -39,7 +45,7 @@ int ReadML(unsigned int position)
     unsigned int HorizontalPosition;
     unsigned int VerticalPosition;
     unsigned int Color;
-    unsigned int WaveForm;
+    unsigned int HideParameter;
     unsigned int Insert;
     unsigned int PadBits=0;
 
@@ -236,20 +242,22 @@ int ReadML(unsigned int position)
 
         if(LongModul)
         {
-            WaveForm=0x08*Tail[2]+0x04*Tail[3]+0x02*Tail[4]+Tail[5];
+            HideParameter=0x08*Tail[2]+0x04*Tail[3]+0x02*Tail[4]+Tail[5];
 
-            printf("ML_WaveForm = ");
-            printf("%d\n",WaveForm);
-/*
+            printf("ML_HideParameter = ");
+            printf("%d\n",HideParameter);
+
             if(vafx)
             {
-                ModuleWaveFormListVA[i]=WaveForm;
+                HiddenFlagVA[i]=true;
+                HiddenParametersVA[i]=HideParameter;
             }
             else
             {
-                ModuleWaveFormListFX[i]=WaveForm;
+                HiddenFlagFX[i]=true;
+                HiddenParametersFX[i]=HideParameter;
             }
-            */
+
         }
         printf("\n");
     }

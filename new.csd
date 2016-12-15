@@ -13,19 +13,24 @@ zakinit 3, 3
 
 ;******************************
 ; Opcode Definitions
-opcode DelayDual, 0, iiikk
-	iTime1, iTime2, imaxdel, kMod1, kMod2 xin
-	ain1 zar 2 ; CHANGE 
-	adel1 zar 1 ; CHANGE 
-	adel2 zar 1 ; CHANGE
-	aout1 vdelay ain, iTime1+adel1*kMod1, imaxdel
-	aout2 vdelay ain, iTime2+adel2*kMod2, imaxdel
-	zaw aout1, 2  ; CHANGE 
-	zaw aout2, 2  ; CHANGE 
+opcode DelayB, 0, KKKKKKKK
+	kTime, kFB, kLP, kHP,  kDW, kFBmod, kDWmod xin
+	
+	ain zar 2 ; CHANGE 
+	kDW += kDWmod
+	kFB += kFBmod
+	
+	abuf delayr 2.7
+	atap deltapi kTime
+	delayw ain+atap*kFB
+	
+	aout tone atap, kLP ; check filter type etc
+	aout atone aout, kHP ; check filter type etc
+	zaw aout*kDW+ain*(1-kDW), 1 ; CHANGE 
 endop
 
 instr 1
-	 DelayDual 3.090, 0.000, 1.550, 0.0940.000, , 0, 0, 0, 0, 0
+	 DelayB 2.680, 0.500, 1.000, 0.500, 0.000, 0.000, 0.000, 0.008, 0.000, 0.0000.000, 
 endin
 instr 2
 endin

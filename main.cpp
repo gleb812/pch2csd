@@ -44,7 +44,7 @@ char RecentFileName[50]="recent.txt"; // Txt-file with recent patch-file !!!
 char PatchFileName[50]="Gleb2.pch2"; // Clavia NM2 patch file
 char HeadFileName[50]="Heads/Header.txt"; // Csound header template
 char EndingFileName[50]="Heads/Ending.txt"; // Csound tail template (score and XML ending)
-char ModuleNamesTable[40]="Tables/ModID2Name.txt"; // Table with
+char ModuleNamesTable[40]="Global/ModID2Name.txt"; // Table with
 
 char NamesMapTables[6][256]; // Six Symbol Name Format - example CLA000
 
@@ -55,6 +55,13 @@ unsigned int MapTablesFX[128][24]; //FX Module parameter types table (Module num
 
 unsigned int ParametersVA[128][64]; //Table with VA Module parameter values (Module number 0-127)
 unsigned int ParametersFX[128][64]; //Table with FX Module parameter values (Module number 0-127)
+
+unsigned int HiddenParametersVA[128]; //Table with VA Module hidden parameter value (Module number 0-127)
+unsigned int HiddenParametersFX[128]; //Table with FX Module hidden parameter value (Module number 0-127)
+
+bool HiddenFlagVA[128]; //Flag VA if Module has the hidden parameter (Module number 0-127)
+bool HiddenFlagFX[128]; //Flag FX if Module has the hidden parameter (Module number 0-127)
+
 
 unsigned int ParameterCountersVA[128]; //Table with VA Module overall number of parameters
 unsigned int ParameterCountersFX[128]; //Table with FX Module overall number of parameters

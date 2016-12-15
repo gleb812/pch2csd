@@ -14,6 +14,12 @@ extern unsigned int ParameterCountersFX[128];
 extern unsigned int ParametersVA[128][64];
 extern unsigned int ParametersFX[128][64];
 
+extern unsigned int HiddenParametersVA[128]; //Table with VA Module hidden parameter value (Module number 0-127)
+extern unsigned int HiddenParametersFX[128]; //Table with FX Module hidden parameter value (Module number 0-127)
+
+extern bool HiddenFlagVA[128]; //Flag VA if Module has the hidden parameter (Module number 0-127)
+extern bool HiddenFlagFX[128]; //Flag FX if Module has the hidden parameter (Module number 0-127)
+
 int ReadMP(unsigned int position) //Reading Module Parameters
 {
     unsigned char temp;
@@ -178,8 +184,30 @@ int ReadMP(unsigned int position) //Reading Module Parameters
 
             }
 
-        }
+            // Add parameter value from ModuleList
+            if(location)
+            {
+                if(HiddenFlagVA[ModuleIndex-1])
+                {
+                    ParameterCountersVA[ModuleIndex-1]=ParameterCount+1;
+                    ParametersVA[ModuleIndex-1][ParameterCount]=HiddenParametersVA[ModuleIndex-1];
+                    printf("MP_Hidden_Value = ");
+                    printf("%d\n",HiddenParametersVA[ModuleIndex-1]);
+                }
+            }
+            else
+            {
+                if(HiddenFlagFX[ModuleIndex-1])
+                {
+                    ParameterCountersFX[ModuleIndex-1]=ParameterCount+1;
+                    ParametersFX[ModuleIndex-1][ParameterCount
+                    ]=HiddenParametersFX[ModuleIndex-1];
+                    printf("MP_Hidden_Value = ");
+                    printf("%d\n",HiddenParametersFX[ModuleIndex-1]);
+                }
+            }
 
+        }
 
     }
 

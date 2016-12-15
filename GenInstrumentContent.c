@@ -55,6 +55,7 @@ int GenInstrumentContent(unsigned int number)
     unsigned int mapid;
     float value[64];
     unsigned int IOTemp[100];
+    char ParameterType[100];
     unsigned int StringCounter;
     unsigned int IOCount=0;
     unsigned int TempCount=0;
@@ -62,6 +63,7 @@ int GenInstrumentContent(unsigned int number)
     unsigned char Maptemp;
     unsigned char Maptemp6[6];
     unsigned int SelectorID;
+    unsigned int SelectorIDadd;
     unsigned int TablesPointer;
     unsigned char Nametemp6[6];
     unsigned int IO[50]; // Input = 0; Output = 0;
@@ -216,12 +218,14 @@ int GenInstrumentContent(unsigned int number)
             {
                 fread(&Maptemp,1,1,TempFile);
 
+                ParameterType[i]=Maptemp;
+
                 if(Maptemp==0)
                 {
                     break;
                 }
 
-                if(Maptemp==100)
+                if((Maptemp==100)||(Maptemp==104)) // d or h
                 {
 
                     fread(&Maptemp,1,1,TempFile); // space or tab
@@ -331,12 +335,93 @@ int GenInstrumentContent(unsigned int number)
 
             }
 
-        }
+            // And let set the w-map parameters (Section of Delays)
+            //
 
+            fseek(TempFile, 0, SEEK_SET);
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                if(Maptemp==119) // if find w-type parameter
+                {
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    SelectorID=0; // first selector. His value most be only "0" or "1"
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorID=SelectorID*10+(Maptemp-48);
+                    }
+
+                    SelectorIDadd=0; // second selector
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorIDadd=SelectorIDadd*10+(Maptemp-48);
+                    }
+
+                    TablesPointer=(unsigned int)(value[SelectorID-1])*(unsigned int)(value[SelectorIDadd-1]);
+
+                    for(j=0;j<TablesPointer+1;j++)
+                    {
+                        fread(&Maptemp6,1,6,TempFile);
+                        fread(&Maptemp,1,1,TempFile);
+                    }
+
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesVA[ModuleCounter][i]=mapid;
+                            valueINT=ParametersVA[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
+        }
 
         for(i=0;i<StringCounter;i++)
         {
             mapid=MapTablesVA[ModuleCounter][i];
+
+            printf("ParameterType: ");
+            printf("%c\n",ParameterType[i]);
 
             for(k=0;k<6;k++)
             {
@@ -357,89 +442,294 @@ int GenInstrumentContent(unsigned int number)
             printf(" -> ");
             printf("%1.3f\n",value[i]);
 
-            fprintf(NewFile,"%1.3f",value[i]);
-            PPflag=true;
-            if(i!=ParameterCountersVA[ModuleCounter]-1)
+
+            if(ParameterType[i]!=104) // h - we hide parameter in new.csd-file
             {
-                fprintf(NewFile,", ");
+                fprintf(NewFile,"%1.3f",value[i]);
+                PPflag=true;
+                if((i!=ParameterCountersVA[ModuleCounter]-1)&&(ParameterType[i+1]!=104))
+                {
+                    fprintf(NewFile,", ");
+                }
             }
-        }
-        //fprintf(NewFile,"\n");
-    }
 
-
-    /*
-    if(VAFXFlag)
-    {
-
-        if((TempFile = fopen(TempModuleMap,"r")) == NULL)
-        {
-            //printf("Error - ");
-            //printf(TempModuleMap);
-            //printf(" not opened!\n");
-            return 0;
-        }
-        else
-        {
-            for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
-            {
-                fscanf(TempFile, "%d", &mapid);
-                MapTablesVA[ModuleCounter][i]=mapid;
-                valueINT=ParametersVA[ModuleCounter][i];
-                value[i]=Tables[valueINT][mapid];
-            }
-        }
-
-        //printf("Parameter count = ");
-        //printf("%d\n",ParameterCountersVA[ModuleCounter]);
-
-        for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
-        {
-            fprintf(NewFile,"%1.3f",value[i]);
-            PPflag=true;
-            if(i!=ParameterCountersVA[ModuleCounter]-1)
-            {
-                fprintf(NewFile,", ");
-            }
         }
         //fprintf(NewFile,"\n");
     }
     else
     {
-        if((TempFile = fopen(TempModuleMap,"r")) == NULL)
+        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
         {
-            //printf("Error - ");
-            //printf(TempModuleMap);
-            //printf(" not opened!\n");
             return 0;
         }
         else
         {
-            for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
+            //printf("Number of real parameters =");
+
+            fseek(TempFile, 0, SEEK_SET);
+            StringCounter=0;
+            while(true)
             {
-                fscanf(TempFile, "%d", &mapid);
-                MapTablesFX[ModuleCounter][i]=mapid;
-                valueINT=ParametersFX[ModuleCounter][i];
-                value[i]=Tables[valueINT][mapid];
+                if(fread(&Maptemp,1,1,TempFile)==0)
+                {
+                    break;
+                }
+                if(Maptemp==13)
+                {
+                    StringCounter++;
+                }
+
             }
+            StringCounter++;
+            //printf("%d\n",StringCounter);
+
+            fseek(TempFile, 0, SEEK_SET);
+
+            //printf("Direct Parameters\n");
+
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                ParameterType[i]=Maptemp;
+
+                if(Maptemp==0)
+                {
+                    break;
+                }
+
+                if((Maptemp==100)||(Maptemp==104)) // d or h
+                {
+
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    fread(&Maptemp6,1,6,TempFile);
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesFX[ModuleCounter][i]=mapid;
+                            valueINT=ParametersFX[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
+            //printf("Selected Parameters\n");
+
+            fseek(TempFile, 0, SEEK_SET);
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                if(Maptemp==115)
+                {
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    SelectorID=0;
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorID=SelectorID*10+(Maptemp-48);
+                    }
+
+                    TablesPointer=(unsigned int)(value[SelectorID-1]);
+
+                    for(j=0;j<TablesPointer+1;j++)
+                    {
+                        fread(&Maptemp6,1,6,TempFile);
+                        fread(&Maptemp,1,1,TempFile);
+                    }
+
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesFX[ModuleCounter][i]=mapid;
+                            valueINT=ParametersFX[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
+            // And let set the w-map parameters (Section of Delays)
+            //
+
+            fseek(TempFile, 0, SEEK_SET);
+            for(i=0;i<StringCounter;i++)
+            {
+                fread(&Maptemp,1,1,TempFile);
+
+                if(Maptemp==119) // if find w-type parameter
+                {
+                    fread(&Maptemp,1,1,TempFile); // space or tab
+
+                    SelectorID=0; // first selector. His value most be only "0" or "1"
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorID=SelectorID*10+(Maptemp-48);
+                    }
+
+                    SelectorIDadd=0; // second selector
+                    while(true)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        if((Maptemp==13)||(Maptemp==9)||(Maptemp==32)||(Maptemp==0))
+                        {
+                            break;
+                        }
+                        SelectorIDadd=SelectorIDadd*10+(Maptemp-48);
+                    }
+
+                    TablesPointer=(unsigned int)(value[SelectorID-1])*(unsigned int)(value[SelectorIDadd-1]);
+
+                    for(j=0;j<TablesPointer+1;j++)
+                    {
+                        fread(&Maptemp6,1,6,TempFile);
+                        fread(&Maptemp,1,1,TempFile);
+                    }
+
+                    for(j=0;j<256;j++)
+                    {
+                        for(k=0;k<6;k++)
+                        {
+                            Nametemp6[k]=NamesMapTables[k][j];
+                        }
+
+                        if(memcmp(Maptemp6,Nametemp6,6)==0)
+                        {
+                            mapid=j;
+
+                            MapTablesFX[ModuleCounter][i]=mapid;
+                            valueINT=ParametersFX[ModuleCounter][i];
+                            value[i]=Tables[valueINT][mapid];
+
+                            break;
+
+                        }
+                    }
+                }
+
+                while(true)
+                {
+                    if(fread(&Maptemp,1,1,TempFile)==0)
+                    {
+                        break;
+                    }
+                    if(Maptemp==13)
+                    {
+                        fread(&Maptemp,1,1,TempFile);
+                        break;
+                    }
+
+                }
+
+            }
+
         }
 
-        //printf("Parameter count = ");
-        //printf("%d\n",ParameterCountersFX[ModuleCounter]);
-
-        for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
+        for(i=0;i<StringCounter;i++)
         {
-            fprintf(NewFile,"%1.3f",value[i]);
-            PPflag=true;
-            if(i!=ParameterCountersFX[ModuleCounter]-1)
+            mapid=MapTablesFX[ModuleCounter][i];
+
+            printf("ParameterType: ");
+            printf("%c\n",ParameterType[i]);
+
+            for(k=0;k<6;k++)
             {
-                fprintf(NewFile,", ");
+                Nametemp6[k]=NamesMapTables[k][mapid];
             }
+
+            printf("TableName: ");
+            for(k=0;k<6;k++)
+            {
+                printf("%c",Nametemp6[k]);
+            }
+
+            printf("; ");
+            printf("TableID = ");
+            printf("%d\n",mapid);
+
+            printf("%d",ParametersFX[ModuleCounter][i]);
+            printf(" -> ");
+            printf("%1.3f\n",value[i]);
+
+
+            if(ParameterType[i]!=104) // h - we hide parameter in new.csd-file
+            {
+                fprintf(NewFile,"%1.3f",value[i]);
+                PPflag=true;
+                if((i!=ParameterCountersFX[ModuleCounter]-1)&&(ParameterType[i+1]!=104))
+                {
+                    fprintf(NewFile,", ");
+                }
+            }
+
         }
         //fprintf(NewFile,"\n");
     }
 
-    */
 
     // Here goes the weirdest thing - patching
     // The same way we open IO file with inputs, outputs and their types for given module
