@@ -11,7 +11,7 @@ extern char NamesMapTables[6][256];
 
 int TablesReader(void)
 {
-    unsigned int i,j;
+    unsigned int i;
     unsigned int TableNameCount;
     char NameMapTable[6];
 

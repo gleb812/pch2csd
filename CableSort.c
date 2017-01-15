@@ -189,7 +189,7 @@ int CableSort(void)
         {
             azakNumber+=aIOTable[i][1];
         }
-        /*
+
         printf("Location = ");
         printf("%d ",aIOTable[i][0]);
         printf("Number = ");
@@ -202,7 +202,7 @@ int CableSort(void)
         printf("%d ",aIOTable[i][4]);
         printf("PT = ");
         printf("%d\n",aIOTable[i][5]);
-        */
+
     }
 
     return 1;

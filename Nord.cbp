@@ -89,6 +89,9 @@
 		<Unit filename="ReadPS.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="SearchK2AModules.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="TablesReader.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -14,6 +14,7 @@ extern char ModuleNamesTable[40];
 int ModuleTableCheck(void)
 {
     unsigned int i,j,k;
+    unsigned int maptempnumber;
     unsigned int tempnumber;
     unsigned int counter;
     //char Name[20];
@@ -49,8 +50,16 @@ int ModuleTableCheck(void)
         printf("%d\t",k);
         printf("%d\t",ModuleTypeList[k]);
 
-        tempnumber=ModuleTypeList[k];
+        if(ModuleTypeList[k]>1000)
+        {
+            maptempnumber=ModuleTypeList[k]-1000;
+        }
+        else
+        {
+            maptempnumber=ModuleTypeList[k];
+        }
 
+        tempnumber=maptempnumber;
         counter=1;
 
         while(true)
@@ -65,6 +74,35 @@ int ModuleTableCheck(void)
 
         for(i=0;i<counter;i++)
         {
+            tempnumber=maptempnumber;
+
+            for(j=0;j<counter-i-1;j++)
+            {
+                tempnumber=tempnumber/10;
+            }
+            tempnumber=tempnumber%10;
+
+            TempModuleMap[5+i]=(char)(48+tempnumber);
+
+        }
+
+        tempnumber=ModuleTypeList[k];
+
+        counter=1;
+
+        while(true)
+        {
+            tempnumber=(tempnumber-tempnumber%10)/10;
+            if(tempnumber==0)
+            {
+                break;
+            }
+            counter++;
+        }
+
+
+        for(i=0;i<counter;i++)
+        {
             tempnumber=ModuleTypeList[k];
 
             for(j=0;j<counter-i-1;j++)
@@ -74,10 +112,11 @@ int ModuleTableCheck(void)
             tempnumber=tempnumber%10;
 
             TempFileName[8+i]=(char)(48+tempnumber);
-            TempModuleMap[5+i]=(char)(48+tempnumber);
             TempModuleIO[3+i]=(char)(48+tempnumber);
 
         }
+
+
 
         //Module Name
         TempFileName[counter+8]=0x2e;
@@ -97,11 +136,22 @@ int ModuleTableCheck(void)
         }
 
         //Mapping file name
-        TempModuleMap[counter+5]=0x2e;
-        TempModuleMap[counter+6]=0x74;
-        TempModuleMap[counter+7]=0x78;
-        TempModuleMap[counter+8]=0x74;
-        TempModuleMap[counter+9]=0x0;
+        if(ModuleTypeList[k]>1000)
+        {
+            TempModuleMap[counter+4]=0x2e;
+            TempModuleMap[counter+5]=0x74;
+            TempModuleMap[counter+6]=0x78;
+            TempModuleMap[counter+7]=0x74;
+            TempModuleMap[counter+8]=0x0;
+        }
+        else
+        {
+            TempModuleMap[counter+5]=0x2e;
+            TempModuleMap[counter+6]=0x74;
+            TempModuleMap[counter+7]=0x78;
+            TempModuleMap[counter+8]=0x74;
+            TempModuleMap[counter+9]=0x0;
+        }
 
         if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
         {

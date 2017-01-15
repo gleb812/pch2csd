@@ -23,6 +23,7 @@
 #include "Welcome.c"
 #include "ModuleTableCheck.c"
 #include "TablesReader.c"
+#include "SearchK2AModules.c"
 
 
 
@@ -109,8 +110,8 @@ unsigned int ModuleTypeCount=0; // Module type counter
 unsigned int ModuleListVA[1024]; // VA module list
 unsigned int ModuleListFX[1024]; // FX module list
 
-unsigned int ModuleWaveFormListVA[1024]; // VA waveforms list
-unsigned int ModuleWaveFormListFX[1024]; // FX waveforms list
+bool seludoMAlertVA[1024]; // VA flag of eludoM
+bool seludoMAlertFX[1024]; // FX flag of eludoM
 
 unsigned int ModuleIndexListVA[1024]; // VA Module Index list
 unsigned int ModuleIndexListFX[1024]; // FX Module Index list
@@ -123,6 +124,11 @@ bool VAFXFlag; //VA=1 FX=0
 int main(void)
 {
     Welcome();
+
+    /************************************************************************/
+
+    /************************************************************************/
+
     mcommand=menu();
     if(mcommand==0)
     {
@@ -149,6 +155,7 @@ int main(void)
                 ReadCL(MOposition+MOlength+3);
                 ReadCL(CLposition+CLlength+3);
 
+
                 //Read patch parameters for VA & FX
                 ReadPS(CLposition+CLlength+3);
 
@@ -157,21 +164,26 @@ int main(void)
                 // So function ReadML should be revised
                 ReadMP(PSposition+PSlength+3);
                 ReadMP(MPposition+MPlength+3);
+
             }
         }
-
-        ModuleTableCheck();
 
         OpenWrite(HeadFileName); // Start the new file from header template
         NextField(); // -
         II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
         CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
+
+        SearchK2AModules();
+        ModuleTableCheck();
+
         GenZakInit(); // zakinit creation
         NextField(); // -
         GenInstruments(); // CSound Instruments
         GenInstrumentSpace(); // Instr parameters
         NextField(); // -
         OpenWrite(EndingFileName); // file formating
+
+
     }
     if(mcommand==1)
     {

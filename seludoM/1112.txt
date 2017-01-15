@@ -1,0 +1,7 @@
+opcode LevAdd, 0, k   
+; Need to check..
+	kVal xin
+	aVal = a(kVal)
+	a1 zar 1 ; CHANGE 
+	zaw a1+aVal, 2 ; CHANGE
+endop
