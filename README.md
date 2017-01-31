@@ -25,25 +25,28 @@ HISTORY
 
 We started our project during Summer of 2015. The Project's main objective is to simulate legendary Clavia Nord Modular G2 synthesizer using CSound language. The Project was first presented at the The Third International CSound Conference (2-4 October, St. Petersburg, Russia).
 
-WHY YOU NEED IT?
+AUTHORS
 
-If you are a Nord Modular fan, this software allows you to have you favourite device ressurected for internal life in the halls of CSound language. You also can improve the precision of models and use the whole world of CSound possibilities together with Clavia
+The project is developed by Gleb G. Rogozinsky (Csound models) and Michael Chesnokov (C coding). From January 2017 Eugene Cherny started developing GUI for the converter. 
 
-If you are a CSound person, this is a new branch of our journey. This is great to have some hardware digital synths running on CSound. Once the conversion project is done, you are able to use hundreds of patches straigth on CSound
+WHY DO YOU NEED IT?
 
-If you discover the world of modular synthesis and algorithmic composition, the system provides a good way to describe the graphic patches of Clavia
+If you are a Nord Modular fan, this software allows you to have your favourite device ressurected for internal life in the halls of CSound language. You also can improve the precision of models and use the whole world of CSound possibilities together with Clavia.
 
-If you are a developer of alternative Clavia Nord Modular G2 Editor, you could merge your graphical editor software with the system to produce the sound
+If you are a CSound person, this is a new branch of our journey. This is great to have some hardware digital synths running on CSound. Once the conversion project is done, you are able to use hundreds of interesting Clavia's G2 patches straigth on CSound.
+
+If you discover the world of modular synthesis and algorithmic composition, the system provides a good way to describe the graphic patches of Clavia.
+
+If you are a developer of alternative Clavia Nord Modular G2 Editor, you could merge your graphical editor software with the system to produce the sound.
 
 IMPLEMENTATION
 
-The main idea behind implementation is to model all the modules of Clavia with CSound UDOs. See /Modules for modules description based on CSound language. The module numbers correspond to original Clavia module IDs. For the IDs table see ModIDNames.xls
+The main idea behind the implementation of a converter is to model all the modules of Clavia with CSound UDOs. See /Modules for modules description based on CSound language. Please notice that models can contain a lot of errors and typos. Right now we are working at the core part of the code and do not pay a lot of attention to models accuracy. The module numbers correspond to original Clavia module IDs. For the IDs table see ModIDNames.xls
 
-The output of our converter is csd file with all used UDO's and two separate instruments (VA and FX).
+The output of our converter is csd file with all used UDO's and two separate instruments (instr 1 is the VA part and instr 2 is the FX part).
 
 If some module exists in the patch, we have to insert the corresponding Csound UDO to the output csd file.
-Please notice, that all UDOs have only inputs. They are patched to each other not directly, but through the zak-space.
-It allows us to maintain the orbitrary order of modules, where CSound typicaly reads the code from top to bottom.
+Please notice that all UDOs have only inputs. They are patched to each other not directly, but through the zak-space (see Csound manual on zak-space for more details). It allows us to maintain the orbitrary order of modules, where CSound typicaly reads the code from top to bottom.
 
 Another remarkable issue is cabling, which is completely different to CSound. 
 
@@ -51,7 +54,9 @@ Check /Tables to see mapping for module parameter values. Being MIDI compatible,
 
 /IO directory contains module input/output tables. The order of inputs/outputs is strictly fixed. 
 
-Check the Status List to find which modules are implemented and which are the next to-dos by group. 
+Several Clavia modules are polymorphous and can run at a-/k-rates depending on cabling. I.e. any of mixing modules can mix a-rate signals or can mix k-rate signals (when working in k-rate mode). For such modules see /seludoM directory instead of /Modules.
+
+Check the Status List to find which modules are implemented and which are the next to-dos by group.  
 By now the top priorities are oscillators, filters and envelope generators. Any help is very welcome.
 
 *************************************************************
@@ -78,7 +83,6 @@ endop                                 ; end of UDO definition
 
 
 ***************************************************************
-The patch format succefully decoded thanks to Michael Dewberry http://www.dewb.org/g2/pch2format.html
 
 HOW TO START DEVELOPING
 
@@ -91,14 +95,25 @@ HOW TO START DEVELOPING
 
 4. Use pch2csd utility
 
-5. Run your csd with CSound
+5. Check the consistency of your patch (all modules, maps etc shoudl be present in a status table)
+
+6. Run your csd with CSound
 
 
 If some modules were not converted into CSound UDO's, it means you need to add them to /Modules directory.
 You also need to create input-output routing table for those modules and place it in /IO
 In case there is some parameter error, you need to add a new mapping table and place it in /Maps
 
+IO table syntax
+
+...to be done later
+
+
 Refer to Status List.pdf to discovered which modules are already implemented.
 
 
 More detailed description will appear soon..
+
+SPECIAL THANKS
+
+We would like to thank Michael Dewberry for very useful info on pch2 format structure http://www.dewb.org/g2/pch2format.html
