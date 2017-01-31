@@ -1,0 +1,21 @@
+opcode Keyboard, 0, 0
+	
+	kstatus, kchan, kdata1, kdata2 midiin
+
+	if (kstatus != 144) then goto Halt
+		zkw 0, 1 ; CHANGE - Gate
+		zkw kdata2/128, 2; CHANGE - Lin
+		zkw exp(kdata2/128), 3 ; CHANGE - Exp?
+		zkw kdata1, 4 ; CHANGE - note
+		goto Run
+		
+		; PITCH NOT YET IMPLEMENTED	
+	
+	Halt:
+	zkw 1, 0 ;CHANGE - gate
+	if (kstatus != 128) then goto Run	
+		zkw kdata2, 2 ; CHANGE release
+	
+	Run:
+
+endop

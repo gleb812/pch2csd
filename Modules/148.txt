@@ -1,0 +1,13 @@
+opcode NoteRcv, 0, kk
+	 kNote, kChnl xin
+	
+	kstatus, kchan, kdata1, kdata2 midiin
+
+	if (kstatus==144 && kchan==kChnl && kdata1==kNote) then
+		zkw kdata2, 1 ;CHANGE
+		zkw 1, 2 ;CHANGE   - GATE
+		zkw kdata1/128, 3; CHANGE - CHECK SCALING?
+	endif
+
+
+endop

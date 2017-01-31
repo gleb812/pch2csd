@@ -1,0 +1,10 @@
+opcode CtrlSend, 0, kkkk
+	kSend, kCtrl, kVal, kChnl xin
+	
+	if (kSend!=0) then
+		midiout 176, kChnl, kCtrl, kVal ; GENERIC 127 CTRL
+		; zkw what???
+	endif
+
+
+endop

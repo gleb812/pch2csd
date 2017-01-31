@@ -1,0 +1,10 @@
+opcode PCSend, 0, kkkk
+	kSend, kCtrl, kVal, kChnl xin
+	
+	if (kSend!=0) then
+		midiout 192, kChnl, kVal, 0  ; GENERIC PC
+		; zkw what???
+	endif
+
+
+endop

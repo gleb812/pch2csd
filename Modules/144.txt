@@ -1,0 +1,80 @@
+opcode SeqEvent, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ;...
+	kTr1[] init 16
+	kTr2[] init 16
+	kCnt init 0
+	
+;fix names
+	kIn0,kIn1,kIn2,kIn3,
+	kIn4,kIn5,kIn6,kIn7,
+	kIn8,kIn9,kInA,kInB,
+	kInC,kInD,kInE,kInF,
+	kTr0,kTr1,kTr2,kTr3,
+	kTr4,kTr5,kTr6,kTr7,
+	kTr8,kTr9,kTrA,kTrB,
+	kTrC,kTrD,kTrE,kTrF,
+	kLen,kClr,kRnd,kPol
+	xin
+
+	k1Tr[0] = k1Tr0
+	k1Tr[1] = k1Tr1
+	k1Tr[2] = k1Tr2
+	k1Tr[3] = k1Tr3
+	k1Tr[4] = k1Tr4
+	k1Tr[5] = k1Tr5
+	k1Tr[6] = k1Tr6
+	k1Tr[7] = k1Tr7
+	k1Tr[8] = k1Tr8
+	k1Tr[9] = k1Tr9
+	k1Tr[A] = k1TrA
+	k1Tr[B] = k1TrB
+	k1Tr[C] = k1TrC
+	k1Tr[D] = k1TrD
+	k1Tr[E] = k1TrE
+	k1Tr[F] = k1TrF
+
+	k2Tr[0] = k2Tr0
+	k2Tr[1] = k2Tr1
+	k2Tr[2] = k2Tr2
+	k2Tr[3] = k2Tr3
+	k2Tr[4] = k2Tr4
+	k2Tr[5] = k2Tr5
+	k2Tr[6] = k2Tr6
+	k2Tr[7] = k2Tr7
+	k2Tr[8] = k2Tr8
+	k2Tr[9] = k2Tr9
+	k2Tr[A] = k2TrA
+	k2Tr[B] = k2TrB
+	k2Tr[C] = k2TrC
+	k2Tr[D] = k2TrD
+	k2Tr[E] = k2TrE
+	k2Tr[F] = k2TrF
+
+	kt1 trigger kClk, 0, 0
+	kt2 trigger kRst, 0, 0
+	kPark init 1
+	
+	if (kt2 != 0) then
+		k1Tr = k1Tr*0
+		k2Tr = k2Tr*0
+		kPark = 1 ; RESET PARKING IF ANY
+	endif
+
+	;NO TRIGGER IMPLEMENTED
+	kCnt += (kt1>0?1:0)
+	if (kCnt != kLen) then kgoto Continue
+		kLink = 1
+		if (kLoop == 1) then 
+			kCnt = kCnt%kLen
+		elseif
+			kCnt -= 1
+		endif
+
+Continue:
+
+	zkw k1Tr[kCnt]*kPark,1 ;CHANGE
+	zkw k2Tr[kCnt]*kPark,2 ;CHANGE
+
+
+	
+
+endop

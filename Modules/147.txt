@@ -1,0 +1,12 @@
+opcode CtrlRcv, 0, kk
+	 kCtrl, kChnl xin
+	
+	kstatus, kchan, kdata1, kdata2 midiin
+
+	if (kstatus==176 && kchan==kChnl && kdata1==kCtrl) then
+		zkw kdata2, 1 ;CHANGE
+		zkw 1, 2 ;CHANGE
+	endif
+
+
+endop
