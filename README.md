@@ -10,6 +10,8 @@ gleb.rogozinsky@gmail.com
 
 HISTORY
 
+AUTHORS
+
 WHY YOU NEED IT?
 
 IMPLEMENTATION
@@ -17,6 +19,10 @@ IMPLEMENTATION
 UDO EXAMPLES
 
 HOW TO START DEVELOPING
+
+IO TABLE SYNTAX
+
+CREDITS
 
 
 
@@ -104,7 +110,7 @@ If some modules were not converted into CSound UDO's, it means you need to add t
 You also need to create input-output routing table for those modules and place it in /IO
 In case there is some parameter error, you need to add a new mapping table and place it in /Maps
 
-IO table syntax
+IO TABLE SYNTAX
 
 ...to be done later
 
@@ -114,6 +120,6 @@ Refer to Status List.pdf to discovered which modules are already implemented.
 
 More detailed description will appear soon..
 
-SPECIAL THANKS
+CREDITS
 
 We would like to thank Michael Dewberry for very useful info on pch2 format structure http://www.dewb.org/g2/pch2format.html
