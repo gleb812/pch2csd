@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "Util.c"
 
 extern FILE *RecentFile;
 extern char RecentFileName[50];
@@ -7,6 +8,8 @@ extern char PatchFileName[50];
 
 int menu(void)
 {
+    char *RecentFileName_ = PreparePathString(RecentFileName);
+
     int returnpointnumber;
     int pointnumber;
     printf("Please make a choice of action!\n");
@@ -25,7 +28,7 @@ int menu(void)
         }
         case 2:
         {
-            if((RecentFile = fopen(RecentFileName,"r")) == NULL)
+            if((RecentFile = fopen(RecentFileName_,"r")) == NULL)
             {
                 printf("Error with saving patch-file to recent file!\n");
             }
@@ -45,7 +48,6 @@ int menu(void)
     }
 
     return returnpointnumber;
-
 }
 
 

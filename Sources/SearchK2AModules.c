@@ -44,7 +44,7 @@ int SearchK2AModules(void)
 
     K2AModulesIDCount=0;
 
-    // Загрузка правил замены Modules на seludoM из каталога "RulesK2A"
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Modules пїЅпїЅ seludoM пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "RulesK2A"
 
     DIR *dir = opendir("RulesK2A");
     if(dir)
@@ -117,7 +117,9 @@ int SearchK2AModules(void)
                 RulesK2AFileName[counter+12]=0x74;
                 RulesK2AFileName[counter+13]=0x0;
 
-                if((RulesK2AFile = fopen(RulesK2AFileName,"rb")) == NULL)
+                char *RulesK2AFileName_ = PreparePathString(RulesK2AFileName);
+
+                if((RulesK2AFile = fopen(RulesK2AFileName_,"rb")) == NULL)
                 {
                     //printf("N\n");
                 }
@@ -147,6 +149,7 @@ int SearchK2AModules(void)
                     fclose(RulesK2AFile);
                 }
 
+                free(RulesK2AFileName_);
             }
 
         }
@@ -161,7 +164,7 @@ int SearchK2AModules(void)
         }
         */
 
-        // Сверка соединения модулей кабелями согласно правилам
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         for(c=0;c<CCa;c++)
         {
             /*

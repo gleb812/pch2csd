@@ -2,14 +2,18 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include "Util.c"
 
 extern FILE *TempFile;
 extern FILE *NewFile;
 
 int OpenWrite(char TempFileName[50])
 {
+    char *TempFileName_ = PreparePathString(TempFileName);
+
     char temp;
-    if((TempFile = fopen(TempFileName,"r")) == NULL)
+    if((TempFile = fopen(TempFileName_,"r")) == NULL)
 	{
 	    /*
 		printf("Error - ");
@@ -33,6 +37,8 @@ int OpenWrite(char TempFileName[50])
             }
         }
 	}
+
+    free(TempFileName_);
 
 	return 1;
 }

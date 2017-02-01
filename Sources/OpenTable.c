@@ -1,15 +1,18 @@
 // Function opens a parameter map table
 #include <stdio.h>
+#include <stdlib.h>
+#include "Util.c"
 
 extern FILE *TempFile;
 extern float Tables[128][128];
 
 int OpenTable(char TempFileName[20],unsigned int TableID)
 {
+    char *TempFileName_ = PreparePathString(TempFileName);
     float value;
     unsigned int i;
 
-    if((TempFile = fopen(TempFileName,"r")) == NULL)
+    if((TempFile = fopen(TempFileName_,"r")) == NULL)
 	{
 		printf("Error - ");
 		printf(TempFileName);
@@ -35,5 +38,7 @@ int OpenTable(char TempFileName[20],unsigned int TableID)
         }
 	}
 
-	return 1;
+    free(TempFileName_);
+
+    return 1;
 }

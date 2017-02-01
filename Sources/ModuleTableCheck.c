@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include "Util.c"
 
 extern FILE *TempFile;
 
@@ -13,6 +15,11 @@ extern char ModuleNamesTable[40];
 
 int ModuleTableCheck(void)
 {
+    char *TempFileName_ = PreparePathString(TempFileName);
+    char *TempModuleMap_ = PreparePathString(TempModuleMap);
+    char *TempModuleIO_ = PreparePathString(TempModuleIO);
+    char *ModuleNamesTable_ = PreparePathString(ModuleNamesTable);
+
     unsigned int i,j,k;
     unsigned int maptempnumber;
     unsigned int tempnumber;
@@ -23,7 +30,7 @@ int ModuleTableCheck(void)
     unsigned int NameCount = 0;
 
     printf("*** Checking Library of Modules ***\n");
-    if((TempFile = fopen(ModuleNamesTable,"rb")) == NULL)
+    if((TempFile = fopen(ModuleNamesTable_,"rb")) == NULL)
     {
         printf("Table with names of modules not found");
         NameFlag = false;
@@ -125,7 +132,7 @@ int ModuleTableCheck(void)
         TempFileName[counter+11]=0x74;
         TempFileName[counter+12]=0x0;
 
-        if((TempFile = fopen(TempFileName,"rb")) == NULL)
+        if((TempFile = fopen(TempFileName_,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -153,7 +160,7 @@ int ModuleTableCheck(void)
             TempModuleMap[counter+9]=0x0;
         }
 
-        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
+        if((TempFile = fopen(TempModuleMap_,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -163,14 +170,14 @@ int ModuleTableCheck(void)
             fclose(TempFile);
         }
 
-        //формирование имени файла с определением входов и выходов
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         TempModuleIO[counter+3]=0x2e;
         TempModuleIO[counter+4]=0x74;
         TempModuleIO[counter+5]=0x78;
         TempModuleIO[counter+6]=0x74;
         TempModuleIO[counter+7]=0x0;
 
-        if((TempFile = fopen(TempModuleIO,"rb")) == NULL)
+        if((TempFile = fopen(TempModuleIO_,"rb")) == NULL)
         {
             printf("N\t");
         }
@@ -182,8 +189,8 @@ int ModuleTableCheck(void)
 
         if(NameFlag==true)
         {
-            //Добавление названия модуля, который берется из таблицы имен модулей
-            TempFile = fopen(ModuleNamesTable,"rb");
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            TempFile = fopen(ModuleNamesTable_,"rb");
             NameCount=0;
 
             if(ModuleTypeList[k]!=1)
@@ -248,6 +255,12 @@ int ModuleTableCheck(void)
         printf("\n");
 
     }
+
+    free(TempFileName_);
+    free(TempModuleMap_);
+    free(TempModuleIO_);
+    free(ModuleNamesTable_);
+
     return 1;
 }
 

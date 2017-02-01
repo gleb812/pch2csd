@@ -1,6 +1,8 @@
 // Function that adds Instr to orc part according to Nord patch
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include "Util.c"
 
 extern FILE *NewFile;
 extern FILE *TempFile;
@@ -117,7 +119,7 @@ int GenInstrumentContent(unsigned int number)
     TempModuleMap[counter+8]=0x74;
     TempModuleMap[counter+9]=0x0;
 
-    //формирование имени файла с определением входов и выходов
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     TempModuleIO[counter+3]=0x2e;
     TempModuleIO[counter+4]=0x74;
     TempModuleIO[counter+5]=0x78;
@@ -127,8 +129,14 @@ int GenInstrumentContent(unsigned int number)
     PPflag=false;
 
 
+    // FIXME quick dirty hack for cross-platform path
+    char *TempFileName_ = PreparePathString(TempFileName);
+    char *TempModuleMap_ = PreparePathString(TempModuleMap);
+    char *TempModuleIO_ = PreparePathString(TempModuleIO);
+
     //We need only name of a module
-    if((TempFile = fopen(TempFileName,"r")) == NULL)
+
+    if((TempFile = fopen(TempFileName_,"r")) == NULL)
 	{
 		//printf("Error - ");
 		//printf(TempFileName);
@@ -184,8 +192,7 @@ int GenInstrumentContent(unsigned int number)
 
     if(VAFXFlag)
     {
-
-        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
+        if((TempFile = fopen(TempModuleMap_,"rb")) == NULL)
         {
             return 0;
         }
@@ -458,7 +465,7 @@ int GenInstrumentContent(unsigned int number)
     }
     else
     {
-        if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
+        if((TempFile = fopen(TempModuleMap_,"rb")) == NULL)
         {
             return 0;
         }
@@ -737,7 +744,7 @@ int GenInstrumentContent(unsigned int number)
     // first column input(0)/output(1)
     // second column k(0)/a(1)
 
-    if((TempFile = fopen(TempModuleIO,"r")) == NULL)
+    if((TempFile = fopen(TempModuleIO_,"r")) == NULL)
     {
         //printf("Error - ");
         //printf(TempModuleIO);
@@ -1097,6 +1104,10 @@ int GenInstrumentContent(unsigned int number)
     }
 
     //printf("InstrIO \n");
+
+    free(TempFileName_);
+    free(TempModuleMap_);
+    free(TempModuleIO_);
 
     return 1;
 }
