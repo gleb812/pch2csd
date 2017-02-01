@@ -1,0 +1,16 @@
+opcode EnvD, 0, ikkk
+	iSW, kAM, kH xin
+	iTab[][] init 2,4 ;MAYBE GLOBAL?
+	iTab array 1,-1, 1, -1,    0, 1, -1, 0 ;double check
+	kTrig zkr 1 ; CHANGE
+start:
+	kEnv transeg 0, 0, 0,   1, i(kH), 0.5,   0.001,0,0,0   ;check exp
+	
+	if (kTrig != 0) then	; Aktivaziya tolko po frontu :) !!!
+		reinit start
+	endif
+	
+	kEnvD = iTab[1][iSW]*kEnv*kAM+iTab[2][iSW]
+	zkr kEnvH, 1 ; CHANGE
+	zkr kIn*kEnvH, 2 ; CHANGE
+endop

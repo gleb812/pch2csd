@@ -1,0 +1,6 @@
+opcode DlySingleA, 0, i
+	iTime xin
+	ain zar 2 ; CHANGE 
+	aout delay ain, iTime
+	zaw aout, 2  ; CHANGE 
+endop

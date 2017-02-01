@@ -1,0 +1,7 @@
+opcode EnvFollow, 0, kk   ; MULTIMODE support a/k?
+; Need to check..
+	kAtt, kRel xin
+	a1 zar 1 ; CHANGE 
+	ares follow2 a1, kAtt, kRel
+	zaw ares, 2 ; CHANGE
+endop

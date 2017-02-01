@@ -1,0 +1,19 @@
+opcode BinCounter, 0, kk
+	kClk, kRst xin
+	kCount init 0
+	if (kClk != 0) then
+		kCount += 1
+		zkw int(kCount*.5), 1 ; CHANGE 
+		zkw int(kCount*.25), 1 ; CHANGE 
+		zkw int(kCount*.125), 1 ; CHANGE 
+		zkw int(kCount*.0625), 1 ; CHANGE 
+		zkw int(kCount*.03125), 1 ; CHANGE 
+		zkw int(kCount*.015625), 1 ; CHANGE 
+		zkw int(kCount*.0078125), 1 ; CHANGE 
+		zkw int(kCount*.00390625), 1 ; CHANGE
+	endif
+	
+	if (kRst != 0) then
+		kCount = 0 
+	endif
+endop

@@ -1,0 +1,12 @@
+opcode Fade1, 0, kk
+	kMod, kMix xin
+	k1 zkr 1 ;CHANGE
+	kmod zkr 3; CHANGE
+	
+	kMix += kMod ;+ limiter?
+	kL = k1*kMix
+	kR = k2*(1-kMix)
+	
+	zkw kL, 2 ; CHANGE
+	zkw kR, 2 ; CHANGE
+endop
