@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "menu.c"
 #include "CableSort.c"
 #include "II2IO.c"
 #include "GenZakInit.c"
@@ -31,7 +30,6 @@ FILE *NewFile;
 FILE *ReadFile;
 FILE *TempFile;
 FILE *TempMapFile;
-FILE *RecentFile;
 
 int mcommand; // returned number of startmenu function !!!
 
@@ -40,9 +38,8 @@ char TempFileName[L]="Modules\\"; // Path to Csound Instrs descriptions
 char TempModuleMap[L]="Maps\\"; // Path to Map tables
 char TempModuleIO[L]="IO\\"; // Path to modules IO tables
 
-char NewFileName[50]="new.csd"; // Output csd file
-char RecentFileName[50]="recent.txt"; // Txt-file with recent patch-file !!!
-char PatchFileName[50]="Gleb2.pch2"; // Clavia NM2 patch file
+char *NewFileName; // Output csd file
+char *PatchFileName; // Clavia NM2 patch file
 char HeadFileName[50]="Heads/Header.txt"; // Csound header template
 char EndingFileName[50]="Heads/Ending.txt"; // Csound tail template (score and XML ending)
 char ModuleNamesTable[40]="Global/ModID2Name.txt"; // Table with
@@ -121,78 +118,83 @@ unsigned int ModuleCountFX=0; // FX field module counter
 
 bool VAFXFlag; //VA=1 FX=0
 
-int main(void)
+int main(int argc, char **argv)
 {
-    Welcome();
-
-    /************************************************************************/
-
-    /************************************************************************/
-
-    mcommand=menu();
-    if(mcommand==0)
+    if (argc != 2)
     {
-        // Nord to CSound parameters mapping
-        TablesReader();
-        //OpenTable("Tables/CLA000.txt",1);
-        //OpenTable("Tables/BUT002.txt",2);
-        //OpenTable("Tables/CLAEXP",3);
-        //OpenTable("Tables/BUT003.txt",4);
+        printf("usage: pch2csd nord_patch.pch2\n\n");
+        Welcome();
+        return 0;
+    }
 
-        CreatingNewFile(NewFileName);
-        if(OpenPatchFile(PatchFileName)!=0)
+    char *patchFile = argv[1];
+    char *patchFileExt = strrchr(patchFile, '.');
+    if (patchFileExt == NULL || strcoll(patchFileExt, ".pch2") != 0)
+    {
+        printf("error: wrong input patch file extension (%s), should be .pch2\n", patchFileExt);
+        return 0;
+    }
+
+    // Setting global PatchFileName and NewFileName according to the user input
+    size_t flen = strlen(patchFile) + 1;
+    PatchFileName = (char *) malloc(sizeof(char) * flen);
+    NewFileName = (char *) malloc(sizeof(char) * (flen - 1));
+    strcpy(PatchFileName, patchFile);
+    strncpy(NewFileName, patchFile, flen - 5);
+    strcat(NewFileName, "csd");
+
+    /////////////////////////////////////////////
+
+    // Nord to CSound parameters mapping
+    TablesReader();
+    //OpenTable("Tables/CLA000.txt",1);
+    //OpenTable("Tables/BUT002.txt",2);
+    //OpenTable("Tables/CLAEXP",3);
+    //OpenTable("Tables/BUT003.txt",4);
+
+    CreatingNewFile(NewFileName);
+    if(OpenPatchFile(PatchFileName)!=0)
+    {
+        if(ReadPD()!=0) // If patch header is OK
         {
-            if(ReadPD()!=0) // If patch header is OK
-            {
-                //Read module lists for VA & FX
-                ReadML(PDposition+PDlength+3);
-                ReadML(MLposition+MLlength+3);
+            //Read module lists for VA & FX
+            ReadML(PDposition+PDlength+3);
+            ReadML(MLposition+MLlength+3);
 
-                // Skip a Mistery Object
-                ReadMO(MLposition+MLlength+3);
+            // Skip a Mistery Object
+            ReadMO(MLposition+MLlength+3);
 
-                //Read cable lists for VA & FX
-                ReadCL(MOposition+MOlength+3);
-                ReadCL(CLposition+CLlength+3);
+            //Read cable lists for VA & FX
+            ReadCL(MOposition+MOlength+3);
+            ReadCL(CLposition+CLlength+3);
 
 
-                //Read patch parameters for VA & FX
-                ReadPS(CLposition+CLlength+3);
+            //Read patch parameters for VA & FX
+            ReadPS(CLposition+CLlength+3);
 
-                //Read module parameters for VA & FX
-                //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
-                // So function ReadML should be revised
-                ReadMP(PSposition+PSlength+3);
-                ReadMP(MPposition+MPlength+3);
+            //Read module parameters for VA & FX
+            //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
+            // So function ReadML should be revised
+            ReadMP(PSposition+PSlength+3);
+            ReadMP(MPposition+MPlength+3);
 
-            }
         }
-
-        OpenWrite(HeadFileName); // Start the new file from header template
-        NextField(); // -
-        II2IO4all(); // �������������� ������� �������� - �������������� ���������������� ����� � ���������� ��������
-        CableSort(); // ������� � ���������������� �������� ����������� ��� �������� ����� �������������� �������
-
-        SearchK2AModules();
-        ModuleTableCheck();
-
-        GenZakInit(); // zakinit creation
-        NextField(); // -
-        GenInstruments(); // CSound Instruments
-        GenInstrumentSpace(); // Instr parameters
-        NextField(); // -
-        OpenWrite(EndingFileName); // file formating
-
-
-    }
-    if(mcommand==1)
-    {
-        printf("See you later!\n");
     }
 
-/*
-	char s[3];
-	gets(s);
-*/
-	return 0;
+    OpenWrite(HeadFileName); // Start the new file from header template
+    NextField(); // -
+    II2IO4all();
+    CableSort();
+
+    SearchK2AModules();
+    ModuleTableCheck();
+
+    GenZakInit(); // zakinit creation
+    NextField(); // -
+    GenInstruments(); // CSound Instruments
+    GenInstrumentSpace(); // Instr parameters
+    NextField(); // -
+    OpenWrite(EndingFileName); // file formating
+
+    return 0;
 }

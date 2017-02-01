@@ -3,7 +3,7 @@ project(pch2csd)
 
 set(SOURCE_FILES
         Sources/CableSort.c Sources/CreatingNewFile.c Sources/GenInstrumentContent.c Sources/GenInstruments.c
-        Sources/GenInstrumentSpace.c Sources/GenZakInit.c Sources/II2IO.c Sources/main.cpp Sources/menu.c
+        Sources/GenInstrumentSpace.c Sources/GenZakInit.c Sources/II2IO.c Sources/main.cpp
         Sources/ModuleTableCheck.c Sources/NextField.c Sources/OpenPatchFile.c Sources/OpenTable.c Sources/OpenWrite.c
         Sources/OWModule.c Sources/ReadCL.c Sources/ReadML.c Sources/ReadMO.c Sources/ReadMP.c Sources/ReadPD.c
         Sources/ReadPS.c Sources/TablesReader.c Sources/Welcome.c Sources/Util.c)
