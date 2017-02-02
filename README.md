@@ -115,7 +115,7 @@ IO TABLE SYNTAX
 ...to be done later
 
 
-Refer to Status List.pdf to discovered which modules are already implemented.
+Refer to Status List.pdf to discover which modules are already implemented.
 
 
 More detailed description will appear soon..
