@@ -1,7 +1,7 @@
 # pch2csd
 The Clavia Nord Modular G2 Patch Convertor Project
 
-(c) Gleb G. Rogozinsky and Michael Chesnokov 2015
+(c) Gleb G. Rogozinsky, Michael Chesnokov and Eugene Cherny 2015-2017
 
 gleb.rogozinsky@gmail.com
 
@@ -33,7 +33,7 @@ We started our project during Summer of 2015. The Project's main objective is to
 
 AUTHORS
 
-The project is developed by Gleb G. Rogozinsky (Csound models) and Michael Chesnokov (C coding). From January 2017 Eugene Cherny started developing GUI for the converter. 
+The project is developed by Gleb G. Rogozinsky (Csound models) and Michael Chesnokov (C coding). Beginning from January 2017 Eugene Cherny started developing GUI for the converter. 
 
 WHY DO YOU NEED IT?
 
@@ -122,4 +122,6 @@ More detailed description will appear soon..
 
 CREDITS
 
-We would like to thank Michael Dewberry for very useful info on pch2 format structure http://www.dewb.org/g2/pch2format.html
+The credits go to
+Michael Dewberry for very useful info on pch2 format structure http://www.dewb.org/g2/pch2format.html
+Iain McCurdy for his bright and revolutionary ideas on some models 
