@@ -22,6 +22,8 @@ HOW TO START DEVELOPING
 
 IO TABLE SYNTAX
 
+KNOWN ISSUES
+
 CREDITS
 
 
@@ -119,6 +121,12 @@ Refer to Status List.pdf to discover which modules are already implemented.
 
 
 More detailed description will appear soon..
+
+KNOWN ISSUES
+
+04/02/2017 Gleb - Clavia's ClkGen can be switched into Master Clock Source mode. In that mode it accepts realtime MIDI start and stop messages. This feature is not supported by Csound. 
+
+
 
 CREDITS
 
