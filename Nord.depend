@@ -201,23 +201,23 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484258435 source:d:\nordclaviapch2csd\pch2csd\cablesort.c
+1486681538 source:d:\nordclaviapch2csd\pch2csd\cablesort.c
 
 1483384604 source:d:\nordclaviapch2csd\pch2csd\creatingnewfile.c
 	<stdio.h>
 
-1483384604 source:d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+1486774857 source:d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
 1483384604 source:d:\nordclaviapch2csd\pch2csd\geninstruments.c
 	<stdio.h>
 
-1483384604 source:d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
+1486770724 source:d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
 	<stdio.h>
 	<stdbool.h>
 
-1483384604 source:d:\nordclaviapch2csd\pch2csd\genzakinit.c
+1486680295 source:d:\nordclaviapch2csd\pch2csd\genzakinit.c
 	<stdio.h>
 
 1483384604 source:d:\nordclaviapch2csd\pch2csd\ii2io.c
@@ -240,11 +240,11 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484512826 source:d:\nordclaviapch2csd\pch2csd\readcl.c
+1486324485 source:d:\nordclaviapch2csd\pch2csd\readcl.c
 	<stdio.h>
 	<stdbool.h>
 
-1483384604 source:d:\nordclaviapch2csd\pch2csd\readml.c
+1486321237 source:d:\nordclaviapch2csd\pch2csd\readml.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -252,7 +252,7 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484512661 source:d:\nordclaviapch2csd\pch2csd\readmp.c
+1486321986 source:d:\nordclaviapch2csd\pch2csd\readmp.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -268,7 +268,7 @@
 	<stdio.h>
 	<string.h>
 
-1484514124 source:d:\nordclaviapch2csd\pch2csd\main.cpp
+1486771236 source:d:\nordclaviapch2csd\pch2csd\main.cpp
 	<stdio.h>
 	<stdbool.h>
 	"menu.c"
@@ -294,17 +294,18 @@
 	"ModuleTableCheck.c"
 	"TablesReader.c"
 	"SearchK2AModules.c"
+	"AddConverters.c"
 
 1483384604 d:\nordclaviapch2csd\pch2csd\menu.c
 	<stdio.h>
 	<string.h>
 
-1484258435 d:\nordclaviapch2csd\pch2csd\cablesort.c
+1486681538 d:\nordclaviapch2csd\pch2csd\cablesort.c
 
 1483384604 d:\nordclaviapch2csd\pch2csd\ii2io.c
 	<stdbool.h>
 
-1483384604 d:\nordclaviapch2csd\pch2csd\genzakinit.c
+1486680295 d:\nordclaviapch2csd\pch2csd\genzakinit.c
 	<stdio.h>
 
 1483384604 d:\nordclaviapch2csd\pch2csd\openwrite.c
@@ -318,11 +319,11 @@
 	<stdio.h>
 	<stdbool.h>
 
-1483384604 d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
+1486774857 d:\nordclaviapch2csd\pch2csd\geninstrumentcontent.c
 	<stdio.h>
 	<stdbool.h>
 
-1483384604 d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
+1486770724 d:\nordclaviapch2csd\pch2csd\geninstrumentspace.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -342,7 +343,7 @@
 	<stdio.h>
 	<stdbool.h>
 
-1483384604 d:\nordclaviapch2csd\pch2csd\readml.c
+1486321237 d:\nordclaviapch2csd\pch2csd\readml.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -354,11 +355,11 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484512826 d:\nordclaviapch2csd\pch2csd\readcl.c
+1486324485 d:\nordclaviapch2csd\pch2csd\readcl.c
 	<stdio.h>
 	<stdbool.h>
 
-1484512661 d:\nordclaviapch2csd\pch2csd\readmp.c
+1486321986 d:\nordclaviapch2csd\pch2csd\readmp.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -718,7 +719,7 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484515198 source:d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
+1484515645 source:d:\nordclaviapch2csd\pch2csd\moduletablecheck.c
 	<stdio.h>
 	<stdbool.h>
 
@@ -920,15 +921,23 @@
 	<stdio.h>
 	<stdbool.h>
 
-1484513909 source:d:\nordclaviapch2csd\pch2csd\searchk2amodules.c
+1485115428 source:d:\nordclaviapch2csd\pch2csd\searchk2amodules.c
 	<stdio.h>
 	<stdbool.h>
 	<sys/types.h>
 	<dirent.h>
 
-1484513909 d:\nordclaviapch2csd\pch2csd\searchk2amodules.c
+1485115428 d:\nordclaviapch2csd\pch2csd\searchk2amodules.c
 	<stdio.h>
 	<stdbool.h>
 	<sys/types.h>
 	<dirent.h>
+
+1486778589 source:d:\nordclaviapch2csd\pch2csd\addconverters.c
+	<stdio.h>
+	<stdbool.h>
+
+1486778589 d:\nordclaviapch2csd\pch2csd\addconverters.c
+	<stdio.h>
+	<stdbool.h>
 

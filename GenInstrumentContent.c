@@ -36,6 +36,9 @@ extern unsigned int ModuleCounter; // Module Counter
 extern unsigned int ModuleIndexListVA[1024]; // VA modules index list
 extern unsigned int ModuleIndexListFX[1024]; // same for FX
 
+extern unsigned int ModuleListVA[1024]; // VA modules index list
+extern unsigned int ModuleListFX[1024]; // same for FX
+
 extern float Tables[128][128]; // Parameter mapping table
 
 extern bool VAFXFlag; // VA or FX flag
@@ -45,6 +48,7 @@ int GenInstrumentContent(unsigned int number)
 {
     const unsigned int L=40;
     unsigned int tempnumber;
+    unsigned int maptempnumber;
     unsigned int i,j,k;
     char NAME[L];
     unsigned int NAMELength=0;
@@ -56,7 +60,6 @@ int GenInstrumentContent(unsigned int number)
     float value[64];
     unsigned int IOTemp[100];
     char ParameterType[100];
-    unsigned int StringCounter;
     unsigned int IOCount=0;
     unsigned int TempCount=0;
     unsigned char IOtemp;
@@ -73,10 +76,47 @@ int GenInstrumentContent(unsigned int number)
     bool FFlag;
     bool PPflag; // To understand whether to put a coma between parameters
 
+    // Go go go!
+
+    if(number>1000)
+    {
+        maptempnumber=number-1000;
+    }
+    else
+    {
+        maptempnumber=number;
+    }
+
+    tempnumber=maptempnumber;
+    counter=1;
+
+    while(true)
+    {
+        tempnumber=(tempnumber-tempnumber%10)/10;
+        if(tempnumber==0)
+        {
+            break;
+        }
+        counter++;
+    }
+
+    for(i=0;i<counter;i++)
+    {
+        tempnumber=maptempnumber;
+
+        for(j=0;j<counter-i-1;j++)
+        {
+            tempnumber=tempnumber/10;
+        }
+        tempnumber=tempnumber%10;
+
+        TempModuleMap[5+i]=(char)(48+tempnumber);
+
+    }
+
     tempnumber=number;
 
-    //printf("Number = %d\n",number);
-    //printf("ModuleCounter = %d\n",ModuleCounter);
+    counter=1;
 
     while(true)
     {
@@ -97,8 +137,8 @@ int GenInstrumentContent(unsigned int number)
             tempnumber=tempnumber/10;
         }
         tempnumber=tempnumber%10;
+
         TempFileName[8+i]=(char)(48+tempnumber);
-        TempModuleMap[5+i]=(char)(48+tempnumber);
         TempModuleIO[3+i]=(char)(48+tempnumber);
 
     }
@@ -130,9 +170,9 @@ int GenInstrumentContent(unsigned int number)
     //We need only name of a module
     if((TempFile = fopen(TempFileName,"r")) == NULL)
 	{
-		//printf("Error - ");
-		//printf(TempFileName);
-		//printf(" not opened!\n");
+		printf("Error - ");
+		printf(TempFileName);
+		printf(" not opened!\n");
 		return 0;
 	}
 	else
@@ -187,35 +227,30 @@ int GenInstrumentContent(unsigned int number)
 
         if((TempFile = fopen(TempModuleMap,"rb")) == NULL)
         {
+            printf("Error - ");
+            printf(TempModuleMap);
+            printf(" not opened!\n");
             return 0;
         }
         else
         {
-            //printf("Number of real parameters =");
+            printf("Number of real parameters = ");
+            printf("%d\n",ParameterCountersVA[ModuleCounter]);
+            printf("ModuleCounter = ");
+            printf("%d\n",ModuleCounter);
+            printf("ModuleIndex = ");
+            printf("%d\n",ModuleIndexListVA[ModuleCounter]);
+            printf("ModuleType = ");
+            printf("%d\n",ModuleListVA[ModuleCounter]);
 
-            fseek(TempFile, 0, SEEK_SET);
-            StringCounter=0;
-            while(true)
-            {
-                if(fread(&Maptemp,1,1,TempFile)==0)
-                {
-                    break;
-                }
-                if(Maptemp==13)
-                {
-                    StringCounter++;
-                }
-
-            }
-            StringCounter++;
-            //printf("%d\n",StringCounter);
 
             fseek(TempFile, 0, SEEK_SET);
 
             //printf("Direct Parameters\n");
 
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
             {
+
                 fread(&Maptemp,1,1,TempFile);
 
                 ParameterType[i]=Maptemp;
@@ -271,7 +306,7 @@ int GenInstrumentContent(unsigned int number)
             //printf("Selected Parameters\n");
 
             fseek(TempFile, 0, SEEK_SET);
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
             {
                 fread(&Maptemp,1,1,TempFile);
 
@@ -339,7 +374,7 @@ int GenInstrumentContent(unsigned int number)
             //
 
             fseek(TempFile, 0, SEEK_SET);
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
             {
                 fread(&Maptemp,1,1,TempFile);
 
@@ -415,8 +450,13 @@ int GenInstrumentContent(unsigned int number)
             }
 
         }
+        //printf("ModuleCounter: ");
+        //printf("%d\n",ModuleCounter);
 
-        for(i=0;i<StringCounter;i++)
+        printf("ParameterCountersVA: ");
+        printf("%d\n",ParameterCountersVA[ModuleCounter]);
+
+        for(i=0;i<ParameterCountersVA[ModuleCounter];i++)
         {
             mapid=MapTablesVA[ModuleCounter][i];
 
@@ -464,6 +504,7 @@ int GenInstrumentContent(unsigned int number)
         }
         else
         {
+            /*
             //printf("Number of real parameters =");
 
             fseek(TempFile, 0, SEEK_SET);
@@ -482,12 +523,13 @@ int GenInstrumentContent(unsigned int number)
             }
             StringCounter++;
             //printf("%d\n",StringCounter);
+            */
 
             fseek(TempFile, 0, SEEK_SET);
 
             //printf("Direct Parameters\n");
 
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
             {
                 fread(&Maptemp,1,1,TempFile);
 
@@ -544,7 +586,7 @@ int GenInstrumentContent(unsigned int number)
             //printf("Selected Parameters\n");
 
             fseek(TempFile, 0, SEEK_SET);
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
             {
                 fread(&Maptemp,1,1,TempFile);
 
@@ -612,7 +654,7 @@ int GenInstrumentContent(unsigned int number)
             //
 
             fseek(TempFile, 0, SEEK_SET);
-            for(i=0;i<StringCounter;i++)
+            for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
             {
                 fread(&Maptemp,1,1,TempFile);
 
@@ -689,7 +731,7 @@ int GenInstrumentContent(unsigned int number)
 
         }
 
-        for(i=0;i<StringCounter;i++)
+        for(i=0;i<ParameterCountersFX[ModuleCounter];i++)
         {
             mapid=MapTablesFX[ModuleCounter][i];
 
@@ -725,9 +767,8 @@ int GenInstrumentContent(unsigned int number)
                     fprintf(NewFile,", ");
                 }
             }
-
         }
-        //fprintf(NewFile,"\n");
+        fprintf(NewFile,"\n");
     }
 
 
@@ -737,11 +778,12 @@ int GenInstrumentContent(unsigned int number)
     // first column input(0)/output(1)
     // second column k(0)/a(1)
 
-    if((TempFile = fopen(TempModuleIO,"r")) == NULL)
+
+    if((TempFile = fopen(TempModuleIO,"rb")) == NULL)
     {
-        //printf("Error - ");
-        //printf(TempModuleIO);
-        //printf(" not opened!\n");
+        printf("Error - ");
+        printf(TempModuleIO);
+        printf(" not opened!\n");
         return 0;
     }
     else
@@ -768,7 +810,7 @@ int GenInstrumentContent(unsigned int number)
         for(i=0;i<IOCount;i++)
         {
             //printf("%d\n",IOTemp[i]);
-            if(i%4==0)
+            if(i%5==0)
             {
                 if(IOTemp[i]==73) // If IN
                 {
@@ -785,7 +827,7 @@ int GenInstrumentContent(unsigned int number)
                 }
                 if(IOTemp[i]==79) // If OUT
                 {
-                    IO[TempCount]=0;
+                    IO[TempCount]=1;
                     if(IOTemp[i+2]==97)
                     {
                         IOAK[TempCount]=1; // a
@@ -811,6 +853,8 @@ int GenInstrumentContent(unsigned int number)
                 N++;
             }
         }
+        //printf("Inputs = ");
+        //printf("%d\n",N);
 
         N=0;
         for(i=0;i<TempCount;i++)
@@ -821,6 +865,8 @@ int GenInstrumentContent(unsigned int number)
                 N++;
             }
         }
+        //printf("Outputs = ");
+        //printf("%d\n",N);
     }
 
     if(TempCount>0)
@@ -830,6 +876,7 @@ int GenInstrumentContent(unsigned int number)
             fprintf(NewFile,", ");
         }
     }
+
 // Once all inputs and outputs are read and NIO table are created (it carries the numbers of inputs and outputs)
 // we have to check each element of table
 // if we find the value equal to module and port, we create a patch in zak space
@@ -844,13 +891,19 @@ int GenInstrumentContent(unsigned int number)
             FFlag=false;
             if(IOAK[i]==1) // output type is audio
             {
+                printf("A-cable\n");
                 if(IO[i]==0) // if input
                 {
-                    //printf("IN\n");
+                    printf("IN\n");
                     for(j=0;j<CCa;j++)
                     {
-                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][4]);
-                        //printf("Ports %d %d\n",NIO[i],aIOTable[j][5]);
+
+                        printf("j %d\n",j);
+                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][4]);
+                        printf("Ports %d %d\n",NIO[i],aIOTable[j][5]);
+                        printf("Location VA %d\n",aIOTable[j][0]);
+
+
                         if(aIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(aIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
@@ -862,20 +915,26 @@ int GenInstrumentContent(unsigned int number)
                                     {
                                         fprintf(NewFile,", ");
                                     }
+                                    printf("Cable# %d\n",aIOTable[j][1]);
                                     FFlag=true;
                                     break;
                                 }
                             }
                         }
+
                     }
                 }
                 else // if output
                 {
-                    //printf("OUT\n");
+                    printf("OUT\n");
                     for(j=0;j<CCa;j++)
                     {
-                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][2]);
-                        //printf("Ports %d %d\n",NIO[i],aIOTable[j][3]);
+
+                        printf("j %d\n",j);
+                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],aIOTable[j][2]);
+                        printf("Ports %d %d\n",NIO[i],aIOTable[j][3]);
+                        printf("Location VA %d\n",aIOTable[j][0]);
+
                         if(aIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(aIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
@@ -888,10 +947,12 @@ int GenInstrumentContent(unsigned int number)
                                         fprintf(NewFile,", ");
                                     }
                                     FFlag=true;
+                                    printf("Cable# %d\n",aIOTable[j][1]);
                                     break;
                                 }
                             }
                         }
+
                     }
                 }
                 if(FFlag==false)
@@ -905,18 +966,23 @@ int GenInstrumentContent(unsigned int number)
             }
             else // k type
             {
+                printf("K-cable\n");
                 if(IO[i]==0) // if input
                 {
-                    //printf("IN\n");
+                    printf("IN\n");
                     for(j=0;j<CCk;j++)
                     {
-                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][4]);
-                        //printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
+
+                        printf("j %d\n",j);
+                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][4]);
+                        printf("Ports %d %d\n",NIO[i],kIOTable[j][5]);
+                        printf("Location VA %d\n",kIOTable[j][0]);
+
                         if(kIOTable[j][4]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(kIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Should be VA part
+                                if(kIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=TempCount-1)
@@ -924,24 +990,29 @@ int GenInstrumentContent(unsigned int number)
                                         fprintf(NewFile,", ");
                                     }
                                     FFlag=true;
+                                    printf("Cable# %d\n",kIOTable[j][1]);
                                     break;
                                 }
                             }
                         }
+
                     }
                 }
                 else // if output
                 {
-                    //printf("OUT\n");
+                    printf("OUT\n");
                     for(j=0;j<CCk;j++)
                     {
-                        //printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][2]);
-                        //printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
+                        printf("j %d\n",j);
+                        printf("Moduls %d %d\n",ModuleIndexListVA[ModuleCounter],kIOTable[j][2]);
+                        printf("Ports %d %d\n",NIO[i],kIOTable[j][3]);
+                        printf("Location VA %d\n",kIOTable[j][0]);
+
                         if(kIOTable[j][2]==ModuleIndexListVA[ModuleCounter]) //module to should be equal to module number
                         {
                             if(kIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==1) // Should be VA part
+                                if(kIOTable[j][0]==1) // Should be VA part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //Write a number of cable
                                     if(i!=TempCount-1)
@@ -949,10 +1020,12 @@ int GenInstrumentContent(unsigned int number)
                                         fprintf(NewFile,", ");
                                     }
                                     FFlag=true;
+                                    printf("Cable# %d\n",kIOTable[j][1]);
                                     break;
                                 }
                             }
                         }
+
                     }
                 }
                 if(FFlag==false)
@@ -1045,7 +1118,7 @@ int GenInstrumentContent(unsigned int number)
                         {
                             if(kIOTable[j][5]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Should be FX part
+                                if(kIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
                                     if(i!=TempCount-1)
@@ -1070,7 +1143,7 @@ int GenInstrumentContent(unsigned int number)
                         {
                             if(kIOTable[j][3]==NIO[i]) //port should be equal to port number from IO file
                             {
-                                if(aIOTable[j][0]==0) // Should be FX part
+                                if(kIOTable[j][0]==0) // Should be FX part
                                 {
                                     fprintf(NewFile,"%d",(kIOTable[j][1]+2)); //write a cable number
                                     if(i!=TempCount-1)
@@ -1095,6 +1168,7 @@ int GenInstrumentContent(unsigned int number)
             }
         }
     }
+
 
     //printf("InstrIO \n");
 

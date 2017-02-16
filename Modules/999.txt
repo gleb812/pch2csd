@@ -1,0 +1,6 @@
+;a2k
+opcode A2K, 0, ii
+	iIn, iOut xin
+	aIn zar i1
+	zkw k(aIn), iOut
+endop

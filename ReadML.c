@@ -192,14 +192,17 @@ int ReadML(unsigned int position)
         if(vafx)
         {
             ModuleIndexListVA[i]=ModuleIndex;
+            printf("!!!ML_Module_Index_VA = ");
+            printf("%d\n",ModuleIndexListVA[i]);
+            printf("!!!i = ");
+            printf("%d\n",i);
         }
         else
         {
             ModuleIndexListFX[i]=ModuleIndex;
         }
 
-        printf("ML_Module_Index = ");
-        printf("%d\n",ModuleIndex);
+
 
         HorizontalPosition=0x40*Modul[16]+0x20*Modul[17]+0x10*Modul[18]+0x08*Modul[19]+0x04*Modul[20]+0x02*Modul[21]+Modul[22];
 

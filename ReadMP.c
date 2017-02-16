@@ -14,6 +14,11 @@ extern unsigned int ParameterCountersFX[128];
 extern unsigned int ParametersVA[128][64];
 extern unsigned int ParametersFX[128][64];
 
+extern unsigned int ModuleIndexListVA[1024]; // VA Module Index list
+extern unsigned int ModuleIndexListFX[1024]; // FX Module Index list
+
+extern unsigned int ModuleCountVA, ModuleCountFX;
+
 extern unsigned int HiddenParametersVA[128]; //Table with VA Module hidden parameter value (Module number 0-127)
 extern unsigned int HiddenParametersFX[128]; //Table with FX Module hidden parameter value (Module number 0-127)
 
@@ -26,6 +31,7 @@ int ReadMP(unsigned int position) //Reading Module Parameters
     unsigned int bytecounter=0;
     bool Data[102400];
     unsigned int i,j,k,g,n;
+    unsigned int imodules; // index in a new ModuleList
     bool location;
 
     unsigned int ModuleCount;
@@ -70,8 +76,8 @@ int ReadMP(unsigned int position) //Reading Module Parameters
 	fread(&temp,1,1,ReadFile);
 	MPlength=MPlength+(unsigned int)temp;
 
-    //printf("MP_Length = ");
-	//printf("%d\n",MPlength);
+    printf("MP_Length = ");
+	printf("%d\n",MPlength);
 
     for(i=0;i<MPlength*8;i++)
 	{
@@ -93,17 +99,6 @@ int ReadMP(unsigned int position) //Reading Module Parameters
         }
 	}
 
-    /*
-    for(i=0;i<MPlength*8;i++)
-    {
-        if(i%8==0)
-        {
-            fprintf(UpCodeFile," ");
-        }
-        fprintf(NewFile,"%x",Data[i]);
-    }
-    */
-
 	location=Data[1];
 
 	printf("MP_Location = ");
@@ -118,8 +113,8 @@ int ReadMP(unsigned int position) //Reading Module Parameters
 
     ModuleCount=0x80*Data[2]+0x40*Data[3]+0x20*Data[4]+0x10*Data[5]+0x08*Data[6]+0x04*Data[7]+0x02*Data[8]+Data[9];
 
-    //printf("MP_Module_Count = ");
-    //printf("%d\n",ModuleCount);
+    printf("MP_Module_Count = ");
+    printf("%d\n",ModuleCount);
 
     tempposition=18;
 
@@ -131,19 +126,46 @@ int ReadMP(unsigned int position) //Reading Module Parameters
             tempposition++;
         }
         ModuleIndex=0x80*ModuleHead[0]+0x40*ModuleHead[1]+0x20*ModuleHead[2]+0x10*ModuleHead[3]+0x08*ModuleHead[4]+0x04*ModuleHead[5]+0x02*ModuleHead[6]+ModuleHead[7];
-        //printf("MP_Module_Index = ");
-        //printf("%d\n",ModuleIndex);
-        //ParameterCount=0x80*ModuleHead[8]+0x40*ModuleHead[9]+0x20*ModuleHead[10]+0x10*ModuleHead[11]+0x08*ModuleHead[12]+0x04*ModuleHead[13]+0x02*ModuleHead[14]+ModuleHead[15];
-        ParameterCount=0x40*ModuleHead[8]+0x20*ModuleHead[9]+0x10*ModuleHead[10]+0x08*ModuleHead[11]+0x04*ModuleHead[12]+0x02*ModuleHead[13]+ModuleHead[14];
-        //printf("MP_Module_Parameter_Count = ");
-        //printf("%d\n",ParameterCount);
+        printf("MP_Module_Index = ");
+        printf("%d\n",ModuleIndex);
+
         if(location)
         {
-            ParameterCountersVA[ModuleIndex-1]=ParameterCount;
+            for(k=0;k<ModuleCountVA;k++)
+            {
+                if(ModuleIndexListVA[k]==ModuleIndex)
+                {
+                    imodules=k;
+                    break;
+                }
+            }
         }
         else
         {
-            ParameterCountersFX[ModuleIndex-1]=ParameterCount;
+            for(k=0;k<ModuleCountFX;k++)
+            {
+                if(ModuleIndexListFX[k]==ModuleIndex)
+                {
+                    imodules=k;
+                    break;
+                }
+            }
+        }
+        printf("MP_imodules = ");
+        printf("%d\n",imodules);
+
+
+        ParameterCount=0x80*ModuleHead[8]+0x40*ModuleHead[9]+0x20*ModuleHead[10]+0x10*ModuleHead[11]+0x08*ModuleHead[12]+0x04*ModuleHead[13]+0x02*ModuleHead[14]+ModuleHead[15];
+        ParameterCount=0x40*ModuleHead[8]+0x20*ModuleHead[9]+0x10*ModuleHead[10]+0x08*ModuleHead[11]+0x04*ModuleHead[12]+0x02*ModuleHead[13]+ModuleHead[14];
+        printf("MP_Module_Parameter_Count = ");
+        printf("%d\n",ParameterCount);
+        if(location)
+        {
+            ParameterCountersVA[imodules]=ParameterCount;
+        }
+        else
+        {
+            ParameterCountersFX[imodules]=ParameterCount;
         }
 
         for(k=0;k<9;k++)
@@ -173,11 +195,15 @@ int ReadMP(unsigned int position) //Reading Module Parameters
                 {
                     if(location)
                     {
-                        ParametersVA[ModuleIndex-1][g]=Value;
+                        ParametersVA[imodules][g]=Value;
+                        printf("MP_Value = ");
+                        printf("%d\n",Value);
                     }
                     else
                     {
-                        ParametersFX[ModuleIndex-1][g]=Value;
+                        ParametersFX[imodules][g]=Value;
+                        printf("MP_Value = ");
+                        printf("%d\n",Value);
                     }
 
                 }
@@ -187,23 +213,22 @@ int ReadMP(unsigned int position) //Reading Module Parameters
             // Add parameter value from ModuleList
             if(location)
             {
-                if(HiddenFlagVA[ModuleIndex-1])
+                if(HiddenFlagVA[imodules])
                 {
-                    ParameterCountersVA[ModuleIndex-1]=ParameterCount+1;
-                    ParametersVA[ModuleIndex-1][ParameterCount]=HiddenParametersVA[ModuleIndex-1];
+                    ParameterCountersVA[imodules]=ParameterCount+1;
+                    ParametersVA[imodules][ParameterCount]=HiddenParametersVA[imodules];
                     //printf("MP_Hidden_Value = ");
-                    //printf("%d\n",HiddenParametersVA[ModuleIndex-1]);
+                    //printf("%d\n",HiddenParametersVA[i]);
                 }
             }
             else
             {
-                if(HiddenFlagFX[ModuleIndex-1])
+                if(HiddenFlagFX[imodules])
                 {
-                    ParameterCountersFX[ModuleIndex-1]=ParameterCount+1;
-                    ParametersFX[ModuleIndex-1][ParameterCount
-                    ]=HiddenParametersFX[ModuleIndex-1];
+                    ParameterCountersFX[imodules]=ParameterCount+1;
+                    ParametersFX[imodules][ParameterCount]=HiddenParametersFX[imodules];
                     //printf("MP_Hidden_Value = ");
-                    //printf("%d\n",HiddenParametersFX[ModuleIndex-1]);
+                    //printf("%d\n",HiddenParametersFX[i]);
                 }
             }
 

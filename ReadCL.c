@@ -119,73 +119,78 @@ int ReadCL(unsigned int position)
             Cable[j]=Data[24+i*CableLength+j];
         }
 
-        //printf("CL_Cable_#");
-        //printf("%d\n",i);
+        printf("CL_Cable_#");
+        printf("%d\n",i);
 
         Color=0x04*Cable[0]+0x02*Cable[1]+Cable[2];
 
-        //printf("CL_Color = ");
-        //printf("%d",Color);
-        //printf(" - ");
+        printf("CL_Color = ");
+        printf("%d",Color);
+        printf(" - ");
         switch(Color)
         {
         case 0:
-            //printf("Red\n");
+            printf("Red");
             SoundCableCount++;
             AK=1;
             break;
         case 1:
-            //printf("Blue\n");
+            printf("Blue");
             ControlCableCount++;
             AK=0;
             break;
         case 2:
-            //printf("Yellow\n");
+            printf("Yellow");
             ControlCableCount++;
             AK=0;
             break;
         case 3:
-            //printf("Orange\n");
+            printf("Orange");
             SoundCableCount++;
             AK=1;
             break;
         case 4:
-            //printf("Green\n");
+            printf("Green");
             OtherCableCount++;
             AK=2;
             break;
         case 5:
-            //printf("Purple\n");
+            printf("Purple");
             OtherCableCount++;
             AK=2;
             break;
         case 6:
-            //printf("White\n");
+            printf("White");
             OtherCableCount++;
             AK=2;
             break;
         default:
-            //printf("unknown\n");
+            printf("unknown");
             OtherCableCount++;
             AK=2;
         }
 
+        printf("\n");
+
         ModuleFrom=0x80*Cable[3]+0x40*Cable[4]+0x20*Cable[5]+0x10*Cable[6]+0x08*Cable[7]+0x04*Cable[8]+0x02*Cable[9]+Cable[10];
 
-        //printf("CL_Module_From - ");
-        //printf("%d\n",ModuleFrom);
+        printf("CL_Module_From - ");
+        printf("%d\n",ModuleFrom);
 
         JackFrom=0x20*Cable[11]+0x10*Cable[12]+0x08*Cable[13]+0x04*Cable[14]+0x02*Cable[15]+Cable[16];
 
-        //printf("CL_Jack_From - ");
-        //printf("%d\n",JackFrom);
+        printf("CL_Jack_From - ");
+        printf("%d\n",JackFrom);
+
+        printf("Cable[16] - ");
+        printf("%d\n",Cable[16]);
 
         CableType=Cable[17];
 
-        //printf("CL_Type = ");
-        //printf("%d",CableType);
-        //printf(" - ");
-        /*
+        printf("CL_Type = ");
+        printf("%d",CableType);
+        printf(" - ");
+
         switch(CableType)
         {
         case 0:
@@ -195,17 +200,17 @@ int ReadCL(unsigned int position)
             printf("Output to Input\n");
             break;
         }
-        */
+
 
         ModuleTo=0x80*Cable[18]+0x40*Cable[19]+0x20*Cable[20]+0x10*Cable[21]+0x08*Cable[22]+0x04*Cable[23]+0x02*Cable[24]+Cable[25];
 
-        //printf("CL_Module_To - ");
-        //printf("%d\n",ModuleTo);
+        printf("CL_Module_To - ");
+        printf("%d\n",ModuleTo);
 
         JackTo=0x20*Cable[26]+0x10*Cable[27]+0x08*Cable[28]+0x04*Cable[29]+0x02*Cable[30]+Cable[31];
 
-        //printf("CL_Jack_To - ");
-        //printf("%d\n",JackTo);
+        printf("CL_Jack_To - ");
+        printf("%d\n",JackTo);
 
         IOTable[CableCounter][0]=(unsigned int)location;
         IOTable[CableCounter][1]=i;

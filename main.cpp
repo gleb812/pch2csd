@@ -24,6 +24,7 @@
 #include "ModuleTableCheck.c"
 #include "TablesReader.c"
 #include "SearchK2AModules.c"
+#include "AddConverters.c"
 
 
 
@@ -119,25 +120,22 @@ unsigned int ModuleIndexListFX[1024]; // FX Module Index list
 unsigned int ModuleCountVA=0; // VA field module counter
 unsigned int ModuleCountFX=0; // FX field module counter
 
+bool a2kFlag=false;
+bool k2aFlag=false;
+
 bool VAFXFlag; //VA=1 FX=0
+
+unsigned int i;
 
 int main(void)
 {
     Welcome();
-
-    /************************************************************************/
-
-    /************************************************************************/
 
     mcommand=menu();
     if(mcommand==0)
     {
         // Nord to CSound parameters mapping
         TablesReader();
-        //OpenTable("Tables/CLA000.txt",1);
-        //OpenTable("Tables/BUT002.txt",2);
-        //OpenTable("Tables/CLAEXP",3);
-        //OpenTable("Tables/BUT003.txt",4);
 
         CreatingNewFile(NewFileName);
         if(OpenPatchFile(PatchFileName)!=0)
@@ -162,19 +160,67 @@ int main(void)
                 //Read module parameters for VA & FX
                 //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
                 // So function ReadML should be revised
+
                 ReadMP(PSposition+PSlength+3);
                 ReadMP(MPposition+MPlength+3);
 
+
             }
         }
+
 
         OpenWrite(HeadFileName); // Start the new file from header template
         NextField(); // -
         II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
         CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
 
+        printf("kzakNumber %d\n", kzakNumber);
+        printf("azakNumber %d\n", azakNumber);
+
         SearchK2AModules();
+
         ModuleTableCheck();
+
+        AddConverters();
+
+        printf("kzakNumber %d\n", kzakNumber);
+        printf("azakNumber %d\n", azakNumber);
+
+        // patching fields size computation
+        printf("k-Cables\n");
+        for(i=0;i<CCk;i++)
+        {
+            printf("Location = ");
+            printf("%d ",kIOTable[i][0]);
+            printf("Number = ");
+            printf("%d ",kIOTable[i][1]);
+            printf("MF = ");
+            printf("%d ",kIOTable[i][2]);
+            printf("PF = ");
+            printf("%d ",kIOTable[i][3]);
+            printf("MT = ");
+            printf("%d ",kIOTable[i][4]);
+            printf("PT = ");
+            printf("%d\n",kIOTable[i][5]);
+        }
+
+        printf("a-Cables\n");
+        for(i=0;i<CCa;i++)
+        {
+            printf("Location = ");
+            printf("%d ",aIOTable[i][0]);
+            printf("Number = ");
+            printf("%d ",aIOTable[i][1]);
+            printf("MF = ");
+            printf("%d ",aIOTable[i][2]);
+            printf("PF = ");
+            printf("%d ",aIOTable[i][3]);
+            printf("MT = ");
+            printf("%d ",aIOTable[i][4]);
+            printf("PT = ");
+            printf("%d\n",aIOTable[i][5]);
+        }
+
 
         GenZakInit(); // zakinit creation
         NextField(); // -
@@ -182,7 +228,6 @@ int main(void)
         GenInstrumentSpace(); // Instr parameters
         NextField(); // -
         OpenWrite(EndingFileName); // file formating
-
 
     }
     if(mcommand==1)

@@ -32,6 +32,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="AddConverters.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="CableSort.c">
 			<Option compilerVar="CC" />
 		</Unit>

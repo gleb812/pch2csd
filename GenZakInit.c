@@ -21,9 +21,9 @@ int GenZakInit(void)
 
     fprintf(NewFile,"; Initialize the ZAK space\n");
     fprintf(NewFile,"zakinit ");
-    fprintf(NewFile,"%d",azakNumber+3);
+    fprintf(NewFile,"%d",azakNumber+2);
     fprintf(NewFile,", ");
-    fprintf(NewFile,"%d\n",kzakNumber+3);
+    fprintf(NewFile,"%d\n",kzakNumber+2);
 
     if(OtherCableCount>0)
     {

@@ -17,6 +17,9 @@ extern unsigned int ModuleCounter;
 extern unsigned int ModuleListVA[1024];
 extern unsigned int ModuleListFX[1024];
 
+extern unsigned int ModuleIndexListVA[1024]; // VA Module Index list
+extern unsigned int ModuleIndexListFX[1024]; // FX Module Index list
+
 extern bool seludoMAlertVA[1024]; // VA flag of eludoM
 extern bool seludoMAlertFX[1024]; // FX flag of eludoM
 
@@ -79,7 +82,7 @@ int SearchK2AModules(void)
                 }
 
 
-                printf("%d\t",K2AModulesIDTable[K2AModulesIDCount]);
+                //printf("%d\t",K2AModulesIDTable[K2AModulesIDCount]);
 
 
                 tempnumber=K2AModulesIDTable[K2AModulesIDCount];
@@ -232,6 +235,8 @@ int SearchK2AModules(void)
 
     closedir(dir);
 
+    //VA
+
     for(ModuleCounter=0;ModuleCounter<ModuleCountVA;ModuleCounter++)
     {
         if(seludoMAlertVA[ModuleCounter]==true)
@@ -256,16 +261,44 @@ int SearchK2AModules(void)
         }
     }
 
+    //FX
 
-    printf("*** Modules VA Area\n ***");
+    for(ModuleCounter=0;ModuleCounter<ModuleCountFX;ModuleCounter++)
+    {
+        if(seludoMAlertFX[ModuleCounter]==true)
+        {
+            ModuleListFX[ModuleCounter]=ModuleListFX[ModuleCounter]+1000;
+
+            ModuleType=ModuleListFX[ModuleCounter];
+            ModuleTypeFlag=0;
+            for(j=0;j<1024;j++)
+            {
+                if(ModuleType!=ModuleTypeList[j])
+                {
+                    ModuleTypeFlag++;
+                }
+            }
+
+            if(ModuleTypeFlag==1024)
+            {
+                ModuleTypeList[ModuleTypeCount]=ModuleType;
+                ModuleTypeCount++;
+            }
+        }
+    }
+
+
+    printf("*** Modules VA ***\n");
     //Head of table of Modules & seludoM
     printf("#\t");
+    printf("Index\t");
     printf("Module\t");
     printf("eludoM\n");
 
     for(ModuleCounter=0;ModuleCounter<ModuleCountVA;ModuleCounter++)
     {
         printf("%d\t", ModuleCounter);
+        printf("%d\t", ModuleIndexListVA[ModuleCounter]);
         printf("%d\t", ModuleListVA[ModuleCounter]);
         if(seludoMAlertVA[ModuleCounter]==true)
         {
@@ -274,7 +307,24 @@ int SearchK2AModules(void)
         printf("\n");
     }
 
+    printf("*** Modules FX ***\n");
+    //Head of table of Modules & seludoM
+    printf("#\t");
+    printf("Index\t");
+    printf("Module\t");
+    printf("eludoM\n");
 
+    for(ModuleCounter=0;ModuleCounter<ModuleCountFX;ModuleCounter++)
+    {
+        printf("%d\t", ModuleCounter);
+        printf("%d\t", ModuleIndexListFX[ModuleCounter]);
+        printf("%d\t", ModuleListFX[ModuleCounter]);
+        if(seludoMAlertFX[ModuleCounter]==true)
+        {
+            printf("*");
+        }
+        printf("\n");
+    }
 
     return 0;
 };

@@ -8,8 +8,16 @@ extern unsigned int ModuleCountVA, ModuleCountFX;
 extern unsigned int ModuleCounter;
 extern unsigned int ModuleListVA[1024];
 extern unsigned int ModuleListFX[1024];
-
 extern bool VAFXFlag;
+
+
+extern unsigned int ModuleIndexListVA[1024];
+extern unsigned int ModuleIndexListFX[1024];
+
+extern unsigned int ParameterCountersVA[128]; //Table with VA Module overall number of parameters
+extern unsigned int ParameterCountersFX[128]; //Table with FX Module overall number of parameters
+
+
 
 int GenInstrumentSpace(void)
 {
@@ -20,7 +28,12 @@ int GenInstrumentSpace(void)
     VAFXFlag=true;
     for(ModuleCounter=0;ModuleCounter<ModuleCountVA;ModuleCounter++)
     {
-        //printf("#%d\n",ModuleListVA[ModuleCounter]);
+        printf("ModuleCounter %d\n",ModuleCounter);
+        printf("index %d\n",ModuleIndexListVA[ModuleCounter]);
+        printf("#%d\n",ModuleListVA[ModuleCounter]);
+
+        printf("ParameterCountersVA = %d\n",ParameterCountersVA[ModuleCounter]);
+
         GenInstrumentContent(ModuleListVA[ModuleCounter]);
         fprintf(NewFile,"\n");
     }
