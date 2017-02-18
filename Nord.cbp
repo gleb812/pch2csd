@@ -59,6 +59,9 @@
 		<Unit filename="ModuleTableCheck.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="ModuleTypeListSort.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="NextField.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -9,7 +9,7 @@ nchnls = 2
 
 ;******************************
 ; Initialize the ZAK space
-zakinit 8, 3
+zakinit 7, 3
 
 ;******************************
 ; Opcode Definitions
@@ -19,12 +19,12 @@ opcode Constant, 0, k   ; MULTIMODE support a/k?
 	zaw kVal, 2 ; CHANGE 
 endop
 
-opcode LevAdd, 0, k   ; MULTIMODE support a/k?
+opcode LevAdd, 0, k   
 ; Need to check..
 	kVal xin
-	k1 zkr 1 ; CHANGE 
-	kVal xin
-	zkw k1+kVal, 2 ; CHANGE
+	aVal = a(kVal)
+	a1 zar 1 ; CHANGE 
+	zaw a1+aVal, 2 ; CHANGE
 endop
 
 opcode Out2, 0, iiiii
@@ -36,31 +36,16 @@ opcode Out2, 0, iiiii
 	; iPad = 2 (+6dB) ili iPad = 1
 endop 
 
-opcode OscD, 0, KKiiiii
-
-	kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
+opcode OscA, 0, KKKKKK
+ ; Net knopok
+	kfn, kFreq, kFine, kPitch, kModLev xin
 	
-	;kPitchM zkr iPitchMod 
+	kPitch zkr 2 ; CHANGE 
+	kMod zkr 1 ; CHANGE 
 	; Proverit' amplitudu
 	kfine = cent(kFine)
-	
-	aout oscil 0.5, cpsmidinn(kPitch)*kfine 
-	zaw aout, iOut 
-endop
-
-opcode LevAdd, 0, k   
-; Need to check..
-	kVal xin
-	aVal = a(kVal)
-	a1 zar 1 ; CHANGE 
-	zaw a1+aVal, 2 ; CHANGE
-endop
-
-;k2a
-opcode K2A, 0, ii
-	iIn, iOut xin
-	kIn zkr i1
-	zaw a(kIn), iOut
+	aout oscilikt 0.5, kFreq*kfine+kPitch+kMod*kModLev, kfn   
+	zaw aout, 2  ; CHANGE 
 endop
 
 ;a2k
@@ -70,15 +55,22 @@ opcode A2K, 0, ii
 	zkw k(aIn), iOut
 endop
 
+;k2a
+opcode K2A, 0, ii
+	iIn, iOut xin
+	kIn zkr i1
+	zaw a(kIn), iOut
+endop
+
 instr 1
 	 Constant 0.000, 0.000, 1
 	 LevAdd 
 	 LevAdd 
 	 LevAdd 
 	 LevAdd 
-	 Out2 0.000, 1.000, 0.000, 8, 6
-	 OscD 64.000, 64.000, 1.000, 0.000, 1.000, 0.000, 0, 7
-	 A2K 2, 2
+	 Out2 0.000, 1.000, 0.000, 8, 4
+	 OscA 
+	 A2K 6, 2
 	 K2A 2, 8
 endin
 instr 2

@@ -2287,3 +2287,11 @@
 [0216/233959:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type
 [0216/234441:ERROR:proxy_service_factory.cc(129)] Cannot use V8 Proxy resolver in single process mode.
 [0216/234441:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type
+[0219/012317:ERROR:proxy_service_factory.cc(129)] Cannot use V8 Proxy resolver in single process mode.
+[0219/012317:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type
+[0219/012505:ERROR:proxy_service_factory.cc(129)] Cannot use V8 Proxy resolver in single process mode.
+[0219/012505:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type
+[0219/012711:ERROR:proxy_service_factory.cc(129)] Cannot use V8 Proxy resolver in single process mode.
+[0219/012711:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type
+[0219/013753:ERROR:proxy_service_factory.cc(129)] Cannot use V8 Proxy resolver in single process mode.
+[0219/013753:ERROR:gl_surface_egl.cc(486)] eglInitialize D3D11 failed with error EGL_NOT_INITIALIZED, trying next display type

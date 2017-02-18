@@ -25,6 +25,7 @@
 #include "TablesReader.c"
 #include "SearchK2AModules.c"
 #include "AddConverters.c"
+#include "ModuleTypeListSort.c"
 
 
 
@@ -174,8 +175,6 @@ int main(void)
         II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
         CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
 
-        printf("kzakNumber %d\n", kzakNumber);
-        printf("azakNumber %d\n", azakNumber);
 
         SearchK2AModules();
 
@@ -183,44 +182,7 @@ int main(void)
 
         AddConverters();
 
-        printf("kzakNumber %d\n", kzakNumber);
-        printf("azakNumber %d\n", azakNumber);
-
-        // patching fields size computation
-        printf("k-Cables\n");
-        for(i=0;i<CCk;i++)
-        {
-            printf("Location = ");
-            printf("%d ",kIOTable[i][0]);
-            printf("Number = ");
-            printf("%d ",kIOTable[i][1]);
-            printf("MF = ");
-            printf("%d ",kIOTable[i][2]);
-            printf("PF = ");
-            printf("%d ",kIOTable[i][3]);
-            printf("MT = ");
-            printf("%d ",kIOTable[i][4]);
-            printf("PT = ");
-            printf("%d\n",kIOTable[i][5]);
-        }
-
-        printf("a-Cables\n");
-        for(i=0;i<CCa;i++)
-        {
-            printf("Location = ");
-            printf("%d ",aIOTable[i][0]);
-            printf("Number = ");
-            printf("%d ",aIOTable[i][1]);
-            printf("MF = ");
-            printf("%d ",aIOTable[i][2]);
-            printf("PF = ");
-            printf("%d ",aIOTable[i][3]);
-            printf("MT = ");
-            printf("%d ",aIOTable[i][4]);
-            printf("PT = ");
-            printf("%d\n",aIOTable[i][5]);
-        }
-
+        ModuleTypeListSort();
 
         GenZakInit(); // zakinit creation
         NextField(); // -
