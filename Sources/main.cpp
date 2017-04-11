@@ -1,7 +1,10 @@
-
+#include <iostream>
+#include <string>
 #include <stdio.h>
 #include <stdbool.h>
-#include "menu.c"
+#include <map>
+#include "Config.h"
+
 #include "CableSort.c"
 #include "II2IO.c"
 #include "GenZakInit.c"
@@ -36,17 +39,17 @@ FILE *RecentFile;
 
 int mcommand; // returned number of startmenu function !!!
 
-const unsigned int L = 40;
-char TempFileName[L] = "Modules\\"; // Path to Csound Instrs descriptions
-char TempModuleMap[L] = "Maps\\"; // Path to Map tables
-char TempModuleIO[L] = "IO\\"; // Path to modules IO tables
+//const unsigned int L = 1024;
+//char TempFileName[L] = "Modules\\"; // Path to Csound Instrs descriptions
+//char TempModuleMap[L] = "Maps\\"; // Path to Map tables
+//char TempModuleIO[L] = "IO\\"; // Path to modules IO tables
 
-char NewFileName[50] = "new.csd"; // Output csd file
-char RecentFileName[50] = "recent.txt"; // Txt-file with recent patch-file !!!
-char PatchFileName[50] = "Gleb2.pch2"; // Clavia NM2 patch file
-char HeadFileName[50] = "Heads/Header.txt"; // Csound header template
-char EndingFileName[50] = "Heads/Ending.txt"; // Csound tail template (score and XML ending)
-char ModuleNamesTable[40] = "Global/ModID2Name.txt"; // Table with
+//char NewFileName[1024] = "new.csd"; // Output csd file
+//char RecentFileName[1024] = "recent.txt"; // Txt-file with recent patch-file !!!
+//char PatchFileName[1024] = "Gleb2.pch2"; // Clavia NM2 patch file
+//char HeadFileName[1024] = "Heads/Header.txt"; // Csound header template
+//char EndingFileName[1024] = "Heads/Ending.txt"; // Csound tail template (score and XML ending)
+//char ModuleNamesTable[1024] = "Global/ModID2Name.txt"; // Table with
 
 char NamesMapTables[6][256]; // Six Symbol Name Format - example CLA000
 
@@ -127,74 +130,129 @@ bool VAFXFlag; //VA=1 FX=0
 
 unsigned int i;
 
-int main(void) {
-    Welcome();
+using namespace std;
 
-    mcommand = menu();
-    if (mcommand == 0) {
-        // Nord to CSound parameters mapping
-        TablesReader();
+void RunAll(map<string, string>&params) {
+    TablesReader();
 
-        CreatingNewFile(NewFileName);
-        if (OpenPatchFile(PatchFileName) != 0) {
-            if (ReadPD() != 0) // If patch header is OK
-            {
-                //Read module lists for VA & FX
-                ReadML(PDposition + PDlength + 3);
-                ReadML(MLposition + MLlength + 3);
+    CreatingNewFile(params["file_out"].c_str());
+    if (OpenPatchFile(params["file_in"].c_str()) != 0) {
+        if (ReadPD() != 0) // If patch header is OK
+        {
+            //Read module lists for VA & FX
+            ReadML(PDposition + PDlength + 3);
+            ReadML(MLposition + MLlength + 3);
 
-                // Skip a Mistery Object
-                ReadMO(MLposition + MLlength + 3);
+            // Skip a Mistery Object
+            ReadMO(MLposition + MLlength + 3);
 
-                //Read cable lists for VA & FX
-                ReadCL(MOposition + MOlength + 3);
-                ReadCL(CLposition + CLlength + 3);
+            //Read cable lists for VA & FX
+            ReadCL(MOposition + MOlength + 3);
+            ReadCL(CLposition + CLlength + 3);
 
 
-                //Read patch parameters for VA & FX
-                ReadPS(CLposition + CLlength + 3);
+            //Read patch parameters for VA & FX
+            ReadPS(CLposition + CLlength + 3);
 
-                //Read module parameters for VA & FX
-                //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
-                // So function ReadML should be revised
+            //Read module parameters for VA & FX
+            //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
+            // So function ReadML should be revised
 
-                ReadMP(PSposition + PSlength + 3);
-                ReadMP(MPposition + MPlength + 3);
+            ReadMP(PSposition + PSlength + 3);
+            ReadMP(MPposition + MPlength + 3);
 
 
-            }
         }
-
-
-        OpenWrite(HeadFileName); // Start the new file from header template
-        NextField(); // -
-        II2IO4all(); // �������������� ������� �������� - �������������� ���������������� ����� � ���������� ��������
-        CableSort(); // ������� � ���������������� �������� ����������� ��� �������� ����� �������������� �������
-
-
-        SearchK2AModules();
-
-        ModuleTableCheck();
-
-        AddConverters();
-
-        ModuleTypeListSort();
-
-        GenZakInit(); // zakinit creation
-        NextField(); // -
-        GenInstruments(); // CSound Instruments
-        GenInstrumentSpace(); // Instr parameters
-        NextField(); // -
-        OpenWrite(EndingFileName); // file formating
-
-    }
-    if (mcommand == 1) {
-        printf("See you later!\n");
     }
 
-/*
-	char s[3];
-	gets(s);
-*/
+
+    OpenWrite(NM_FileFooter); // Start the new file from header template
+    NextField(); // -
+    II2IO4all();
+    CableSort();
+
+
+    SearchK2AModules();
+
+    ModuleTableCheck();
+
+    AddConverters();
+
+    ModuleTypeListSort();
+
+    GenZakInit(); // zakinit creation
+    NextField(); // -
+    GenInstruments(); // CSound Instruments
+    GenInstrumentSpace(); // Instr parameters
+    NextField(); // -
+    OpenWrite(NM_FileFooter); // file formating
+}
+
+void ParseArgs(int argc, char *argv[], map<string, string> &params) {
+    if (argc < 2) {
+        Help();
+        exit(0);
+    }
+
+    params["file_in"] = string(argv[1]);
+    params["file_out"] = params["file_in"] + ".csd";
+
+    for (int i = 2; i < argc; i++) {
+        if (string(argv[i]) == "-d" & (i + 1) < argc) {
+            i++;
+            auto arg = string(argv[i]);
+            if (arg[arg.length()] != '/') {
+                arg.push_back('/');
+            }
+            params["dir_data"] = arg;
+        }
+    }
+
+    if (params.find("dir_data") == params.end()) {
+        params["dir_data"] = "Data/";
+    }
+
+    params["dir_ft"] = params["dir_data"] + "Function_Tables/";
+    params["dir_global"] = params["dir_data"] + "Function_Global/";
+    params["dir_heads"] = params["dir_data"] + "Heads/";
+    params["dir_io"] = params["dir_data"] + "IO/";
+    params["dir_maps"] = params["dir_data"] + "Maps/";
+    params["dir_modules"] = params["dir_data"] + "Modules/";
+    params["dir_k2a"] = params["dir_data"] + "RulesK2A/";
+    params["dir_seludom"] = params["dir_data"] + "seludoM/";
+    params["dir_tables"] = params["dir_data"] + "Tables/";
+    params["dir_test"] = params["dir_data"] + "Test/";
+
+    params["file_header"] = params["dir_heads"] + "Header.txt";
+    params["file_footer"] = params["dir_heads"] + "Ending.txt";
+    params["file_modID2Name"] = params["dir_global"] + "ModID2Name.txt";
+
+}
+
+void Configure(map<string, string> &params) {
+    NM_DirData = params["dir_data"].c_str();
+    NM_DirFunctionTables = params["dir_ft"].c_str();
+    NM_DirGlobal = params["dir_global"].c_str();
+    NM_DirHeads = params["dir_heads"].c_str();
+    NM_DirIO = params["dir_io"].c_str();
+    NM_DirMaps = params["dir_maps"].c_str();
+    NM_DirModules = params["dir_modules"].c_str();
+    NM_DirK2A = params["dir_k2a"].c_str();
+    NM_DirSeludoM = params["dir_seludom"].c_str();
+    NM_DirTables = params["dir_tables"].c_str();
+    NM_DirTest = params["dir_test"].c_str();
+
+    NM_FileHeader = params["file_header"].c_str();
+    NM_FileFooter = params["file_footer"].c_str();
+    NM_FileModID2Name = params["file_modID2Name"].c_str();
+}
+
+int main(int argc, char *argv[]) {
+    auto params = map<string, string>();
+
+    ParseArgs(argc, argv, params);
+    Configure(params);
+    RunAll(params);
+
     return 0;
 }

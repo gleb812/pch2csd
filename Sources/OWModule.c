@@ -8,7 +8,7 @@ extern FILE *TempFile;
 int OWModule(unsigned int number) {
     unsigned int tempnumber;
     unsigned int i, j;
-    char TempFileName[50] = "Modules\\";
+    char TempFileName[50] = "Modules\\"; // fixme
     unsigned int counter = 1;
 
     tempnumber = number;

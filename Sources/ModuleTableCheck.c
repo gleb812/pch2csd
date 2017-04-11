@@ -1,28 +1,20 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "Config.h"
 
 extern FILE *TempFile;
 
 extern unsigned int ModuleTypeCount;
 extern unsigned int ModuleTypeList[1024];
 
-extern char TempFileName[40];
-extern char TempModuleMap[40];
-extern char TempModuleIO[40];
-extern char ModuleNamesTable[40];
-
 int ModuleTableCheck(void) {
-    unsigned int i, j, k;
-    unsigned int maptempnumber;
-    unsigned int tempnumber;
-    unsigned int counter;
-    //char Name[20];
+    unsigned int k;
     unsigned char tempSymbol;
     bool NameFlag = false;
     unsigned int NameCount = 0;
 
     printf("*** Checking Library of Modules ***\n");
-    if ((TempFile = fopen(ModuleNamesTable, "rb")) == NULL) {
+    if ((TempFile = fopen(NM_FileModID2Name, "rb")) == NULL) {
         printf("Table with names of modules not found");
         NameFlag = false;
     } else {
@@ -31,7 +23,6 @@ int ModuleTableCheck(void) {
     printf("Number Modules in PatchFile\t%d\n", ModuleTypeCount);
 
     printf("--------------- *** ----------------\n");
-    //printf("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n");
     printf("#\t");
     printf("Module  ");
     printf("csd\t");
@@ -40,112 +31,33 @@ int ModuleTableCheck(void) {
     printf("Name\n");
 
     for (k = 0; k < ModuleTypeCount; k++) {
-        tempnumber = ModuleTypeList[k];
 
         printf("%d\t", k);
         printf("%d\t", ModuleTypeList[k]);
 
-        if (ModuleTypeList[k] > 1000) {
-            maptempnumber = ModuleTypeList[k] - 1000;
-        } else {
-            maptempnumber = ModuleTypeList[k];
-        }
+        char moduleFile[1024];
+        char mapFile[1024];
+        char ioFile[1024];
 
-        tempnumber = maptempnumber;
-        counter = 1;
+        sprintf(moduleFile, "%s%d.txt", NM_DirModules, ModuleTypeList[k]);
+        sprintf(mapFile, "%s%d.txt", NM_DirMaps, ModuleTypeList[k]);
+        sprintf(ioFile, "%s%d.txt", NM_DirIO, ModuleTypeList[k]);
 
-        while (true) {
-            tempnumber = (tempnumber - tempnumber % 10) / 10;
-            if (tempnumber == 0) {
-                break;
-            }
-            counter++;
-        }
-
-        for (i = 0; i < counter; i++) {
-            tempnumber = maptempnumber;
-
-            for (j = 0; j < counter - i - 1; j++) {
-                tempnumber = tempnumber / 10;
-            }
-            tempnumber = tempnumber % 10;
-
-            TempModuleMap[5 + i] = (char) (48 + tempnumber);
-
-        }
-
-        tempnumber = ModuleTypeList[k];
-
-        counter = 1;
-
-        while (true) {
-            tempnumber = (tempnumber - tempnumber % 10) / 10;
-            if (tempnumber == 0) {
-                break;
-            }
-            counter++;
-        }
-
-
-        for (i = 0; i < counter; i++) {
-            tempnumber = ModuleTypeList[k];
-
-            for (j = 0; j < counter - i - 1; j++) {
-                tempnumber = tempnumber / 10;
-            }
-            tempnumber = tempnumber % 10;
-
-            TempFileName[8 + i] = (char) (48 + tempnumber);
-            TempModuleIO[3 + i] = (char) (48 + tempnumber);
-
-        }
-
-
-
-        //Module Name
-        TempFileName[counter + 8] = 0x2e;
-        TempFileName[counter + 9] = 0x74;
-        TempFileName[counter + 10] = 0x78;
-        TempFileName[counter + 11] = 0x74;
-        TempFileName[counter + 12] = 0x0;
-
-        if ((TempFile = fopen(TempFileName, "rb")) == NULL) {
+        if ((TempFile = fopen(moduleFile, "rb")) == NULL) {
             printf("N\t");
         } else {
             printf("Y\t");
             fclose(TempFile);
         }
 
-        //Mapping file name
-        if (ModuleTypeList[k] > 1000) {
-            TempModuleMap[counter + 4] = 0x2e;
-            TempModuleMap[counter + 5] = 0x74;
-            TempModuleMap[counter + 6] = 0x78;
-            TempModuleMap[counter + 7] = 0x74;
-            TempModuleMap[counter + 8] = 0x0;
-        } else {
-            TempModuleMap[counter + 5] = 0x2e;
-            TempModuleMap[counter + 6] = 0x74;
-            TempModuleMap[counter + 7] = 0x78;
-            TempModuleMap[counter + 8] = 0x74;
-            TempModuleMap[counter + 9] = 0x0;
-        }
-
-        if ((TempFile = fopen(TempModuleMap, "rb")) == NULL) {
+        if ((TempFile = fopen(mapFile, "rb")) == NULL) {
             printf("N\t");
         } else {
             printf("Y\t");
             fclose(TempFile);
         }
 
-        //������������ ����� ����� � ������������ ������ � �������
-        TempModuleIO[counter + 3] = 0x2e;
-        TempModuleIO[counter + 4] = 0x74;
-        TempModuleIO[counter + 5] = 0x78;
-        TempModuleIO[counter + 6] = 0x74;
-        TempModuleIO[counter + 7] = 0x0;
-
-        if ((TempFile = fopen(TempModuleIO, "rb")) == NULL) {
+        if ((TempFile = fopen(ioFile, "rb")) == NULL) {
             printf("N\t");
         } else {
             printf("Y\t");
@@ -153,8 +65,7 @@ int ModuleTableCheck(void) {
         }
 
         if (NameFlag == true) {
-            //���������� �������� ������, ������� ������� �� ������� ���� �������
-            TempFile = fopen(ModuleNamesTable, "rb");
+            TempFile = fopen(NM_FileModID2Name, "rb");
             NameCount = 0;
 
             if (ModuleTypeList[k] != 1) {
@@ -171,7 +82,6 @@ int ModuleTableCheck(void) {
                     }
                 }
             }
-
 
             while (true) {
                 if (fread(&tempSymbol, 1, 1, TempFile) == 0) {
@@ -204,4 +114,3 @@ int ModuleTableCheck(void) {
     }
     return 1;
 }
-

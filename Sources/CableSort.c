@@ -1,4 +1,4 @@
-// Cable list sorting
+/**/// Cable list sorting
 
 // While reading the patch file all cables are placed in one IOTable list
 // Two separate lists are formed: one for control cables and one for signals,

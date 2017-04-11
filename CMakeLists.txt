@@ -13,7 +13,6 @@ set(SOURCE_FILES
         Sources/GenZakInit.c
         Sources/II2IO.c
         Sources/main.cpp
-        Sources/menu.c
         Sources/ModuleTableCheck.c
         Sources/ModuleTypeListSort.c
         Sources/NextField.c
@@ -29,6 +28,6 @@ set(SOURCE_FILES
         Sources/ReadPS.c
         Sources/SearchK2AModules.c
         Sources/TablesReader.c
-        Sources/Welcome.c)
+        Sources/Welcome.c Sources/Utils.h Sources/Utils.h Sources/Config.h)
 
 add_executable(pch2csd ${SOURCE_FILES})

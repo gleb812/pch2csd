@@ -4,26 +4,21 @@
 extern FILE *TempFile;
 extern float Tables[128][128];
 
-int OpenTable(char TempFileName[20], unsigned int TableID) {
+int OpenTable(char* FileName, unsigned int TableID) {
     float value;
     unsigned int i;
 
-    if ((TempFile = fopen(TempFileName, "r")) == NULL) {
-        printf("Error - ");
-        printf(TempFileName);
-        printf(" not opened!\n");
+    if ((TempFile = fopen(FileName, "r")) == NULL) {
+        printf("  Error - not opened");
         return 0;
     } else {
-        printf(TempFileName);
-        printf("\n");
+        printf("  %s", FileName);
         for (i = 0; i < 128; i++) {
             if (fscanf(TempFile, "%f", &value) == EOF) {
                 break;
             } else {
                 Tables[i][TableID] = value;
-                //printf("%f\n",value);
             }
-
         }
     }
 

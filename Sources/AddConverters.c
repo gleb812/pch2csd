@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include "Utils.h"
+#include "Config.h"
 
 extern unsigned int IOTable[256][9];
 
@@ -30,9 +34,6 @@ extern unsigned int kzakNumber;
 
 extern unsigned int CCa; // Audio Cable Counter (for csd file)
 extern unsigned int CCk; // Control Cable Counter (for csd file)
-
-extern char TempFileName[40];
-extern char TempModuleIO[40];
 
 extern bool a2kFlag;
 extern bool k2aFlag;
@@ -89,42 +90,11 @@ int AddConverters(void) {
         printf("Destination Port\t");
         printf("%d\n", ItempPort);
 
+        char ioFile[1024];
+        sprintf(ioFile, "%s%d.txt", NM_DirIO, ItempModuleType);
 
-        // �����������, ��� ��� ������� ���������� �����, � ������ �������� �� ��, ��� �������� ������������� ���� �������, �������� ����������!
-
-        // ������� ����� ������ ������� ��� ������ ����������
-        tempnumber = ItempModuleType;
-        counter = 1;
-
-        while (true) {
-            tempnumber = (tempnumber - tempnumber % 10) / 10;
-            if (tempnumber == 0) {
-                break;
-            }
-            counter++;
-        }
-
-        for (i = 0; i < counter; i++) {
-            tempnumber = ItempModuleType;
-
-            for (j = 0; j < counter - i - 1; j++) {
-                tempnumber = tempnumber / 10;
-            }
-            tempnumber = tempnumber % 10;
-
-            TempModuleIO[3 + i] = (char) (48 + tempnumber);
-
-        }
-
-        //������������ ����� ����� � ������������ ������ � �������
-        TempModuleIO[counter + 3] = 0x2e;
-        TempModuleIO[counter + 4] = 0x74;
-        TempModuleIO[counter + 5] = 0x78;
-        TempModuleIO[counter + 6] = 0x74;
-        TempModuleIO[counter + 7] = 0x0;
-
-        if ((TempFile = fopen(TempModuleIO, "rb")) == NULL) {
-            printf("%s\t", TempModuleIO);
+        if ((TempFile = fopen(ioFile, "rb")) == NULL) {
+            printf("%s\t", ioFile);
             printf("IO-file not found\n");
         } else {
             IOCount = 0;
@@ -275,7 +245,6 @@ int AddConverters(void) {
             }
 
         }
-
     }
 
     // k - cables
@@ -325,42 +294,11 @@ int AddConverters(void) {
         printf("Destination Port\t");
         printf("%d\n", ItempPort);
 
+        char ioFile[1024];
+        sprintf(ioFile, "%s%d.txt", NM_DirIO, ItempModuleType);
 
-        // �����������, ��� ��� ������� ���������� �����, � ������ �������� �� ��, ��� �������� ������������� ���� �������, �������� ����������!
-
-        // ������� ����� ������ ������� ��� ������ ����������
-        tempnumber = ItempModuleType;
-        counter = 1;
-
-        while (true) {
-            tempnumber = (tempnumber - tempnumber % 10) / 10;
-            if (tempnumber == 0) {
-                break;
-            }
-            counter++;
-        }
-
-        for (i = 0; i < counter; i++) {
-            tempnumber = ItempModuleType;
-
-            for (j = 0; j < counter - i - 1; j++) {
-                tempnumber = tempnumber / 10;
-            }
-            tempnumber = tempnumber % 10;
-
-            TempModuleIO[3 + i] = (char) (48 + tempnumber);
-
-        }
-
-        //������������ ����� ����� � ������������ ������ � �������
-        TempModuleIO[counter + 3] = 0x2e;
-        TempModuleIO[counter + 4] = 0x74;
-        TempModuleIO[counter + 5] = 0x78;
-        TempModuleIO[counter + 6] = 0x74;
-        TempModuleIO[counter + 7] = 0x0;
-
-        if ((TempFile = fopen(TempModuleIO, "rb")) == NULL) {
-            printf("%s\t", TempModuleIO);
+        if ((TempFile = fopen(ioFile, "rb")) == NULL) {
+            printf("%s\t", ioFile);
             printf("IO-file not found\n");
         } else {
             IOCount = 0;

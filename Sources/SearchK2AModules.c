@@ -3,6 +3,10 @@
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <string.h>
+#include <inttypes.h>
+#include <stdlib.h>
+#include "Config.h"
 
 extern unsigned int CCa;
 extern unsigned int aIOTable[256][6]; // signal cables list
@@ -31,7 +35,6 @@ int SearchK2AModules(void) {
     unsigned int ModuleType;
     unsigned int ModuleTypeFlag;
     unsigned int RulesCounts[128];
-    char Name[4];
     unsigned int RulesTable[128][13];
     unsigned int K2AModulesIDCount;
     unsigned int K2AModulesIDTable[128];
@@ -39,7 +42,6 @@ int SearchK2AModules(void) {
     unsigned int tempnumber;
     unsigned int temp;
 
-    char RulesK2AFileName[40] = "RulesK2A\\";
     FILE *RulesK2AFile;
 
     printf("*** READ ALL K2A RULES ***\n");
@@ -48,92 +50,52 @@ int SearchK2AModules(void) {
 
     // �������� ������ ������ Modules �� seludoM �� �������� "RulesK2A"
 
-    DIR *dir = opendir("RulesK2A");
+    DIR *dir = opendir(NM_DirK2A);
     if (dir) {
         struct dirent *ent;
         while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_name[0] == '.') {
+                continue;
+            }
+            K2AModulesIDCount++;
+
             i = 0;
-            while (ent->d_name[i] != NULL) {
-                Name[i] = ent->d_name[i];
-                i++;
-                if (i == 10) {
+            for (i = 0; i < ent->d_namlen; i++) {
+                if (ent->d_name[i] == 0x2E) { // if symbol not "."
+                    char fn[i];
+                    strncpy(fn, ent->d_name, i);
+                    char *end;
+                    unsigned int id = (unsigned int) strtol(fn, &end, 10);
+                    K2AModulesIDTable[K2AModulesIDCount] = id;
                     break;
                 }
             }
 
-            if (Name[0] != 0x2E) // if first symbol not "."
-            {
-                K2AModulesIDCount++;
-                for (i = 0; i < 4; i++) {
-                    if (Name[i] == 0x2E) // if symbol not "."
-                    {
+            char k2aFile[1024];
+            sprintf(k2aFile, "%s%d.txt", NM_DirK2A, K2AModulesIDTable[K2AModulesIDCount]);
+
+            if ((RulesK2AFile = fopen(k2aFile, "rb")) == NULL) {
+                //printf("N\n");
+            } else {
+                //printf("Y\n");
+
+                RulesCount = 0;
+
+                for (i = 0; i < 13; i++) {
+                    if (fscanf(RulesK2AFile, "%d", &temp) == EOF) {
                         break;
                     } else {
-                        K2AModulesIDTable[K2AModulesIDCount] =
-                                K2AModulesIDTable[K2AModulesIDCount] * 10 + (unsigned int) (Name[i]) - 48;
+                        RulesCount++;
+                        RulesTable[K2AModulesIDCount][i] = temp;
+                        RulesCounts[K2AModulesIDCount] = RulesCount;
+                        //printf("Rule\t");
+                        //printf("%d\n",temp);
+
                     }
                 }
 
-
-                //printf("%d\t",K2AModulesIDTable[K2AModulesIDCount]);
-
-
-                tempnumber = K2AModulesIDTable[K2AModulesIDCount];
-                counter = 1;
-
-                while (true) {
-                    tempnumber = (tempnumber - tempnumber % 10) / 10;
-                    if (tempnumber == 0) {
-                        break;
-                    }
-                    counter++;
-                }
-
-                for (i = 0; i < counter; i++) {
-
-                    tempnumber = K2AModulesIDTable[K2AModulesIDCount];
-
-                    for (j = 0; j < counter - i - 1; j++) {
-                        tempnumber = tempnumber / 10;
-                    }
-                    tempnumber = tempnumber % 10;
-
-                    RulesK2AFileName[9 + i] = (char) (48 + tempnumber);
-
-                }
-
-                //Module Name
-                RulesK2AFileName[counter + 9] = 0x2e;
-                RulesK2AFileName[counter + 10] = 0x74;
-                RulesK2AFileName[counter + 11] = 0x78;
-                RulesK2AFileName[counter + 12] = 0x74;
-                RulesK2AFileName[counter + 13] = 0x0;
-
-                if ((RulesK2AFile = fopen(RulesK2AFileName, "rb")) == NULL) {
-                    //printf("N\n");
-                } else {
-                    //printf("Y\n");
-
-                    RulesCount = 0;
-
-                    for (i = 0; i < 13; i++) {
-                        if (fscanf(RulesK2AFile, "%d", &temp) == EOF) {
-                            break;
-                        } else {
-                            RulesCount++;
-                            RulesTable[K2AModulesIDCount][i] = temp;
-                            RulesCounts[K2AModulesIDCount] = RulesCount;
-                            //printf("Rule\t");
-                            //printf("%d\n",temp);
-
-                        }
-                    }
-
-                    fclose(RulesK2AFile);
-                }
-
+                fclose(RulesK2AFile);
             }
-
         }
 
         //printf("K2AModulesIDCount ");

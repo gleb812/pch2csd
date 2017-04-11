@@ -8,56 +8,42 @@ extern char NamesMapTables[6][256];
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <string.h>
+#include "Config.h"
 
 int TablesReader(void) {
     unsigned int i;
     unsigned int TableNameCount;
-    char NameMapTable[6];
-
-    char TableNamesBlank[20] = "Tables/xxxxxx.txt"; // Table with
+    char NameMapTable[7];
 
     TableNameCount = 0;
 
     printf("*** READ ALL TABLES ***\n");
 
-    DIR *dir = opendir("Tables");
+    DIR *dir = opendir(NM_DirTables);
     if (dir) {
         struct dirent *ent;
         while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_namlen != 10) { // six chars + .txt
+                continue;
+            }
+            strncpy(NameMapTable, ent->d_name, 6);
+
             i = 0;
-            while (ent->d_name[i] != NULL) {
-                NameMapTable[i] = ent->d_name[i];
-                i++;
-                if (i == 6) {
-                    break;
-                }
+
+            TableNameCount++;
+
+            for (i = 0; i < 6; i++) {
+                NamesMapTables[i][TableNameCount] = NameMapTable[i];
             }
 
+            char tablePath[1024];
+            sprintf(tablePath, "%s%s.txt", NM_DirTables, NameMapTable);
 
-            //printf("%c\n",NameMapTable[0]);
+            printf(NameMapTable);
+            OpenTable(tablePath, TableNameCount);
+            printf("\n");
 
-            if (NameMapTable[0] != 0x2E) // if first symbol not "."
-            {
-                TableNameCount++;
-                //puts(ent->d_name);
-
-                for (i = 0; i < 6; i++) {
-                    NamesMapTables[i][TableNameCount] = NameMapTable[i];
-                    TableNamesBlank[i + 7] = NameMapTable[i];
-                }
-
-                OpenTable(TableNamesBlank, TableNameCount);
-
-                printf("%s", TableNamesBlank);
-                printf("\n");
-            }
-
-/*
-            while()
-            {
-                NamesMapTables[TableNameCount][i]=0x96;
-            }
-            */
         }
     } else {
         fprintf(stderr, "Error opening directory\n");

@@ -1,15 +1,12 @@
 // Function that adds Instr to orc part according to Nord patch
 #include <stdio.h>
 #include <stdbool.h>
+#include "Config.h"
 
 extern FILE *NewFile;
 extern FILE *TempFile;
 
 extern unsigned int CCa, CCk;
-
-extern char TempFileName[40];
-extern char TempModuleMap[40];
-extern char TempModuleIO[40];
 
 extern unsigned int aIOTable[256][6]; // a-cable list
 //0-location (VA or FX); 1-cable ID; 2-module from; 3-port from;
@@ -77,88 +74,20 @@ int GenInstrumentContent(unsigned int number) {
 
     // Go go go!
 
-    if (number > 1000) {
-        maptempnumber = number - 1000;
-    } else {
-        maptempnumber = number;
-    }
+    char moduleFile[1024];
+    char mapFile[1024];
+    char ioFile[1024];
 
-    tempnumber = maptempnumber;
-    counter = 1;
-
-    while (true) {
-        tempnumber = (tempnumber - tempnumber % 10) / 10;
-        if (tempnumber == 0) {
-            break;
-        }
-        counter++;
-    }
-
-    for (i = 0; i < counter; i++) {
-        tempnumber = maptempnumber;
-
-        for (j = 0; j < counter - i - 1; j++) {
-            tempnumber = tempnumber / 10;
-        }
-        tempnumber = tempnumber % 10;
-
-        TempModuleMap[5 + i] = (char) (48 + tempnumber);
-
-    }
-
-    tempnumber = number;
-
-    counter = 1;
-
-    while (true) {
-        tempnumber = (tempnumber - tempnumber % 10) / 10;
-        if (tempnumber == 0) {
-            break;
-        }
-        counter++;
-    }
-
-    for (i = 0; i < counter; i++) {
-        tempnumber = number;
-
-        for (j = 0; j < counter - i - 1; j++) {
-            tempnumber = tempnumber / 10;
-        }
-        tempnumber = tempnumber % 10;
-
-        TempFileName[8 + i] = (char) (48 + tempnumber);
-        TempModuleIO[3 + i] = (char) (48 + tempnumber);
-
-    }
-
-    //Module Name
-    TempFileName[counter + 8] = 0x2e;
-    TempFileName[counter + 9] = 0x74;
-    TempFileName[counter + 10] = 0x78;
-    TempFileName[counter + 11] = 0x74;
-    TempFileName[counter + 12] = 0x0;
-
-    //Mapping file name
-    TempModuleMap[counter + 5] = 0x2e;
-    TempModuleMap[counter + 6] = 0x74;
-    TempModuleMap[counter + 7] = 0x78;
-    TempModuleMap[counter + 8] = 0x74;
-    TempModuleMap[counter + 9] = 0x0;
-
-    //������������ ����� ����� � ������������ ������ � �������
-    TempModuleIO[counter + 3] = 0x2e;
-    TempModuleIO[counter + 4] = 0x74;
-    TempModuleIO[counter + 5] = 0x78;
-    TempModuleIO[counter + 6] = 0x74;
-    TempModuleIO[counter + 7] = 0x0;
+    sprintf(moduleFile, "%s%d.txt", NM_DirModules, number);
+    sprintf(mapFile, "%s%d.txt", NM_DirMaps, number);
+    sprintf(ioFile, "%s%d.txt", NM_DirIO, number);
 
     PPflag = false;
 
-
     //We need only name of a module
-    if ((TempFile = fopen(TempFileName, "r")) == NULL) {
+    if ((TempFile = fopen(moduleFile, "r")) == NULL) {
         printf("Error - ");
-        printf(TempFileName);
+        printf(moduleFile);
         printf(" not opened!\n");
         return 0;
     } else {
@@ -200,9 +129,9 @@ int GenInstrumentContent(unsigned int number) {
 
     if (VAFXFlag) {
 
-        if ((TempFile = fopen(TempModuleMap, "rb")) == NULL) {
+        if ((TempFile = fopen(mapFile, "rb")) == NULL) {
             printf("Error - ");
-            printf(TempModuleMap);
+            printf(mapFile);
             printf(" not opened!\n");
             return 0;
         } else {
@@ -409,7 +338,7 @@ int GenInstrumentContent(unsigned int number) {
 
             printf("TableName: ");
             for (k = 0; k < 6; k++) {
-                printf("%c", Nametemp6[k]);
+                printf("%s", Nametemp6);
             }
 
             printf("; ");
@@ -433,7 +362,7 @@ int GenInstrumentContent(unsigned int number) {
         }
         //fprintf(NewFile,"\n");
     } else {
-        if ((TempFile = fopen(TempModuleMap, "rb")) == NULL) {
+        if ((TempFile = fopen(mapFile, "rb")) == NULL) {
             return 0;
         } else {
             /*
@@ -676,9 +605,9 @@ int GenInstrumentContent(unsigned int number) {
     // second column k(0)/a(1)
 
 
-    if ((TempFile = fopen(TempModuleIO, "rb")) == NULL) {
+    if ((TempFile = fopen(ioFile, "rb")) == NULL) {
         printf("Error - ");
-        printf(TempModuleIO);
+        printf(ioFile);
         printf(" not opened!\n");
         return 0;
     } else {
