@@ -19,36 +19,33 @@ extern unsigned int ParameterCountersFX[128]; //Table with FX Module overall num
 
 
 
-int GenInstrumentSpace(void)
-{
+int GenInstrumentSpace(void) {
     printf("Generating instrument \n");
-    fprintf(NewFile,"instr 1\n");
+    fprintf(NewFile, "instr 1\n");
     //printf("Modules_List_VA = ");
     //printf("%d\n",ModuleCountVA);
-    VAFXFlag=true;
-    for(ModuleCounter=0;ModuleCounter<ModuleCountVA;ModuleCounter++)
-    {
-        printf("ModuleCounter %d\n",ModuleCounter);
-        printf("index %d\n",ModuleIndexListVA[ModuleCounter]);
-        printf("#%d\n",ModuleListVA[ModuleCounter]);
+    VAFXFlag = true;
+    for (ModuleCounter = 0; ModuleCounter < ModuleCountVA; ModuleCounter++) {
+        printf("ModuleCounter %d\n", ModuleCounter);
+        printf("index %d\n", ModuleIndexListVA[ModuleCounter]);
+        printf("#%d\n", ModuleListVA[ModuleCounter]);
 
-        printf("ParameterCountersVA = %d\n",ParameterCountersVA[ModuleCounter]);
+        printf("ParameterCountersVA = %d\n", ParameterCountersVA[ModuleCounter]);
 
         GenInstrumentContent(ModuleListVA[ModuleCounter]);
-        fprintf(NewFile,"\n");
+        fprintf(NewFile, "\n");
     }
-    fprintf(NewFile,"endin\n");
+    fprintf(NewFile, "endin\n");
 
-    fprintf(NewFile,"instr 2\n");
+    fprintf(NewFile, "instr 2\n");
     //printf("Modules_List_FX = ");
     //printf("%d\n",ModuleCountFX);
-    VAFXFlag=false;
-    for(ModuleCounter=0;ModuleCounter<ModuleCountFX;ModuleCounter++)
-    {
+    VAFXFlag = false;
+    for (ModuleCounter = 0; ModuleCounter < ModuleCountFX; ModuleCounter++) {
         //printf("#%d\n",ModuleListFX[ModuleCounter]);
         GenInstrumentContent(ModuleListFX[ModuleCounter]);
-        fprintf(NewFile,"\n");
+        fprintf(NewFile, "\n");
     }
-    fprintf(NewFile,"endin\n");
+    fprintf(NewFile, "endin\n");
     return 1;
 }

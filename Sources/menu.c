@@ -5,8 +5,7 @@ extern FILE *RecentFile;
 extern char RecentFileName[50];
 extern char PatchFileName[50];
 
-int menu(void)
-{
+int menu(void) {
     int returnpointnumber;
     int pointnumber;
     printf("Please make a choice of action!\n");
@@ -14,32 +13,25 @@ int menu(void)
     printf("2. Convert recent patch-file\n");
     printf("3. Exit\n");
     scanf("%d", &pointnumber);
-    switch(pointnumber)
-    {
-        case 1:
-        {
+    switch (pointnumber) {
+        case 1: {
             printf("Please write new patch-filename !\n");
             scanf("%s", &PatchFileName);
-            returnpointnumber=0;
+            returnpointnumber = 0;
             break;
         }
-        case 2:
-        {
-            if((RecentFile = fopen(RecentFileName,"r")) == NULL)
-            {
+        case 2: {
+            if ((RecentFile = fopen(RecentFileName, "r")) == NULL) {
                 printf("Error with saving patch-file to recent file!\n");
-            }
-            else
-            {
+            } else {
                 fgets(PatchFileName, 50, RecentFile);
                 fclose(RecentFile);
             }
-            returnpointnumber=0;
+            returnpointnumber = 0;
             break;
         }
-        case 3:
-        {
-            returnpointnumber=1;
+        case 3: {
+            returnpointnumber = 1;
             break;
         }
     }

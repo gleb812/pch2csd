@@ -28,7 +28,6 @@
 #include "ModuleTypeListSort.c"
 
 
-
 FILE *NewFile;
 FILE *ReadFile;
 FILE *TempFile;
@@ -37,17 +36,17 @@ FILE *RecentFile;
 
 int mcommand; // returned number of startmenu function !!!
 
-const unsigned int L=40;
-char TempFileName[L]="Modules\\"; // Path to Csound Instrs descriptions
-char TempModuleMap[L]="Maps\\"; // Path to Map tables
-char TempModuleIO[L]="IO\\"; // Path to modules IO tables
+const unsigned int L = 40;
+char TempFileName[L] = "Modules\\"; // Path to Csound Instrs descriptions
+char TempModuleMap[L] = "Maps\\"; // Path to Map tables
+char TempModuleIO[L] = "IO\\"; // Path to modules IO tables
 
-char NewFileName[50]="new.csd"; // Output csd file
-char RecentFileName[50]="recent.txt"; // Txt-file with recent patch-file !!!
-char PatchFileName[50]="Gleb2.pch2"; // Clavia NM2 patch file
-char HeadFileName[50]="Heads/Header.txt"; // Csound header template
-char EndingFileName[50]="Heads/Ending.txt"; // Csound tail template (score and XML ending)
-char ModuleNamesTable[40]="Global/ModID2Name.txt"; // Table with
+char NewFileName[50] = "new.csd"; // Output csd file
+char RecentFileName[50] = "recent.txt"; // Txt-file with recent patch-file !!!
+char PatchFileName[50] = "Gleb2.pch2"; // Clavia NM2 patch file
+char HeadFileName[50] = "Heads/Header.txt"; // Csound header template
+char EndingFileName[50] = "Heads/Ending.txt"; // Csound tail template (score and XML ending)
+char ModuleNamesTable[40] = "Global/ModID2Name.txt"; // Table with
 
 char NamesMapTables[6][256]; // Six Symbol Name Format - example CLA000
 
@@ -70,22 +69,22 @@ unsigned int ParameterCountersVA[128]; //Table with VA Module overall number of 
 unsigned int ParameterCountersFX[128]; //Table with FX Module overall number of parameters
 
 unsigned int IOTable[256][9];   //Cables Table (inputs and outputs)
-                                //0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
-                                //4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
+//0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
+//4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
 unsigned int aIOTable[256][6];  //Audio Cables Table (inputs and outputs)
-                                //0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
-                                //4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
+//0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
+//4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
 unsigned int kIOTable[256][6];  //Control Cables Table (inputs and outputs)
-                               //0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
-                                //4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
+//0-location (VA or FX); 1-Cable number; 2-module from; 3-jack from;
+//4-module to;  5-jack to; 6-color; 7-type; 8-a or k type in CSound
 
-unsigned int CableCounter=0; // Cable Counter
+unsigned int CableCounter = 0; // Cable Counter
 
-unsigned int CCa=0; // Audio Cable Counter (for csd file)
-unsigned int CCk=0; // Control Cable Counter (for csd file)
+unsigned int CCa = 0; // Audio Cable Counter (for csd file)
+unsigned int CCk = 0; // Control Cable Counter (for csd file)
 
-unsigned int azakNumber=0;
-unsigned int kzakNumber=0;
+unsigned int azakNumber = 0;
+unsigned int kzakNumber = 0;
 
 unsigned int ModuleCounter; // Module Counter
 
@@ -102,12 +101,12 @@ unsigned int PSlength;
 unsigned int MPposition;
 unsigned int MPlength;
 
-unsigned int SoundCableCount=0; // Audio Cable Counter (for patch file)
-unsigned int ControlCableCount=0; // Control Cable Counter (for patch file)
-unsigned int OtherCableCount=0; // Other Cable Counter (for patch file)
+unsigned int SoundCableCount = 0; // Audio Cable Counter (for patch file)
+unsigned int ControlCableCount = 0; // Control Cable Counter (for patch file)
+unsigned int OtherCableCount = 0; // Other Cable Counter (for patch file)
 
 unsigned int ModuleTypeList[1024]; // Module Type list (modules with the same type are listed only once)
-unsigned int ModuleTypeCount=0; // Module type counter
+unsigned int ModuleTypeCount = 0; // Module type counter
 
 unsigned int ModuleListVA[1024]; // VA module list
 unsigned int ModuleListFX[1024]; // FX module list
@@ -118,52 +117,49 @@ bool seludoMAlertFX[1024]; // FX flag of eludoM
 unsigned int ModuleIndexListVA[1024]; // VA Module Index list
 unsigned int ModuleIndexListFX[1024]; // FX Module Index list
 
-unsigned int ModuleCountVA=0; // VA field module counter
-unsigned int ModuleCountFX=0; // FX field module counter
+unsigned int ModuleCountVA = 0; // VA field module counter
+unsigned int ModuleCountFX = 0; // FX field module counter
 
-bool a2kFlag=false;
-bool k2aFlag=false;
+bool a2kFlag = false;
+bool k2aFlag = false;
 
 bool VAFXFlag; //VA=1 FX=0
 
 unsigned int i;
 
-int main(void)
-{
+int main(void) {
     Welcome();
 
-    mcommand=menu();
-    if(mcommand==0)
-    {
+    mcommand = menu();
+    if (mcommand == 0) {
         // Nord to CSound parameters mapping
         TablesReader();
 
         CreatingNewFile(NewFileName);
-        if(OpenPatchFile(PatchFileName)!=0)
-        {
-            if(ReadPD()!=0) // If patch header is OK
+        if (OpenPatchFile(PatchFileName) != 0) {
+            if (ReadPD() != 0) // If patch header is OK
             {
                 //Read module lists for VA & FX
-                ReadML(PDposition+PDlength+3);
-                ReadML(MLposition+MLlength+3);
+                ReadML(PDposition + PDlength + 3);
+                ReadML(MLposition + MLlength + 3);
 
                 // Skip a Mistery Object
-                ReadMO(MLposition+MLlength+3);
+                ReadMO(MLposition + MLlength + 3);
 
                 //Read cable lists for VA & FX
-                ReadCL(MOposition+MOlength+3);
-                ReadCL(CLposition+CLlength+3);
+                ReadCL(MOposition + MOlength + 3);
+                ReadCL(CLposition + CLlength + 3);
 
 
                 //Read patch parameters for VA & FX
-                ReadPS(CLposition+CLlength+3);
+                ReadPS(CLposition + CLlength + 3);
 
                 //Read module parameters for VA & FX
                 //NOTICE!!! The oscillator wave type for some reason is not a parameter. It placed in module's description
                 // So function ReadML should be revised
 
-                ReadMP(PSposition+PSlength+3);
-                ReadMP(MPposition+MPlength+3);
+                ReadMP(PSposition + PSlength + 3);
+                ReadMP(MPposition + MPlength + 3);
 
 
             }
@@ -172,8 +168,8 @@ int main(void)
 
         OpenWrite(HeadFileName); // Start the new file from header template
         NextField(); // -
-        II2IO4all(); // Преобразования перечня проводов - преобразование последовательных цепей в соединения звездами
-        CableSort(); // Переход к индентификаторам проводов употребимым при описании через коммутационные матрицы
+        II2IO4all(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        CableSort(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 
         SearchK2AModules();
@@ -192,8 +188,7 @@ int main(void)
         OpenWrite(EndingFileName); // file formating
 
     }
-    if(mcommand==1)
-    {
+    if (mcommand == 1) {
         printf("See you later!\n");
     }
 
@@ -201,5 +196,5 @@ int main(void)
 	char s[3];
 	gets(s);
 */
-	return 0;
+    return 0;
 }

@@ -25,17 +25,16 @@ extern unsigned int HiddenParametersFX[128]; //Table with FX Module hidden param
 extern bool HiddenFlagVA[128]; //Flag VA if Module has the hidden parameter (Module number 0-127)
 extern bool HiddenFlagFX[128]; //Flag FX if Module has the hidden parameter (Module number 0-127)
 
-int ReadML(unsigned int position)
-{
+int ReadML(unsigned int position) {
     unsigned char temp;
-    unsigned int bytecounter=0;
+    unsigned int bytecounter = 0;
     bool Data[100240];
-    const unsigned int ModulLength=50;
+    const unsigned int ModulLength = 50;
 
     bool Modul[ModulLength];
     bool Tail[6];
 
-    unsigned int i,j;
+    unsigned int i, j;
     bool location;
     bool LongModul;
     unsigned int ModuleCount;
@@ -47,63 +46,52 @@ int ReadML(unsigned int position)
     unsigned int Color;
     unsigned int HideParameter;
     unsigned int Insert;
-    unsigned int PadBits=0;
+    unsigned int PadBits = 0;
 
     bool vafx;
 
     fseek(ReadFile, position, SEEK_SET);
 
-	while(true)
-	{
+    while (true) {
 
-	    if(fread(&temp,1,1,ReadFile)==0)
-        {
+        if (fread(&temp, 1, 1, ReadFile) == 0) {
             printf("module list not found\n");
             return 0;
-        }
-        else
-        {
-            if(temp==0x4a)
-            {
+        } else {
+            if (temp == 0x4a) {
                 printf("*** module list (ML) ***\n");
-                MLposition=position+bytecounter;
+                MLposition = position + bytecounter;
                 break;
             }
         }
         bytecounter++;
 
-	}
+    }
 
-	printf("ML_position = ");
-    printf("%d\n",MLposition);
+    printf("ML_position = ");
+    printf("%d\n", MLposition);
 
-	fread(&temp,1,1,ReadFile);
-	MLlength=0xff*(unsigned int)temp;
-	fread(&temp,1,1,ReadFile);
-	MLlength=MLlength+(unsigned int)temp;
+    fread(&temp, 1, 1, ReadFile);
+    MLlength = 0xff * (unsigned int) temp;
+    fread(&temp, 1, 1, ReadFile);
+    MLlength = MLlength + (unsigned int) temp;
 
     printf("ML_Length = ");
-	printf("%d\n",MLlength);
+    printf("%d\n", MLlength);
 
-	for(i=0;i<MLlength*8;i++)
-	{
-	    if((i%8)==0)
-        {
-            fread(&temp,1,1,ReadFile);
+    for (i = 0; i < MLlength * 8; i++) {
+        if ((i % 8) == 0) {
+            fread(&temp, 1, 1, ReadFile);
 
-            for(j=0;j<8;j++)
-            {
-                if(((temp>>(8-(j+1)))&0x01)>0)
-                {
-                    Data[i+j]=true;
-                }
-                else
-                {
-                    Data[i+j]=false;
+            for (j = 0; j < 8; j++) {
+                if (((temp >> (8 - (j + 1))) & 0x01) > 0) {
+                    Data[i + j] = true;
+                } else {
+                    Data[i + j] = false;
                 }
             }
         }
-	}
+    }
 /*
 	for(i=0;i<MLlength*8;i++)
     {
@@ -114,151 +102,133 @@ int ReadML(unsigned int position)
         fprintf(NewFile,"%x",Data[i]);
     }
 */
-	location=Data[1];
+    location = Data[1];
 
-	printf("ML_Location = ");
-	if(location==0)
-	{
-	    printf("FX Area\n");
-	    vafx=false;
-	}
-	else
-    {
+    printf("ML_Location = ");
+    if (location == 0) {
+        printf("FX Area\n");
+        vafx = false;
+    } else {
         printf("Voice Area\n");
-        vafx=true;
+        vafx = true;
     }
 
-    ModuleCount=0x80*Data[2]+0x40*Data[3]+0x20*Data[4]+0x10*Data[5]+0x08*Data[6]+0x04*Data[7]+0x02*Data[8]+Data[9];
+    ModuleCount = 0x80 * Data[2] + 0x40 * Data[3] + 0x20 * Data[4] + 0x10 * Data[5] + 0x08 * Data[6] + 0x04 * Data[7] +
+                  0x02 * Data[8] + Data[9];
 
-    if(vafx)
-    {
-         ModuleCountVA=ModuleCount;
-    }
-    else
-    {
-         ModuleCountFX=ModuleCount;
+    if (vafx) {
+        ModuleCountVA = ModuleCount;
+    } else {
+        ModuleCountFX = ModuleCount;
     }
 
     printf("ML_Module_Count = ");
-    printf("%d\n",ModuleCount);
+    printf("%d\n", ModuleCount);
 
-     for(i=0;i<ModuleCount;i++)
-    {
+    for (i = 0; i < ModuleCount; i++) {
 
-        for(j=0;j<ModulLength;j++)
-        {
-            Modul[j]=Data[10+i*ModulLength+j+PadBits];
+        for (j = 0; j < ModulLength; j++) {
+            Modul[j] = Data[10 + i * ModulLength + j + PadBits];
         }
 
-        for(j=0;j<6;j++)
-        {
-            Tail[j]=Data[10+i*ModulLength+ModulLength+j+PadBits];
+        for (j = 0; j < 6; j++) {
+            Tail[j] = Data[10 + i * ModulLength + ModulLength + j + PadBits];
         }
 
         printf("ML_Module_#");
-        printf("%d\n",i);
+        printf("%d\n", i);
 
-        ModuleType=0x80*Modul[0]+0x40*Modul[1]+0x20*Modul[2]+0x10*Modul[3]+0x08*Modul[4]+0x04*Modul[5]+0x02*Modul[6]+Modul[7];
+        ModuleType = 0x80 * Modul[0] + 0x40 * Modul[1] + 0x20 * Modul[2] + 0x10 * Modul[3] + 0x08 * Modul[4] +
+                     0x04 * Modul[5] + 0x02 * Modul[6] + Modul[7];
 
-        if(vafx)
-        {
-            ModuleListVA[i]=ModuleType;
-        }
-        else
-        {
-            ModuleListFX[i]=ModuleType;
+        if (vafx) {
+            ModuleListVA[i] = ModuleType;
+        } else {
+            ModuleListFX[i] = ModuleType;
         }
 
-        ModuleTypeFlag=0;
-        for(j=0;j<1024;j++)
-        {
-            if(ModuleType!=ModuleTypeList[j])
-            {
-               ModuleTypeFlag++;
+        ModuleTypeFlag = 0;
+        for (j = 0; j < 1024; j++) {
+            if (ModuleType != ModuleTypeList[j]) {
+                ModuleTypeFlag++;
             }
         }
 
-        if(ModuleTypeFlag==1024)
-        {
-            ModuleTypeList[ModuleTypeCount]=ModuleType;
+        if (ModuleTypeFlag == 1024) {
+            ModuleTypeList[ModuleTypeCount] = ModuleType;
             ModuleTypeCount++;
         }
 
         printf("ML_Module_Type = ");
-        printf("%d\n",ModuleType);
+        printf("%d\n", ModuleType);
 
-        ModuleIndex=0x80*Modul[8]+0x40*Modul[9]+0x20*Modul[10]+0x10*Modul[11]+0x08*Modul[12]+0x04*Modul[13]+0x02*Modul[14]+Modul[15];
+        ModuleIndex = 0x80 * Modul[8] + 0x40 * Modul[9] + 0x20 * Modul[10] + 0x10 * Modul[11] + 0x08 * Modul[12] +
+                      0x04 * Modul[13] + 0x02 * Modul[14] + Modul[15];
 
-        if(vafx)
-        {
-            ModuleIndexListVA[i]=ModuleIndex;
+        if (vafx) {
+            ModuleIndexListVA[i] = ModuleIndex;
             printf("!!!ML_Module_Index_VA = ");
-            printf("%d\n",ModuleIndexListVA[i]);
+            printf("%d\n", ModuleIndexListVA[i]);
             printf("!!!i = ");
-            printf("%d\n",i);
-        }
-        else
-        {
-            ModuleIndexListFX[i]=ModuleIndex;
+            printf("%d\n", i);
+        } else {
+            ModuleIndexListFX[i] = ModuleIndex;
         }
 
 
-
-        HorizontalPosition=0x40*Modul[16]+0x20*Modul[17]+0x10*Modul[18]+0x08*Modul[19]+0x04*Modul[20]+0x02*Modul[21]+Modul[22];
+        HorizontalPosition =
+                0x40 * Modul[16] + 0x20 * Modul[17] + 0x10 * Modul[18] + 0x08 * Modul[19] + 0x04 * Modul[20] +
+                0x02 * Modul[21] + Modul[22];
 
         printf("ML_Horizontal_position = ");
-        printf("%d\n",HorizontalPosition);
+        printf("%d\n", HorizontalPosition);
 
-        VerticalPosition=0x40*Modul[23]+0x20*Modul[24]+0x10*Modul[25]+0x08*Modul[26]+0x04*Modul[27]+0x02*Modul[28]+Modul[29];
+        VerticalPosition =
+                0x40 * Modul[23] + 0x20 * Modul[24] + 0x10 * Modul[25] + 0x08 * Modul[26] + 0x04 * Modul[27] +
+                0x02 * Modul[28] + Modul[29];
 
         printf("ML_Vertical_position = ");
-        printf("%d\n",VerticalPosition);
+        printf("%d\n", VerticalPosition);
 
-        Color=0x80*Modul[30]+0x40*Modul[31]+0x20*Modul[32]+0x10*Modul[33]+0x08*Modul[34]+0x04*Modul[35]+0x02*Modul[36]+Modul[37];
+        Color = 0x80 * Modul[30] + 0x40 * Modul[31] + 0x20 * Modul[32] + 0x10 * Modul[33] + 0x08 * Modul[34] +
+                0x04 * Modul[35] + 0x02 * Modul[36] + Modul[37];
 
         printf("ML_Color = ");
-        printf("%d\n",Color);
+        printf("%d\n", Color);
 
         //38-45 - empty
 
-        Insert=0x08*Modul[46]+0x04*Modul[47]+0x02*Modul[48]+Modul[49];
+        Insert = 0x08 * Modul[46] + 0x04 * Modul[47] + 0x02 * Modul[48] + Modul[49];
 
         printf("ML_Insert = ");
-        printf("%d\n",Insert);
+        printf("%d\n", Insert);
 
         //50-51 - empty
 
         //UNUSUAL SWEDISH PADDING
 
-        LongModul=false;
+        LongModul = false;
 
-        if (Insert!=0)
-        {
-            LongModul=true;
-            PadBits += 6*Insert;
-        }
-        else
-        {
-            LongModul=false;
+        if (Insert != 0) {
+            LongModul = true;
+            PadBits += 6 * Insert;
+        } else {
+            LongModul = false;
         }
         // Somewhere here a wavetype is hidden from us
 
-        if(LongModul)
-        {
-            HideParameter=0x08*Tail[2]+0x04*Tail[3]+0x02*Tail[4]+Tail[5];
+        if (LongModul) {
+            HideParameter = 0x08 * Tail[2] + 0x04 * Tail[3] + 0x02 * Tail[4] + Tail[5];
 
             printf("ML_HideParameter = ");
-            printf("%d\n",HideParameter);
+            printf("%d\n", HideParameter);
 
-            if(vafx)
-            {
-                HiddenFlagVA[i]=true;
-                HiddenParametersVA[i]=HideParameter;
-            }
-            else
-            {
-                HiddenFlagFX[i]=true;
-                HiddenParametersFX[i]=HideParameter;
+            if (vafx) {
+                HiddenFlagVA[i] = true;
+                HiddenParametersVA[i] = HideParameter;
+            } else {
+                HiddenFlagFX[i] = true;
+                HiddenParametersFX[i] = HideParameter;
             }
 
         }
@@ -266,29 +236,23 @@ int ReadML(unsigned int position)
     }
 
     printf("ML_Module_Type_List\n");
-    for(i=0;i<ModuleTypeCount;i++)
-    {
-        printf("%d\n",ModuleTypeList[i]);
+    for (i = 0; i < ModuleTypeCount; i++) {
+        printf("%d\n", ModuleTypeList[i]);
     }
 
 
-    if(vafx)
-    {
+    if (vafx) {
         printf("ML_Module_List_VA\n");
-        for(i=0;i<ModuleCountVA;i++)
-        {
-            printf("%d\n",ModuleListVA[i]);
+        for (i = 0; i < ModuleCountVA; i++) {
+            printf("%d\n", ModuleListVA[i]);
         }
-    }
-    else
-    {
+    } else {
         printf("ML_Module_List_FX\n");
-        for(i=0;i<ModuleCountFX;i++)
-        {
-            printf("%d\n",ModuleListFX[i]);
+        for (i = 0; i < ModuleCountFX; i++) {
+            printf("%d\n", ModuleListFX[i]);
         }
     }
 
-	return 1;
+    return 1;
 
 }

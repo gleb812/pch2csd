@@ -9,19 +9,17 @@ extern FILE *NewFile;
 extern unsigned int ModuleTypeCount;
 extern unsigned int ModuleTypeList[1024];
 
-int GenInstruments(void)
-{
+int GenInstruments(void) {
     unsigned int i;
     printf("Generating instruments list\n");
-    fprintf(NewFile,"; Opcode Definitions\n");
+    fprintf(NewFile, "; Opcode Definitions\n");
 
     //printf("%d\n",ModuleTypeCount);
     //printf("Module_Type_List\n");
-    for(i=0;i<ModuleTypeCount;i++)
-    {
+    for (i = 0; i < ModuleTypeCount; i++) {
         //printf("#%d\n",ModuleTypeList[i]);
         OWModule(ModuleTypeList[i]);
-        fprintf(NewFile,"\n");
+        fprintf(NewFile, "\n");
     }
     return 1;
 }

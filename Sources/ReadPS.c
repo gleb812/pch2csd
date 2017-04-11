@@ -12,42 +12,37 @@ extern unsigned int PSlength;
 int ReadPS(unsigned int position) //Reading Patch Settings
 {
     unsigned char temp;
-    unsigned int bytecounter=0;
+    unsigned int bytecounter = 0;
 
     fseek(ReadFile, position, SEEK_SET);
 
-	while(true)
-	{
+    while (true) {
 
-	    if(fread(&temp,1,1,ReadFile)==0)
-        {
+        if (fread(&temp, 1, 1, ReadFile) == 0) {
             printf("Patch Settings not found\n");
             return 0;
-        }
-        else
-        {
-            if(temp==0x4d)
-            {
+        } else {
+            if (temp == 0x4d) {
                 printf("*** Patch Settings (PS) ***\n");
-                PSposition=position+bytecounter;
+                PSposition = position + bytecounter;
                 break;
             }
         }
         bytecounter++;
 
-	}
+    }
 
-	printf("PS_position = ");
-    printf("%d\n",PSposition);
+    printf("PS_position = ");
+    printf("%d\n", PSposition);
 
-	fread(&temp,1,1,ReadFile);
-	PSlength=0xff*(unsigned int)temp;
-	fread(&temp,1,1,ReadFile);
-	PSlength=PSlength+(unsigned int)temp;
+    fread(&temp, 1, 1, ReadFile);
+    PSlength = 0xff * (unsigned int) temp;
+    fread(&temp, 1, 1, ReadFile);
+    PSlength = PSlength + (unsigned int) temp;
 
     printf("PS_Length = ");
-	printf("%d\n",PSlength);
+    printf("%d\n", PSlength);
 
-	return 1;
+    return 1;
 
 }
