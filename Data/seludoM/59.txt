@@ -1,0 +1,13 @@
+opcode CompLev, 0, k   ; MULTIMODE support a/k?
+	kVal xin
+	k1 zkr 1 ; CHANGE 
+	kres init 0
+	
+	if (k1 >= kVal) then 
+		kres = 1
+		goto run
+	endif	
+	kres = 0
+run:
+	zkw kres, 2 ; CHANGE
+endop

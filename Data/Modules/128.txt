@@ -1,0 +1,10 @@
+opcode MinMax, 0, 0
+	kA zkr 1  ;CHANGE
+	kB zkr 2 ;CHANGE
+	
+	kMin min kA, kB
+	kMax max kA, kB
+	
+	zkw kMin, 1 ;CHANGE
+	zkw kMax, 2 ; CHANGE 	
+endop

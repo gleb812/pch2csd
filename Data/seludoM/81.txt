@@ -1,0 +1,8 @@
+opcode LevAmp, 0, k   ; MULTIMODE support a/k?
+; Need to check..
+	kVal xin
+	k1 zkr 1 ; CHANGE 
+	kVal xin
+	zkw k1*kVal, 2 ; CHANGE
+	; LIN vs DB ???
+endop

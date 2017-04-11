@@ -1,0 +1,13 @@
+opcode OscPerc, 0, iKK
+ ; Net punch i Click
+	kDcy, kFreq, kFine xin
+	
+	kPitch zkr 2 ; CHANGE 
+	kMod zkr 1 ; CHANGE  
+	; Proverit' amplitudu
+	kfine = cent(kFine)
+	
+	kEnv expseg 0.00001, 0.001, 1, kDcy, 0.00001
+	aout oscili kEnv, kFreq*kfine+kPitch+kMod*kModLev  
+	zaw aout, 2  ; CHANGE 
+endop

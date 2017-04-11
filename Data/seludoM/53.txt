@@ -1,0 +1,10 @@
+opcode sH, 0, 0
+	kCtrl zkr 1; CHANGE
+	kIn zkr 2; CHANGE
+	kOut init 0
+	if (kCtrl != 0) then
+		kOut = kIn
+	endif
+	
+	zkw kOut, 2; CHANGE
+endop

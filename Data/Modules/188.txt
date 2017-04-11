@@ -1,0 +1,6 @@
+opcode ConstSwM, 0, kk   ; MULTIMODE support a/k?
+; THIS opcode is for RT only.. Need to check..
+; BIPOLAR UNIPOLAR ????
+	kSw, kVal xin ;kSw = 0 / 1
+	zaw kVal*kSw, 2 ; CHANGE
+endop

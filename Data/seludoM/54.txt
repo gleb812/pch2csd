@@ -1,0 +1,16 @@
+opcode FltStatic, 0, iKK ; GC !!!
+	iType, kFreq, kRes xin
+	ain zar 2; CHANGE
+	ahp, alp, abp, abr statevar ain, kFreq, kRes 
+	; balance ???
+	if (iType == 0) goto Lowpass
+	if (iType == 1) goto Highpass
+	aout = abp
+Lowpass:
+	aout = alp
+	goto run
+Highpass:
+	aout = ahp
+run:
+	zaw aout, 2 ;CHANGE
+endop

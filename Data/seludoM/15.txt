@@ -1,0 +1,7 @@
+opcode sw811, 0, k   ; MULTIMODE support a/k? == sw411 !!!
+; Need to check..
+	kSw xin ;kSw = nomera shin
+	a1 zar kSw ; CHANGE  
+	zaw a1, 2 ; CHANGE
+	; poka bez Ctrl 
+endop

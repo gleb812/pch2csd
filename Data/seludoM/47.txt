@@ -1,0 +1,18 @@
+opcode Pan, 0, kk
+	kMod, kMix xin
+	k1 zkr 1 ;CHANGE
+	kmod zkr 3; CHANGE
+	
+	kMix += kMod ;+ limiter?
+	if (iSW != 0) then
+		kL = k1*kMix
+		kR = k2*(1-kMix)
+		goto run 
+	endif
+	
+	kL = k1*log10(kMix)
+	kR = k2*log10(1-kMix)
+run:
+	zkw kL, 2 ; CHANGE
+	zkw kR, 1 ; CHANGE
+endop

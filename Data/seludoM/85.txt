@@ -1,0 +1,13 @@
+opcode WindSw, 0, KK
+	kFrom, kTo xin
+	kCtrl zkr 1; CHANGE
+	kOut init 0
+	
+	if (kCtrl >= kFrom && kCtrl <= kTo ) then
+		kOut = 1
+		goto run
+	endif
+	kOut = 0
+run:
+	zkw kOut, 1 ; CHANGE
+endop
