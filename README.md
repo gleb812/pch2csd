@@ -70,7 +70,7 @@ envelope generators. Any help is very welcome.
 This is an example of UDO model for Out2 module. Check Csound manual for details
 on Csound programming.
 
-```csound-csd
+```csound-orc
 opcode Out2, 0, iiiii                   ; a new UDO definition. 0 - no outputs,;
                                         ; iiiii - five inputs/parameters of i-type
 
