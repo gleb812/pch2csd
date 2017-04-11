@@ -337,9 +337,9 @@ int GenInstrumentContent(unsigned int number) {
             }
 
             printf("TableName: ");
-            for (k = 0; k < 6; k++) {
+//            for (k = 0; k < 6; k++) {
                 printf("%s", Nametemp6);
-            }
+//            }
 
             printf("; ");
             printf("TableID = ");
