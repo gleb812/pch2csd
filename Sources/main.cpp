@@ -211,7 +211,7 @@ void ParseArgs(int argc, char *argv[], map<string, string> &params) {
     }
 
     if (params.find("dir_data") == params.end()) {
-        params["dir_data"] = "Data/";
+        params["dir_data"] = "./Data/";
     }
 
     params["dir_ft"] = params["dir_data"] + "Function_Tables/";
