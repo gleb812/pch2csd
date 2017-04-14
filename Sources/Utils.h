@@ -6,11 +6,35 @@
 #define PCH2CSD_UTILS_H
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-void NM_MakeModulePathInt(char* str, char* dir, int module) {
-    sprintf(str, "%s/%d.txt", dir, module);
-}
+typedef struct StringArray {
+    char **data;
+    size_t length;
+} StringArray_t;
 
+
+struct StringArray *StringArray_alloc();
+
+
+void StringArray_dealloc(struct StringArray *arr);
+
+
+size_t StringArray_add(struct StringArray *arr, char *str);
+
+
+char *StringArray_get(struct StringArray *arr, size_t idx);
+
+
+long NM_getFileSize(FILE *fp);
+
+void NM_allocStringFromFile(char **s, FILE *fp);
+
+struct StringArray *NM_readLines(char *string);
+
+struct StringArray *NM_splitString(char *string, const char *delim);
 
 
 #endif //PCH2CSD_UTILS_H

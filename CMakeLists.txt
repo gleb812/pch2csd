@@ -28,6 +28,6 @@ set(SOURCE_FILES
         Sources/ReadPS.c
         Sources/SearchK2AModules.c
         Sources/TablesReader.c
-        Sources/Welcome.c Sources/Utils.h Sources/Utils.h Sources/Config.h)
+        Sources/Welcome.c Sources/Utils.h Sources/Config.h Sources/Utils.c)
 
 add_executable(pch2csd ${SOURCE_FILES})
