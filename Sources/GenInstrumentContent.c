@@ -1,7 +1,9 @@
 // Function that adds Instr to orc part according to Nord patch
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "Config.h"
+#include "Utils.h"
 
 extern FILE *NewFile;
 extern FILE *TempFile;
@@ -60,11 +62,11 @@ int GenInstrumentContent(unsigned int number) {
     unsigned int TempCount = 0;
     unsigned char IOtemp;
     unsigned char Maptemp;
-    unsigned char Maptemp6[6];
+    char Maptemp6[7];
     unsigned int SelectorID;
     unsigned int SelectorIDadd;
     unsigned int TablesPointer;
-    unsigned char Nametemp6[6];
+    char Nametemp6[7];
     unsigned int IO[50]; // Input = 0; Output = 0;
     unsigned int N;
     unsigned int NIO[50]; // Input = 0; Output = 0;
@@ -144,181 +146,118 @@ int GenInstrumentContent(unsigned int number) {
             printf("ModuleType = ");
             printf("%d\n", ModuleListVA[ModuleCounter]);
 
-
             fseek(TempFile, 0, SEEK_SET);
+
+            char *fileStr;
+            NM_allocStringFromFile(&fileStr, TempFile);
+            auto mapStrings = NM_readLines(fileStr);
+            free(fileStr);
 
             //printf("Direct Parameters\n");
 
             for (i = 0; i < ParameterCountersVA[ModuleCounter]; i++) {
+                auto mapStr = StringArray_get(mapStrings, i);  // line formatted as 'd MID000', etc.
+                auto tokens = NM_splitString(mapStr, " ");
+                ParameterType[i] = *StringArray_get(tokens, 0);  // only 'd'
 
-                fread(&Maptemp, 1, 1, TempFile);
-
-                ParameterType[i] = Maptemp;
-
-                if (Maptemp == 0) {
-                    break;
-                }
-
-                if ((Maptemp == 100) || (Maptemp == 104)) // d or h
-                {
-
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
-
-                    fread(&Maptemp6, 1, 6, TempFile);
+                if ((ParameterType[i] == 'd') || (ParameterType[i] == 'h')) {
+                    auto token = StringArray_get(tokens, 1);
+                    char tempName[7];
                     for (j = 0; j < 256; j++) {
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
+                        tempName[6] = '\0';
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcmp(token, tempName) == 0) {
                             mapid = j;
-
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
+                StringArray_dealloc(tokens);
             }
 
             //printf("Selected Parameters\n");
 
             fseek(TempFile, 0, SEEK_SET);
             for (i = 0; i < ParameterCountersVA[ModuleCounter]; i++) {
-                fread(&Maptemp, 1, 1, TempFile);
+                auto map = StringArray_get(mapStrings, i);
+                auto tokens = NM_splitString(map, " ");
 
-                if (Maptemp == 115) {
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
+                ParameterType[i] = *StringArray_get(tokens, 0);
 
-                    SelectorID = 0;
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorID = SelectorID * 10 + (Maptemp - 48);
-                    }
+                if (ParameterType[i] == 's') {
+                    SelectorID = (unsigned int) atoi(StringArray_get(tokens, 1));
+//                  FIXME what does TablesPointer?
+//                    TablesPointer = (unsigned int) (value[SelectorID - 1]);
+//                    for (j = 0; j < TablesPointer + 1; j++) {
+//                        fread(&Maptemp6, 1, 6, TempFile);
+//                        fread(&Maptemp, 1, 1, TempFile);
+//                    }
 
-                    TablesPointer = (unsigned int) (value[SelectorID - 1]);
-
-                    for (j = 0; j < TablesPointer + 1; j++) {
-                        fread(&Maptemp6, 1, 6, TempFile);
-                        fread(&Maptemp, 1, 1, TempFile);
-                    }
-
+                    auto token2 = StringArray_get(tokens, 2);
                     for (j = 0; j < 256; j++) {
+                        char tempName[7];
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
+                        tempName[6] = '\0';
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcmp(token2, tempName) == 0) {
                             mapid = j;
-
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
+                StringArray_dealloc(tokens);
             }
 
             // And let set the w-map parameters (Section of Delays)
             //
 
-            fseek(TempFile, 0, SEEK_SET);
             for (i = 0; i < ParameterCountersVA[ModuleCounter]; i++) {
-                fread(&Maptemp, 1, 1, TempFile);
+                auto map = StringArray_get(mapStrings, i);
+                auto tokens = NM_splitString(map, " ");
 
-                if (Maptemp == 119) // if find w-type parameter
-                {
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
+                if (*StringArray_get(tokens, 0) == 'w') {
+                    // first selector. Its value most be only "0" or "1"
+                    SelectorID = (unsigned int) atoi(StringArray_get(tokens, 1));
+                    SelectorIDadd = (unsigned int) atoi(StringArray_get(tokens, 2));  // second selector
 
-                    SelectorID = 0; // first selector. His value most be only "0" or "1"
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorID = SelectorID * 10 + (Maptemp - 48);
-                    }
+//                    TODO what does this?
+//                    TablesPointer = (unsigned int) (value[SelectorID - 1]) * (unsigned int) (value[SelectorIDadd - 1]);
+//                    for (j = 0; j < TablesPointer + 1; j++) {
+//                        fread(&Maptemp6, 1, 6, TempFile);
+//                        fread(&Maptemp, 1, 1, TempFile);
+//                    }
 
-                    SelectorIDadd = 0; // second selector
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorIDadd = SelectorIDadd * 10 + (Maptemp - 48);
-                    }
-
-                    TablesPointer = (unsigned int) (value[SelectorID - 1]) * (unsigned int) (value[SelectorIDadd - 1]);
-
-                    for (j = 0; j < TablesPointer + 1; j++) {
-                        fread(&Maptemp6, 1, 6, TempFile);
-                        fread(&Maptemp, 1, 1, TempFile);
-                    }
-
+                    auto tokenX = StringArray_get(tokens, 3);  // FIXME should be wrong due to the previous TODO
                     for (j = 0; j < 256; j++) {
+                        char tempName[7];
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
+                        tempName[6] = '\0';
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcmp(tokenX, tempName) == 0) {
                             mapid = j;
-
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
+                StringArray_dealloc(tokens);
             }
-
+            StringArray_dealloc(mapStrings);
         }
         //printf("ModuleCounter: ");
         //printf("%d\n",ModuleCounter);
@@ -332,16 +271,14 @@ int GenInstrumentContent(unsigned int number) {
             printf("ParameterType: ");
             printf("%c\n", ParameterType[i]);
 
+            char tempName[7];
             for (k = 0; k < 6; k++) {
-                Nametemp6[k] = NamesMapTables[k][mapid];
+                tempName[k] = NamesMapTables[k][mapid];
             }
+            tempName[6] = '\0';
 
-            printf("TableName: ");
-//            for (k = 0; k < 6; k++) {
-                printf("%s", Nametemp6);
-//            }
+            printf("TableName: %s\n", tempName);
 
-            printf("; ");
             printf("TableID = ");
             printf("%d\n", mapid);
 
@@ -350,8 +287,7 @@ int GenInstrumentContent(unsigned int number) {
             printf("%1.3f\n", value[i]);
 
 
-            if (ParameterType[i] != 104) // h - we hide parameter in new.csd-file
-            {
+            if (ParameterType[i] != 'h') {
                 fprintf(NewFile, "%1.3f", value[i]);
                 PPflag = true;
                 if ((i != ParameterCountersVA[ModuleCounter] - 1) && (ParameterType[i + 1] != 104)) {
@@ -365,131 +301,73 @@ int GenInstrumentContent(unsigned int number) {
         if ((TempFile = fopen(mapFile, "rb")) == NULL) {
             return 0;
         } else {
-            /*
-            //printf("Number of real parameters =");
-
-            fseek(TempFile, 0, SEEK_SET);
-            StringCounter=0;
-            while(true)
-            {
-                if(fread(&Maptemp,1,1,TempFile)==0)
-                {
-                    break;
-                }
-                if(Maptemp==13)
-                {
-                    StringCounter++;
-                }
-
-            }
-            StringCounter++;
-            //printf("%d\n",StringCounter);
-            */
-
             fseek(TempFile, 0, SEEK_SET);
 
-            //printf("Direct Parameters\n");
+            char *fileStr;
+            NM_allocStringFromFile(&fileStr, TempFile);
+            auto mapStrings = NM_readLines(fileStr);
+            free(fileStr);
 
             for (i = 0; i < ParameterCountersFX[ModuleCounter]; i++) {
-                fread(&Maptemp, 1, 1, TempFile);
+                auto mapStr = StringArray_get(mapStrings, i);
+                auto tokens = NM_splitString(mapStr, " ");
 
-                ParameterType[i] = Maptemp;
+                ParameterType[i] = *StringArray_get(tokens, 0);
 
-                if (Maptemp == 0) {
-                    break;
-                }
+                if ((ParameterType[i] == 'd') || (ParameterType[i] == 'h')) {
+                    auto token2 = StringArray_get(tokens, 1);
 
-                if ((Maptemp == 100) || (Maptemp == 104)) // d or h
-                {
-
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
-
-                    fread(&Maptemp6, 1, 6, TempFile);
                     for (j = 0; j < 256; j++) {
+                        char tempName[7];
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
+                        tempName[6] = '\0';
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcmp(token2, tempName) == 0) {
                             mapid = j;
-
                             MapTablesFX[ModuleCounter][i] = mapid;
                             valueINT = ParametersFX[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
+                StringArray_dealloc(tokens);
             }
-
-            //printf("Selected Parameters\n");
 
             fseek(TempFile, 0, SEEK_SET);
             for (i = 0; i < ParameterCountersFX[ModuleCounter]; i++) {
-                fread(&Maptemp, 1, 1, TempFile);
+                auto mapStr = StringArray_get(mapStrings, i);
+                auto tokens = NM_splitString(mapStr, " ");
 
-                if (Maptemp == 115) {
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
+                if (*StringArray_get(tokens, 0) == 's') {
+                    SelectorID = (unsigned int) atoi(StringArray_get(tokens, 1));
 
-                    SelectorID = 0;
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorID = SelectorID * 10 + (Maptemp - 48);
-                    }
+//                    FIXME
+//                    TablesPointer = (unsigned int) (value[SelectorID - 1]);
+//                    for (j = 0; j < TablesPointer + 1; j++) {
+//                        fread(&Maptemp6, 1, 6, TempFile);
+//                        fread(&Maptemp, 1, 1, TempFile);
+//                    }
 
-                    TablesPointer = (unsigned int) (value[SelectorID - 1]);
-
-                    for (j = 0; j < TablesPointer + 1; j++) {
-                        fread(&Maptemp6, 1, 6, TempFile);
-                        fread(&Maptemp, 1, 1, TempFile);
-                    }
-
+                    auto tokenX = StringArray_get(tokens, 2);
                     for (j = 0; j < 256; j++) {
+                        char tempName[7];
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcmp(tokenX, tempName) == 0) {
                             mapid = j;
-
                             MapTablesFX[ModuleCounter][i] = mapid;
                             valueINT = ParametersFX[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
+                StringArray_dealloc(tokens);
             }
 
             // And let set the w-map parameters (Section of Delays)
@@ -497,68 +375,40 @@ int GenInstrumentContent(unsigned int number) {
 
             fseek(TempFile, 0, SEEK_SET);
             for (i = 0; i < ParameterCountersFX[ModuleCounter]; i++) {
-                fread(&Maptemp, 1, 1, TempFile);
+                auto mapStr = StringArray_get(mapStrings, i);
+                auto tokens = NM_splitString(mapStr, " ");
 
-                if (Maptemp == 119) // if find w-type parameter
-                {
-                    fread(&Maptemp, 1, 1, TempFile); // space or tab
+                if (*StringArray_get(tokens, 0) == 'w') {
+                    // first selector. Its value most be only "0" or "1"
+                    SelectorID = (unsigned int) atoi(StringArray_get(tokens, 1));
 
-                    SelectorID = 0; // first selector. His value most be only "0" or "1"
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorID = SelectorID * 10 + (Maptemp - 48);
-                    }
+                    SelectorIDadd = (unsigned int) atoi(StringArray_get(tokens, 2)); // second selector
 
-                    SelectorIDadd = 0; // second selector
-                    while (true) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        if ((Maptemp == 13) || (Maptemp == 9) || (Maptemp == 32) || (Maptemp == 0)) {
-                            break;
-                        }
-                        SelectorIDadd = SelectorIDadd * 10 + (Maptemp - 48);
-                    }
+//                    FIXME
+//                    TablesPointer = (unsigned int) (value[SelectorID - 1]) * (unsigned int) (value[SelectorIDadd - 1]);
+//                    for (j = 0; j < TablesPointer + 1; j++) {
+//                        fread(&Maptemp6, 1, 6, TempFile);
+//                        fread(&Maptemp, 1, 1, TempFile);
+//                    }
 
-                    TablesPointer = (unsigned int) (value[SelectorID - 1]) * (unsigned int) (value[SelectorIDadd - 1]);
-
-                    for (j = 0; j < TablesPointer + 1; j++) {
-                        fread(&Maptemp6, 1, 6, TempFile);
-                        fread(&Maptemp, 1, 1, TempFile);
-                    }
-
+                    auto tokenX = StringArray_get(tokens, 3);
                     for (j = 0; j < 256; j++) {
+                        char tempName[7];
                         for (k = 0; k < 6; k++) {
-                            Nametemp6[k] = NamesMapTables[k][j];
+                            tempName[k] = NamesMapTables[k][j];
                         }
 
-                        if (memcmp(Maptemp6, Nametemp6, 6) == 0) {
+                        if (strcpy(tokenX, tempName) == 0) {
                             mapid = j;
-
                             MapTablesFX[ModuleCounter][i] = mapid;
                             valueINT = ParametersFX[ModuleCounter][i];
                             value[i] = Tables[valueINT][mapid];
-
                             break;
-
                         }
                     }
                 }
-
-                while (true) {
-                    if (fread(&Maptemp, 1, 1, TempFile) == 0) {
-                        break;
-                    }
-                    if (Maptemp == 13) {
-                        fread(&Maptemp, 1, 1, TempFile);
-                        break;
-                    }
-
-                }
-
             }
-
+            StringArray_dealloc(mapStrings);
         }
 
         for (i = 0; i < ParameterCountersFX[ModuleCounter]; i++) {

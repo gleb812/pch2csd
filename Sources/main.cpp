@@ -3,7 +3,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <map>
+
 #include "Config.h"
+#include "Utils.h"
+#include "Utils.c"
 
 #include "CableSort.c"
 #include "II2IO.c"
@@ -29,7 +32,6 @@
 #include "SearchK2AModules.c"
 #include "AddConverters.c"
 #include "ModuleTypeListSort.c"
-
 
 FILE *NewFile;
 FILE *ReadFile;
@@ -132,7 +134,7 @@ unsigned int i;
 
 using namespace std;
 
-void RunAll(map<string, string>&params) {
+void RunAll(map<string, string> &params) {
     TablesReader();
 
     CreatingNewFile(params["file_out"].c_str());
