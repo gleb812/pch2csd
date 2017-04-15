@@ -168,8 +168,7 @@ int GenInstrumentContent(unsigned int number) {
                             tempName[k] = NamesMapTables[k][j];
                         }
                         tempName[6] = '\0';
-
-                        if (strcmp(token, tempName) == 0) {
+                        if (memcmp(token, tempName, 6) == 0) {
                             mapid = j;
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
@@ -207,7 +206,7 @@ int GenInstrumentContent(unsigned int number) {
                         }
                         tempName[6] = '\0';
 
-                        if (strcmp(token2, tempName) == 0) {
+                        if (memcmp(token2, tempName, 6) == 0) {
                             mapid = j;
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
@@ -246,7 +245,7 @@ int GenInstrumentContent(unsigned int number) {
                         }
                         tempName[6] = '\0';
 
-                        if (strcmp(tokenX, tempName) == 0) {
+                        if (memcmp(tokenX, tempName, 6) == 0) {
                             mapid = j;
                             MapTablesVA[ModuleCounter][i] = mapid;
                             valueINT = ParametersVA[ModuleCounter][i];
@@ -324,7 +323,7 @@ int GenInstrumentContent(unsigned int number) {
                         }
                         tempName[6] = '\0';
 
-                        if (strcmp(token2, tempName) == 0) {
+                        if (memcmp(token2, tempName, 6) == 0) {
                             mapid = j;
                             MapTablesFX[ModuleCounter][i] = mapid;
                             valueINT = ParametersFX[ModuleCounter][i];
@@ -358,7 +357,7 @@ int GenInstrumentContent(unsigned int number) {
                             tempName[k] = NamesMapTables[k][j];
                         }
 
-                        if (strcmp(tokenX, tempName) == 0) {
+                        if (memcmp(tokenX, tempName, 6) == 0) {
                             mapid = j;
                             MapTablesFX[ModuleCounter][i] = mapid;
                             valueINT = ParametersFX[ModuleCounter][i];
