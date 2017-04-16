@@ -37,3 +37,4 @@ after_script:
   - cp pch2csd pch2csd-linux/
   - tar -czf pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz pch2csd-linux/
   - curl -T pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz -u $WEBDAV_ACCESS https://myfiles.fastmail.com/trunk.oscii.ru/pch2csd/pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz
+
