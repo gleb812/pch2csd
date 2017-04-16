@@ -1,7 +1,40 @@
-lanugage: c
+language: cpp
+sudo: required
+dist: trusty
 
-compiler: gcc
+branches:
+  only:
+    - master
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.9
+    packages:
+      - g++-6
+      - clang-3.9
+
+env:
+  global:
+    secure: L3R31+zmXMxYq4e+tLeFHd9c/BkOydVNZ2RmL8GkJ6mOuJiLeyos9XKvKVCw9SmVypr6kr2v9gRb5NcwvhQON8nIhXY4m7h1ErBFgkV0/U4R74JJyRCne0/7ZrAY7npxQLtc0a3YfRkZ+IVo+ZHVm4mpGsGeoLy9XJBXqEr+gQ2+dkSuA3Xw3I8Vt+soioX0Jju6DagHdIBg9Ee5IsICuHg5U6buMoEdd10U9onWyu6+7j4Q3JYoTfM4uUqDCyLmlpUNwPyicryoFr1p6EbFnI9AtWKN90hXC9GML3/+k83R0kzFGZo97bxAfBFjXvnAS5i0c2U6PhCkLsW9MKrm9eJKoQa+xSYJGS1wMj9MOWH/Qwz8iBVZXI+T5nJv9PNEy1UHsZyDrwVumy3z28OMqEry8xNOtnPaVBgnaLzB+wO+8zaGurxCivXhfnHfcuIJ5yTdtnIraayowRHvYfZ54kIvOhyVE+KI6LvY6oY1juoI/osxxn518QOstj7I06AU6nNzoItZh4hAueGRP4rdH68pQmHftiPVyC3JYMHf+7Iy5YUqTcSyvfmfleHJT5IL2RN1EIDshdeEhgTzXAoWZEbJ4Ja8gF+JQFYXjHaQp5Pv7I0pGoWIBzvYdO68xf111HAad2yVvQQGhVlNLINivmjfonHqByIo9+1u76HoJsA=
+
+before_install:
+  - sudo apt-get -qq update
+
+before_script:
+  - export CXX="clang++-3.9" CC="clang-3.9"
 
 script:
   - cmake .
   - make
+
+after_script:
+  - mkdir pch2csd-linux
+  - cp -r Data pch2csd-linux/
+  - cp -r Docs pch2csd-linux/
+  - cp -r Patches pch2csd-linux/
+  - cp pch2csd pch2csd-linux/
+  - tar -czf pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz pch2csd-linux/
+  - curl -T pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz -u $WEBDAV_ACCESS https://myfiles.fastmail.com/trunk.oscii.ru/pch2csd/pch2csd-linux-b$TRAVIS_JOB_ID.tar.gz
+
