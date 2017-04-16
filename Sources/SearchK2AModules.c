@@ -60,7 +60,8 @@ int SearchK2AModules(void) {
             K2AModulesIDCount++;
 
             i = 0;
-            for (i = 0; i < ent->d_namlen; i++) {
+            auto d_namlen = strlen(ent->d_name);
+            for (i = 0; i < d_namlen; i++) {
                 if (ent->d_name[i] == 0x2E) { // if symbol not "."
                     char fn[i];
                     strncpy(fn, ent->d_name, i);

@@ -24,7 +24,7 @@ int TablesReader(void) {
     if (dir) {
         struct dirent *ent;
         while ((ent = readdir(dir)) != NULL) {
-            if (ent->d_namlen != 10) { // six chars + .txt
+            if (strlen(ent->d_name) != 10) { // six chars + .txt
                 continue;
             }
             strncpy(NameMapTable, ent->d_name, 6);
