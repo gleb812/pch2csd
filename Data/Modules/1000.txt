@@ -1,6 +1,0 @@
-;k2a
-opcode K2A, 0, ii
-	iIn, iOut xin
-	kIn zkr i1
-	zaw a(kIn), iOut
-endop

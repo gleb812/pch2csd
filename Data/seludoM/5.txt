@@ -1,8 +1,0 @@
-opcode Invert, 0, 0
-	ay1 zar 1 ; CHANGE 
-	ay2 zar 2 ; CHANGE 
-	ayInv1 = -ay1
-	ayInv2 = -ay2
-	zaw ayInv1, 1 ; CHANGE
-	zaw ayInv1, 2 ; CHANGE
-endop

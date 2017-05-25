@@ -1,4 +1,0 @@
-s 3 LOGsub LOGlow LOGhii
-d CLA000
-d BUT003
-d BUT002
