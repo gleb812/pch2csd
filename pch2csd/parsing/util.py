@@ -10,3 +10,11 @@ class AttrEqMixin:
             if attrs_self[key] != attrs_other[key]:
                 return False
         return True
+
+
+class ReprStrMixin:
+    def __repr__(self):
+        return f"{type(self).__name__}({', '.join([f'{k}={v}' for k, v in self.__dict__.items()])})"
+
+    def __str__(self):
+        return self.__repr__()
