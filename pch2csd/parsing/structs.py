@@ -27,9 +27,7 @@ class Location(Enum):
             raise ValueError(f'Wrong location code: {i}')
 
 
-class Module:
-    __slots__ = ['location', 'type', 'type_name', 'id']
-
+class Module(AttrEqMixin):
     def __init__(self, loc: Location, mod_type: int, id: int):
         self.type = mod_type
         self.type_name = mod_type_name[str(mod_type)]
@@ -43,10 +41,7 @@ class Module:
         return self.__str__()
 
     def __eq__(self, other):
-        return self.type == other.type \
-               and self.type_name == other.type_name \
-               and self.id == other.id \
-               and self.location == other.location
+        return self.attrs_equal(other)
 
 
 class CableType(Enum):
@@ -92,9 +87,7 @@ class CableColor(Enum):
             raise ValueError(f'Wrong cable color code {i}')
 
 
-class Cable:
-    __slots__ = ['loc', 'type', 'color', 'module_from', 'jack_from', 'module_to', 'jack_to']
-
+class Cable(AttrEqMixin):
     def __init__(self, loc: Location, type: CableType, color: CableColor, module_from: int,
                  jack_from: int, module_to: int, jack_to: int):
         self.loc = loc
@@ -114,13 +107,7 @@ class Cable:
         return self.__str__()
 
     def __eq__(self, other):
-        return self.loc == other.loc \
-               and self.type == other.type \
-               and self.color == other.color \
-               and self.module_from == other.module_from \
-               and self.jack_from == other.jack_from \
-               and self.module_to == other.module_to \
-               and self.jack_to == other.jack_to
+        return self.attrs_equal(other)
 
 
 class ModuleParameters(AttrEqMixin):
