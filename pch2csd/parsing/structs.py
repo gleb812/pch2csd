@@ -1,10 +1,10 @@
 from enum import Enum
 
 from pch2csd.parsing.data import mod_type_name
-from pch2csd.parsing.util import AttrEqMixin
+from pch2csd.parsing.util import AttrEqMixin, ReprStrMixin
 
 
-class Patch:
+class Patch(ReprStrMixin):
     __slots__ = ['ver', 'type', 'modules', 'cables', 'mod_params']
 
     def __init__(self):
@@ -27,18 +27,12 @@ class Location(Enum):
             raise ValueError(f'Wrong location code: {i}')
 
 
-class Module(AttrEqMixin):
+class Module(AttrEqMixin, ReprStrMixin):
     def __init__(self, loc: Location, mod_type: int, id: int):
         self.type = mod_type
         self.type_name = mod_type_name[str(mod_type)]
         self.id = id
         self.location = loc
-
-    def __str__(self):
-        return f'{self.type_name}:{self.id} ({self.location})'
-
-    def __repr__(self):
-        return self.__str__()
 
     def __eq__(self, other):
         return self.attrs_equal(other)
@@ -87,7 +81,7 @@ class CableColor(Enum):
             raise ValueError(f'Wrong cable color code {i}')
 
 
-class Cable(AttrEqMixin):
+class Cable(AttrEqMixin, ReprStrMixin):
     def __init__(self, loc: Location, type: CableType, color: CableColor, module_from: int,
                  jack_from: int, module_to: int, jack_to: int):
         self.loc = loc
@@ -98,19 +92,11 @@ class Cable(AttrEqMixin):
         self.module_to = module_to
         self.jack_to = jack_to
 
-    def __str__(self):
-        return f'Cable: {self.type, self.color}' \
-               f'{self.module_from}:{self.jack_from} ' \
-               f'{self.module_to}:{self.jack_to}'
-
-    def __repr__(self):
-        return self.__str__()
-
     def __eq__(self, other):
         return self.attrs_equal(other)
 
 
-class ModuleParameters(AttrEqMixin):
+class ModuleParameters(AttrEqMixin, ReprStrMixin):
     def __init__(self, loc: Location, module_id: int, num_params: int, values=None):
         if values is None:
             values = []
