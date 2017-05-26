@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from pch2csd.parsing.parsing import parse_pch2
+from pch2csd.parsing.g2 import parse_pch2
 from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor
 
 
