@@ -1,4 +1,5 @@
 import os
+from unittest import TestCase
 
 from pch2csd.parsing.parsing import parse_pch2
 from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor
@@ -18,4 +19,3 @@ class TestParsing(TestCase):
         parsed = parse_pch2(gleb_2_pch)
         self.assertSequenceEqual(parsed.modules, expected_modules)
         self.assertSequenceEqual(parsed.cables, expected_cables)
-
