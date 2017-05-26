@@ -3,7 +3,7 @@ from struct import unpack
 
 from bitarray import bitarray
 
-from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable
+from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters
 
 
 def parse_header(pch2: FileIO, patch: Patch):
@@ -41,22 +41,35 @@ def parse_cable_list(blob: bitarray, patch: Patch):
 
 
 def parse_module_parameters(blob: bitarray, patch: Patch):
-    pass
+    location = parse_location(blob[0:2].tobytes()[0])
+    num_modules, = unpack('>B', blob[2:10].tobytes())
+    for i in range(18, 88 * num_modules, 88):
+        module_id, num_params = unpack('>BB', blob[i:i + 16].tobytes())
+        params = ModuleParameters(location, module_id, num_params)
+        for j in range(i + 16, i + 151, 15):
+            variation, value = unpack('>BB', blob[i:i + 15].tobytes())
+            value = value >> 1
+            params.values.append((variation, value))
+        patch.mod_params.append(params)
 
 
-def parse_data_object(head: int, blob: bitarray, patch: Patch):
+def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
     if head == 0x4a:
         parse_module_list(blob, patch)
     elif head == 0x52:
         parse_cable_list(blob, patch)
     elif head == 0x4d:
-        parse_module_parameters(blob, patch)
+        if ctx['head_4d_count'] > 0:
+            # skipping patch settings
+            parse_module_parameters(blob, patch)
+        ctx['head_4d_count'] += 1
 
 
 def parse_pch2(pch2_file: str) -> Patch:
     patch = Patch()
     with open(pch2_file, 'rb') as pch2:
         parse_header(pch2, patch)
+        context = {'head_4d_count': 0}
         while True:
             object_header = pch2.read(3)
             if len(object_header) == 3:
@@ -64,7 +77,7 @@ def parse_pch2(pch2_file: str) -> Patch:
                 blob = pch2.read(obj_len)
                 blob_bits = bitarray(endian='big')
                 blob_bits.frombytes(blob)
-                parse_data_object(obj_header, blob_bits, patch)
+                parse_data_object(obj_header, blob_bits, patch, context)
             else:
                 break
     return patch

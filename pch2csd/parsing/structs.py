@@ -1,14 +1,16 @@
 from enum import Enum
 
 from pch2csd.parsing.data import mod_type_name
+from pch2csd.parsing.util import AttrEqMixin
 
 
 class Patch:
-    __slots__ = ['ver', 'type', 'modules', 'cables']
+    __slots__ = ['ver', 'type', 'modules', 'cables', 'mod_params']
 
     def __init__(self):
         self.modules = []
         self.cables = []
+        self.mod_params = []
 
 
 class Location(Enum):
@@ -119,3 +121,16 @@ class Cable:
                and self.jack_from == other.jack_from \
                and self.module_to == other.module_to \
                and self.jack_to == other.jack_to
+
+
+class ModuleParameters(AttrEqMixin):
+    def __init__(self, loc: Location, module_id: int, num_params: int, values=None):
+        if values is None:
+            values = []
+        self.loc = loc
+        self.module_id = module_id
+        self.num_params = num_params
+        self.values = values
+
+    def __eq__(self, other):
+        return self.attrs_equal(other)
