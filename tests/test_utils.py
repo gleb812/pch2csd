@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from pch2csd.parsing.structs import ModuleParameters
+from pch2csd.parsing.structs import ModuleParameters, Location, Module
 from pch2csd.parsing.util import AttrEqMixin
 
 
@@ -37,3 +37,14 @@ class TestAttrEqMixin(TestCase):
         o1 = self.ThreeSlots(1, [x for x in 'test'], [x * 2 for x in range(10)])
         o2 = ModuleParameters(1, 2, [x for x in [(1, 32), (3, '43')]])
         self.assertFalse(o1.attrs_equal(o2))
+
+
+class TestReprStrMixin(TestCase):
+    def test_simple(self):
+        m = Module(Location.VOICE_AREA, 1, 1)
+        expected_str = 'Module(type=1, type_name=Keyboard, id=1, location=Location.VOICE_AREA)'
+        self.assertEqual(str(m), expected_str)
+
+    def test_repr_equal_to_str(self):
+        m = Module(Location.VOICE_AREA, 1, 1)
+        self.assertEqual(m.__repr__(), m.__str__())
