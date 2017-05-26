@@ -3,7 +3,7 @@ from struct import unpack
 
 from bitarray import bitarray
 
-from pch2csd.parsing.structs import Patch, Module
+from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable
 
 
 def parse_header(pch2: FileIO, patch: Patch):
@@ -14,24 +14,43 @@ def parse_header(pch2: FileIO, patch: Patch):
     patch.type = 'patch' if type == 0 else 'performance'
 
 
-def parse_patch_description(pch2):
-    raise NotImplementedError()
+def parse_location(loc: int):
+    return Location.from_int(loc >> 6)
 
 
-def parse_module_list(blob: bytes, patch: Patch):
-    blob_bits = bitarray(endian='big')
-    blob_bits.frombytes(blob)
-    location = 'voice' if blob_bits.tobytes()[0] >> 6 == 1 else 'fx'
-    num_modules, = unpack('>B', blob_bits[2:10].tobytes())
+def parse_module_list(blob: bitarray, patch: Patch):
+    location = parse_location(blob.tobytes()[0])
+    num_modules, = unpack('>B', blob[2:10].tobytes())
     for i in range(10, 50 * num_modules, 50):
-        mod_type, mod_id = unpack('>BB', blob_bits[i:i + 16].tobytes())
-        patch.modules.append(
-            Module(mod_type, mod_id, location))
+        mod_type, mod_id = unpack('>BB', blob[i:i + 16].tobytes())
+        patch.modules.append(Module(location, mod_type, mod_id))
 
 
-def parse_data_object(head: int, blob: bytes, patch: Patch):
+def parse_cable_list(blob: bitarray, patch: Patch):
+    location = parse_location(blob.tobytes()[0])
+    num_cables, = unpack('>B', blob[16:24].tobytes())
+    for i in range(24, 32 * num_cables, 32):
+        color = CableColor.from_int(blob[i:i + 3].tobytes()[0] >> 5)
+        module_from, = unpack('>B', blob[i + 3:i + 11].tobytes())
+        jack_from = blob[i + 11:i + 17].tobytes()[0] >> 2
+        cable_type = CableType.from_int(int(blob[i + 17]))
+        module_to, = unpack('>B', blob[i + 18:i + 26].tobytes())
+        jack_to = blob[i + 26:i + 32].tobytes()[0] >> 2
+        patch.cables.append(
+            Cable(location, cable_type, color, module_from, jack_from, module_to, jack_to))
+
+
+def parse_module_parameters(blob: bitarray, patch: Patch):
+    pass
+
+
+def parse_data_object(head: int, blob: bitarray, patch: Patch):
     if head == 0x4a:
         parse_module_list(blob, patch)
+    elif head == 0x52:
+        parse_cable_list(blob, patch)
+    elif head == 0x4d:
+        parse_module_parameters(blob, patch)
 
 
 def parse_pch2(pch2_file: str) -> Patch:
@@ -42,7 +61,10 @@ def parse_pch2(pch2_file: str) -> Patch:
             object_header = pch2.read(3)
             if len(object_header) == 3:
                 obj_header, obj_len = unpack('>BH', object_header)
-                parse_data_object(obj_header, pch2.read(obj_len), patch)
+                blob = pch2.read(obj_len)
+                blob_bits = bitarray(endian='big')
+                blob_bits.frombytes(blob)
+                parse_data_object(obj_header, blob_bits, patch)
             else:
                 break
     return patch
