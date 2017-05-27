@@ -3,7 +3,9 @@ from struct import unpack
 
 from bitarray import bitarray
 
-from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters
+from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, \
+    ModuleParameters
+from pch2csd.parsing.util import BitArrayStream
 
 
 def parse_header(pch2: FileIO, patch: Patch):
@@ -41,16 +43,16 @@ def parse_cable_list(blob: bitarray, patch: Patch):
 
 
 def parse_module_parameters(blob: bitarray, patch: Patch):
-    location = parse_location(blob[0:2].tobytes()[0])
-    num_modules, = unpack('>B', blob[2:10].tobytes())
-    for i in range(18, 88 * num_modules, 88):
-        module_id, num_params = unpack('>BB', blob[i:i + 16].tobytes())
-        params = ModuleParameters(location, module_id, num_params)
-        for j in range(i + 16, i + 151, 15):
-            variation, value = unpack('>BB', blob[i:i + 15].tobytes())
-            value = value >> 1
-            params.values.append((variation, value))
-        patch.mod_params.append(params)
+    bits = BitArrayStream(blob)
+    loc, num_modules, num_variations = bits.read_ints([2, 8, 8])
+    for imod in range(num_modules):
+        mod_id, num_params = bits.read_ints([8, 7])
+        mod_params = ModuleParameters(Location.from_int(loc), mod_id, num_params)
+        for ivar in range(num_variations):
+            var, *p_list = bits.read_ints([8] + [7] * num_params)
+            if var == patch.description.active_variation:
+                mod_params.values.extend(p_list)  # TODO variations support
+        patch.mod_params.append(mod_params)
 
 
 def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
