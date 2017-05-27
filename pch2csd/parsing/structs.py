@@ -1,20 +1,12 @@
 from enum import Enum
+from typing import List
 
 from pch2csd.parsing.data import mod_type_name
 from pch2csd.parsing.util import AttrEqMixin, ReprStrMixin
 
 
-class Patch(ReprStrMixin):
-    __slots__ = ['ver', 'type', 'modules', 'cables', 'mod_params']
-
-    def __init__(self):
-        self.modules = []
-        self.cables = []
-        self.mod_params = []
-
-
 class Location(Enum):
-    FX_AREA = 0,
+    FX_AREA = 0
     VOICE_AREA = 1
 
     @staticmethod
@@ -25,6 +17,26 @@ class Location(Enum):
             return Location.VOICE_AREA
         else:
             raise ValueError(f'Wrong location code: {i}')
+
+
+class Patch(ReprStrMixin):
+    __slots__ = ['ver', 'type', 'modules', 'cables', 'mod_params']
+
+    def __init__(self):
+        self.description = PatchDescription()
+        self.modules: List[Module] = []
+        self.cables: List[Cable] = []
+        self.mod_params: List[ModuleParameters] = []
+
+    def find_module(self, id: int, loc=Location.VOICE_AREA):
+        for m in self.modules:
+            if m.id == id and m.location == loc:
+                return m
+
+
+class PatchDescription(ReprStrMixin):
+    def __init__(self):
+        self.active_variation = 0  # TODO support variations
 
 
 class Module(AttrEqMixin, ReprStrMixin):
