@@ -21,11 +21,14 @@ def parse_location(loc: int):
 
 
 def parse_module_list(blob: bitarray, patch: Patch):
-    location = parse_location(blob.tobytes()[0])
-    num_modules, = unpack('>B', blob[2:10].tobytes())
-    for i in range(10, 50 * num_modules, 50):
-        mod_type, mod_id = unpack('>BB', blob[i:i + 16].tobytes())
-        patch.modules.append(Module(location, mod_type, mod_id))
+    bits = BitArrayStream(blob)
+    loc, num_modules = bits.read_ints([2, 8])
+    for i in range(num_modules):
+        mod_type, mod_id = bits.read_ints([8, 8])
+        hpos, vpos, color = bits.read_ints([7, 7, 8])
+        _, num_modes = bits.read_ints([8, 4])
+        bits.read_ints([6] * num_modes)  # skip for now
+        patch.modules.append(Module(Location.from_int(loc), mod_type, mod_id))
 
 
 def parse_cable_list(blob: bitarray, patch: Patch):
