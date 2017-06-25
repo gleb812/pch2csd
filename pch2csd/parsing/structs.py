@@ -46,6 +46,12 @@ class Module(AttrEqMixin, ReprStrMixin):
         self.type_name = data.mod_type_name[mod_type]
         self.id = id
         self.location = loc
+        io = data.mod_type_connections[self.type]
+        self.inlet_types = io['inputs']
+        self.outlet_types = io['outputs']
+        # Default buses
+        self.inlet_conn = [0 for _ in self.inlet_types]
+        self.outlet_conn = [1 for _ in self.outlet_types]
 
     def __eq__(self, other):
         return self.attrs_equal(other)
