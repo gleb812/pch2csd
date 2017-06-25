@@ -1,13 +1,9 @@
-import os
 from unittest import TestCase
 
 from pch2csd.data import ProjectData
 from pch2csd.parsing.g2 import parse_pch2
 from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor, ModuleParameters
-
-
-def get_test_resource(path: str) -> str:
-    return os.path.join(os.path.dirname(__file__), 'resources', path)
+from tests.util import get_test_resource
 
 
 class TestParsing(TestCase):
