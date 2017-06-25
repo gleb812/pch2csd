@@ -16,7 +16,7 @@ class ProjectData:
         self._mod_type_name = None
 
     @property
-    def value_map(self):
+    def value_maps(self):
         if self._value_maps is None:
             self._value_maps = _read_json('value_maps.json')
         return self._value_maps
