@@ -1,0 +1,23 @@
+opcode Mux18, 0, 0
+
+	kM1[] fillarray 1,0,0,0,0,0,0,0
+	kM2[] fillarray 0,1,0,0,0,0,0,0
+	kM3[] fillarray 0,0,1,0,0,0,0,0
+	kM4[] fillarray 0,0,0,1,0,0,0,0
+	kM5[] fillarray 0,0,0,0,1,0,0,0
+	kM6[] fillarray 0,0,0,0,0,1,0,0
+	kM7[] fillarray 0,0,0,0,0,0,1,0
+	kM8[] fillarray 0,0,0,0,0,0,0,1
+
+	kCtrl zkr 1; CHANGE
+	kIn zkr 1; CHANGE
+	
+	zkw kIn*kM1[kCtrl], 1; CHANGE
+	zkw kIn*kM2[kCtrl], 2; CHANGE
+	zkw kIn*kM3[kCtrl], 3; CHANGE
+	zkw kIn*kM4[kCtrl], 4; CHANGE
+	zkw kIn*kM5[kCtrl], 5; CHANGE
+	zkw kIn*kM6[kCtrl], 6; CHANGE
+	zkw kIn*kM7[kCtrl], 7; CHANGE
+	zkw kIn*kM8[kCtrl], 8; CHANGE
+endop

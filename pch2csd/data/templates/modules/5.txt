@@ -1,0 +1,8 @@
+opcode Invert, 0, 0
+	ky1 zkr 1 ; CHANGE 
+	ky2 zkr 2 ; CHANGE 
+	kyInv1 = -ky1+1
+	kyInv2 = -ky2+1
+	zkw kyInv1, 1 ; CHANGE
+	zkw kyInv1, 2 ; CHANGE
+endop

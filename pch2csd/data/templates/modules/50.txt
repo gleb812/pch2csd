@@ -1,0 +1,5 @@
+opcode ConstSwT, 0, kk   ; MULTIMODE support a/k?
+; Need to check..
+	kSw, kVal xin ;kSw = 0 / 1
+	zaw a1*kSw, 2 ; CHANGE
+endop

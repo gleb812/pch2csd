@@ -1,0 +1,23 @@
+opcode FlipFlop, 0, k
+	kType xin
+	kClk zkr 1 ; CHANGE 
+	kIn zkr 2 ; CHANGE 
+	kRst zkr 1 ; CHANGE 
+	
+	kQ init 0 
+
+	ktrig	trigger kClk, 0, 0
+
+	if (ktrig == 0) kgoto Run
+
+	if (kType!=0) kgoto RS
+		kQ = kIn *(kRst>0 ? 0:1)	
+		kgoto Run
+	RS:
+		kQ = 1		
+
+Run:
+	
+	zkw kQ, 1 ; CHANGE
+	zkw 1-kQ, 2 ; CHANGE
+endop

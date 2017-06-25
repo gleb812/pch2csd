@@ -1,0 +1,11 @@
+opcode LevMod, 0, kk   
+	kMod, kBal xin
+	kModD 	zkr 1 ; CHANGE 
+	kModIn 	zkr 2 ; CHANGE 
+	kIn 	zkr 3 ; CHANGE 
+
+	kOut = kIn*(1-kBal * (1 - kModD * kMod)) + (1 - kModD * kMod) * kBal * kIn * kModIn
+
+	zkw kOut, 2 ; CHANGE
+	; normirovka ??
+endop

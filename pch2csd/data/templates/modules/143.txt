@@ -1,0 +1,10 @@
+opcode NoteSend, 0, kkkk
+	kGate, kNote, kVel, kChnl xin
+	
+	if (kGate!=0) then
+		midiout 144, kChnl, kNote, kVel  ; GENERIC 127 NOTEON
+		; zkw what???
+	endif
+
+
+endop

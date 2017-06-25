@@ -1,0 +1,31 @@
+opcode ClkGen, 0, kki
+; SWING ???
+kReset, kBPM, iSEB xin
+kfr = kBPM/60
+kReset zkr 1 ; CHANGE  
+
+start:
+	iPh = 0
+	k16 metro kfr, iPh
+	k96 metro kfr*6, iPh
+	kCount init 0
+	kSync = 0
+	if (kReset == 1)
+		reinit start 
+	endif
+
+	if (k1 != 0) then
+		kCount += 1
+	endif
+
+	kSyn = kCount%iSEB
+
+	if (kSyn == 1) then
+		kSync = 1
+	endif
+
+	zkr k16, 1 ; CHANGE  
+	zkr k96, 1 ; CHANGE  
+	zkr kSync, 1 ; CHANGE  
+	; Plus ewe nado Clock Active
+endop

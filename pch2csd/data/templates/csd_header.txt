@@ -1,0 +1,8 @@
+<CsoundSynthesizer>
+<CsOptions>
+</CsOptions>
+<CsInstruments>
+sr = 44100 ;96000?
+kr = 22050 ;24000?
+nchnls = 2
+0dbfs = 1

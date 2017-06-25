@@ -3,6 +3,14 @@ import os
 from typing import Dict, Any
 
 
+def get_template_path(name: str) -> str:
+    return os.path.join(os.path.dirname(__file__), 'templates', f'{name}.txt')
+
+
+def get_template_module_path(name: str) -> str:
+    return os.path.join(os.path.dirname(__file__), 'templates', 'modules', f'{name}.txt')
+
+
 def _read_json(filename: str) -> Dict[str, Any]:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, 'r') as f:

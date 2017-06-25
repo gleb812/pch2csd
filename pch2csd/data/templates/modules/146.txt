@@ -1,0 +1,70 @@
+opcode SeqLev, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ;...
+	kSeq[] init 16
+	kTr[] init 16
+	kCnt init 0
+	
+
+	kIn0,kIn1,kIn2,kIn3,
+	kIn4,kIn5,kIn6,kIn7,
+	kIn8,kIn9,kInA,kInB,
+	kInC,kInD,kInE,kInF,
+	kTr0,kTr1,kTr2,kTr3,
+	kTr4,kTr5,kTr6,kTr7,
+	kTr8,kTr9,kTrA,kTrB,
+	kTrC,kTrD,kTrE,kTrF,
+	kLen,kClr,kRnd,kPol
+	xin
+
+	kSeq[0] = kIn0
+	kSeq[1] = kIn1
+	kSeq[2] = kIn2
+	kSeq[3] = kIn3
+	kSeq[4] = kIn4
+	kSeq[5] = kIn5
+	kSeq[6] = kIn6
+	kSeq[7] = kIn7
+	kSeq[8] = kIn8
+	kSeq[9] = kIn9
+	kSeq[10] = kInA
+	kSeq[11] = kInB
+	kSeq[12] = kInC
+	kSeq[13] = kInD
+	kSeq[14] = kInE
+	kSeq[15] = kInF
+
+	kTr[0] = kTr0
+	kTr[1] = kTr1
+	kTr[2] = kTr2
+	kTr[3] = kTr3
+	kTr[4] = kTr4
+	kTr[5] = kTr5
+	kTr[6] = kTr6
+	kTr[7] = kTr7
+	kTr[8] = kTr8
+	kTr[9] = kTr9
+	kTr[A] = kTrA
+	kTr[B] = kTrB
+	kTr[C] = kTrC
+	kTr[D] = kTrD
+	kTr[E] = kTrE
+	kTr[F] = kTrF
+
+	kt1 trigger kClk, 0, 0
+	kt2 trigger kRst, 0, 0
+	
+	if (kt2 != 0 || kClr!= 0) then
+		kSeq = kSeq*0
+		kTr = kTr*0
+	endif
+
+	;NO LOOP IMPLEMENTED
+	kCnt += (kt1>0?1:0)
+	kCnt = kCnt%kLen
+		
+	zkw kSeq[kCnt],1 ;CHANGE
+	zkw kTr[kCnt],2 ;CHANGE
+
+
+	
+
+endop
