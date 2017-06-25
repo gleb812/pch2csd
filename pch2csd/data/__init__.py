@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 def get_template_path(name: str) -> str:
@@ -24,20 +24,20 @@ class ProjectData:
         self._mod_type_name = None
 
     @property
-    def value_maps(self):
+    def value_maps(self) -> Dict[str, List[int]]:
         if self._value_maps is None:
             self._value_maps = _read_json('value_maps.json')
         return self._value_maps
 
     @property
-    def mod_type_connections(self):
+    def mod_type_connections(self) -> Dict[int, Dict[str, List[str]]]:
         if self._mod_type_connections is None:
             self._mod_type_connections = {int(k): v for k, v
                                           in _read_json('mod_type_connections.json').items()}
         return self._mod_type_connections
 
     @property
-    def mod_type_name(self):
+    def mod_type_name(self) -> Dict[int, str]:
         if self._mod_type_name is None:
             self._mod_type_name = {int(k): v for k, v
                                    in _read_json('mod_type_name.json').items()
