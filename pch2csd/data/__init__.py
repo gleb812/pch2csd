@@ -20,7 +20,7 @@ def _read_json(filename: str) -> Dict[str, Any]:
 class ProjectData:
     def __init__(self):
         self._value_maps = None
-        self._mod_type_connection = None
+        self._mod_type_connections = None
         self._mod_type_name = None
 
     @property
@@ -30,11 +30,11 @@ class ProjectData:
         return self._value_maps
 
     @property
-    def mod_type_connection(self):
-        if self._mod_type_connection is None:
-            self._mod_type_connection = {int(k): v for k, v
-                                         in _read_json('mod_type_connections.json').items()}
-        return self._mod_type_connection
+    def mod_type_connections(self):
+        if self._mod_type_connections is None:
+            self._mod_type_connections = {int(k): v for k, v
+                                          in _read_json('mod_type_connections.json').items()}
+        return self._mod_type_connections
 
     @property
     def mod_type_name(self):
