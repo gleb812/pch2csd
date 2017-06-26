@@ -36,17 +36,19 @@ def parse_module_list(blob: bitarray, patch: Patch):
 
 
 def parse_cable_list(blob: bitarray, patch: Patch):
-    location = parse_location(blob.tobytes()[0])
-    num_cables, = unpack('>B', blob[16:24].tobytes())
-    for i in range(24, 32 * num_cables, 32):
-        color = CableColor.from_int(blob[i:i + 3].tobytes()[0] >> 5)
-        module_from, = unpack('>B', blob[i + 3:i + 11].tobytes())
-        jack_from = blob[i + 11:i + 17].tobytes()[0] >> 2
-        cable_type = CableType.from_int(int(blob[i + 17]))
-        module_to, = unpack('>B', blob[i + 18:i + 26].tobytes())
-        jack_to = blob[i + 26:i + 32].tobytes()[0] >> 2
-        patch.cables.append(
-            Cable(location, cable_type, color, module_from, jack_from, module_to, jack_to))
+    bits = BitArrayStream(blob)
+    loc, _skip_, num_cables = bits.read_ints([2, 14, 8])
+    for i in range(num_cables):
+        color, module_from, jack_from, cable_type, module_to, jack_to = bits.read_ints([3, 8, 6, 1, 8, 6])
+        c = Cable(Location.from_int(loc), CableType.from_int(cable_type), CableColor.from_int(color),
+                  module_from, jack_from, module_to, jack_to)
+        if c.type == CableType.IN_TO_IN:
+            # By some reason, in2in cables have sources swapped back with destinations...
+            c.module_from = module_to
+            c.module_to = module_from
+            c.jack_from = jack_to
+            c.jack_to = jack_from
+        patch.cables.append(c)
 
 
 def parse_module_parameters(blob: bitarray, patch: Patch):

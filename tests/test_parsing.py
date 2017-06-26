@@ -15,7 +15,7 @@ class TestParsing(TestCase):
         expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1),
                             Module(self.data, Location.VOICE_AREA, 96, 2)]
         expected_cables = [Cable(Location.VOICE_AREA, CableType.IN_TO_IN,
-                                 CableColor.WHITE, 1, 0, 1, 1)]
+                                 CableColor.WHITE, 1, 1, 1, 0)]
         expected_mod_params = [ModuleParameters(Location.VOICE_AREA, 1, 3, [0, 1, 0]),
                                ModuleParameters(Location.VOICE_AREA, 2, 5, [127, 127, 0, 2, 0])]
         parsed = parse_pch2(self.data, gleb_2_pch)
