@@ -28,9 +28,8 @@ def parse_module_list(blob: bitarray, patch: Patch):
     for i in range(num_modules):
         mod_type, mod_id = bits.read_ints([8, 8])
         hpos, vpos, color = bits.read_ints([7, 7, 8])
-        _skip_, _insert_ = bits.read_ints([8, 4])
-        for m in range(_insert_):
-            _skip_ = bits.read_ints([6])
+        _, _n = bits.read_ints([8, 4])
+        _ = bits.read_ints([6] * _n)
         mod = Module(patch.data, Location.from_int(loc), mod_type, mod_id)
         patch.modules.append(mod)
 
