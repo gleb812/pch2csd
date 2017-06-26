@@ -1,0 +1,11 @@
+opcode ValSw1, 0, ik   ; MULTIMODE support a/k? == sw14 !!!
+; Need to check..
+	iVal, kSw xin 
+	a1 zar 1 ; CHANGE  
+	if (kSw != iVal) goto default
+	zaw a1, 1 ; CHANGE
+	goto halt
+default:
+	zaw a1, 2 ; CHANGE
+halt:
+endop

@@ -1,0 +1,29 @@
+opcode EnvD, 0, kk
+	kSW, kH xin
+
+	kIn zkr 1 ; CHANGE
+	kAM zkr 2; CHANGE
+	kTrig zkr 3; CHANGE
+	
+	kTab[][] init 2,4 ;MAYBE GLOBAL?
+	kTab fillarray 1,-1,  1, -1,  0, 1,  -1, 0 ;double check
+	
+Init:
+
+	kEnv = 0
+	kTimer = 0
+	kSet = 0	
+
+	if kTrig == 0 then goto Run 
+		kEnv = 1
+		kSet = 1			
+Run:	
+	kTimer += kSet/kr ; KR TIME STEP
+	kEnv -= 0.01 ; SOME STEP - need to turn into EXP or something	
+
+	if kTimer >= kH then goto Init
+
+	kEnvH = kTab[1][kSW]*kEnv*(1-kAM)+kTab[2][kSW] ; CHECK AM RANGE
+	zkw kEnvH, 1 ; CHANGE
+	zkw kIn*kEnvH, 2 ; CHANGE
+endop

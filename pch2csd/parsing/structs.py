@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from pch2csd.parsing.data import mod_type_name
+from pch2csd.data import ProjectData
 from pch2csd.parsing.util import AttrEqMixin, ReprStrMixin
 
 
@@ -20,9 +20,10 @@ class Location(Enum):
 
 
 class Patch(ReprStrMixin):
-    __slots__ = ['ver', 'type', 'modules', 'cables', 'mod_params']
+    __slots__ = ['data', 'ver', 'type', 'modules', 'cables', 'mod_params']
 
-    def __init__(self):
+    def __init__(self, data: ProjectData):
+        self.data = data
         self.description = PatchDescription()
         self.modules: List[Module] = []
         self.cables: List[Cable] = []
@@ -33,6 +34,9 @@ class Patch(ReprStrMixin):
             if m.id == id and m.location == loc:
                 return m
 
+    def find_incoming_cables(self, mod_id: int, inlet_id: int = None) -> List[Cable]:
+        pass
+
 
 class PatchDescription(ReprStrMixin):
     def __init__(self):
@@ -40,9 +44,9 @@ class PatchDescription(ReprStrMixin):
 
 
 class Module(AttrEqMixin, ReprStrMixin):
-    def __init__(self, loc: Location, mod_type: int, id: int):
+    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int):
         self.type = mod_type
-        self.type_name = mod_type_name[str(mod_type)]
+        self.type_name = data.mod_type_name[mod_type]
         self.id = id
         self.location = loc
 

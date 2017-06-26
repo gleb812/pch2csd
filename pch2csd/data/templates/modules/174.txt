@@ -1,0 +1,10 @@
+opcode DelayDual, 0, iiikk
+	iTime1, iTime2, imaxdel, kMod1, kMod2 xin
+	ain1 zar 2 ; CHANGE 
+	adel1 zar 1 ; CHANGE 
+	adel2 zar 1 ; CHANGE
+	aout1 vdelay ain, iTime1+adel1*kMod1, imaxdel
+	aout2 vdelay ain, iTime2+adel2*kMod2, imaxdel
+	zaw aout1, 2  ; CHANGE 
+	zaw aout2, 2  ; CHANGE 
+endop

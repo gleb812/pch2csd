@@ -1,0 +1,14 @@
+opcode MixFader, 0, kkkkkkkki   ; == Mix81B
+	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8, iPad xin
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE
+	a5 zar 1 ; CHANGE 
+	a6 zar 1 ; CHANGE 
+	a7 zar 1 ; CHANGE 
+	a8 zar 1 ; CHANGE
+	a9 zar 1 ; CHANGE
+	aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)*iPad
+	zaw aout, 2 ; CHANGE 
+endop

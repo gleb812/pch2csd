@@ -1,0 +1,17 @@
+opcode MixStereo, 0, kkkkkkkkkkkkkiiiiiiii   ; MULTIMODE support a/k?
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE 
+	a5 zar 1 ; CHANGE 
+	a6 zar 1 ; CHANGE 
+
+	kLev1, kLev2, kLev3, kLev4, kLev5, kLev6, kPan1, kPan2, kPan3, kPan4, kPan5, kPan6, kMaster xin 
+
+	aoutL = a1*kLev1*kPan1 + a1*kLev2*kPan2 + a1*kLev3*kPan3 + a1*kLev4*kPan4 + a1*kLev5*kPan5 + a1*kLev6*kPan6
+ 	aoutR = a1*kLev1*(1-kPan1) + a1*kLev2(1-kPan2) + a1*kLev3*(1-kPan3) + a1*kLev4*(1-kPan4) + a1*kLev5*(1-kPan5) + a1*kLev6*(1-kPan6)
+
+	zaw aoutL*kMaster, 2 ; CHANGE 
+	zaw aoutR*kMaster, 2 ; CHANGE 
+	; LIN vs DB?
+endop

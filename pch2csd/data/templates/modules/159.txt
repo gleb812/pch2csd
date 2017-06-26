@@ -1,0 +1,13 @@
+opcode CompSig, 0, 0   ; MULTIMODE support a/k?
+	k1 zkr 1 ; CHANGE 
+	k2 zkr 1 ; CHANGE 
+	kres init 0
+	
+	if (k1 >= k2) then 
+		kres = 1
+		goto run
+	endif	
+	kres = 0
+run:
+	zkw kres, 2 ; CHANGE
+endop

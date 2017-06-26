@@ -1,0 +1,7 @@
+opcode LevMult, 0, 0   ; MULTIMODE support a/k?
+; Need to check..
+	k1 zkr 1 ; CHANGE 
+	k2 zkr 1 ; CHANGE 
+	zkw k1*k2, 2 ; CHANGE
+	; normirovka ??
+endop

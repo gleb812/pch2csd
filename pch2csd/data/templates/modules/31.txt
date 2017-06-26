@@ -1,0 +1,6 @@
+opcode Noise, 0, Kii ;
+	kColor, iMute, iOut  xin
+	aout rand 0.5, 0.1 ; seed value ?
+	;aout tone a1, kColor
+	zaw aout, iOut
+endop
