@@ -1,0 +1,39 @@
+opcode 8Counter, 0, kk
+	kClk, kRst xin
+	kCount init 0
+
+	k1[] fillarray 1,0,0,0,0,0,0,0
+	k2[] fillarray 0,1,0,0,0,0,0,0
+	k3[] fillarray 0,0,1,0,0,0,0,0
+	k4[] fillarray 0,0,0,1,0,0,0,0
+	k5[] fillarray 0,0,0,0,1,0,0,0
+	k6[] fillarray 0,0,0,0,0,1,0,0
+	k7[] fillarray 0,0,0,0,0,0,1,0
+	k8[] fillarray 0,0,0,0,0,0,0,1
+
+
+	if (kClk != 0) then
+		kCount += 1
+		kCount = kCount%8
+		zkw k1[kCount], 1 ; CHANGE 
+		zkw k2[kCount], 2 ; CHANGE 
+		zkw k3[kCount], 3 ; CHANGE 
+		zkw k4[kCount], 4 ; CHANGE 
+		zkw k5[kCount], 5 ; CHANGE 
+		zkw k6[kCount], 6 ; CHANGE 
+		zkw k7[kCount], 7 ; CHANGE 
+		zkw k8[kCount], 8 ; CHANGE
+	endif
+	
+	if (kRst != 0) then
+		kCount = 0 
+		zkw 1, 1 ; CHANGE 
+		zkw 0, 2 ; CHANGE 
+		zkw 0, 3 ; CHANGE 
+		zkw 0, 4 ; CHANGE 
+		zkw 0, 5 ; CHANGE 
+		zkw 0, 6 ; CHANGE 
+		zkw 0, 7 ; CHANGE 
+		zkw 0, 8 ; CHANGE
+	endif
+endop

@@ -1,0 +1,20 @@
+opcode Pulse, 0, kk
+	kIn, kMod, kTime, kPN xin ; P- positive, N - negative
+	; WHAT TO DO WITH RANGES? LO_HI_MD
+	kOut init 0		
+
+	if kIn < 0 goto Halt
+
+	;reinit
+	iTime = i(kTime)  ; WHAT IF USER CAN CHANGE DUR AT RUN TIME?	
+	timout 0, iTime, Pulse
+	
+	kOut = 0
+	goto Halt
+	
+	Pulse:
+	kOut = 1
+
+	Halt:	
+	zkw kOut, 1 ; CHANGE
+endop

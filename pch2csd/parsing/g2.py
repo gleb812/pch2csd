@@ -3,6 +3,7 @@ from struct import unpack
 
 from bitarray import bitarray
 
+from pch2csd.data import ProjectData
 from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, \
     ModuleParameters
 from pch2csd.parsing.util import BitArrayStream
@@ -23,12 +24,15 @@ def parse_location(loc: int):
 def parse_module_list(blob: bitarray, patch: Patch):
     bits = BitArrayStream(blob)
     loc, num_modules = bits.read_ints([2, 8])
+    num_modules, = unpack('>B', blob[2:10].tobytes())
     for i in range(num_modules):
         mod_type, mod_id = bits.read_ints([8, 8])
         hpos, vpos, color = bits.read_ints([7, 7, 8])
-        _, num_modes = bits.read_ints([8, 4])
-        bits.read_ints([6] * num_modes)  # skip for now
-        patch.modules.append(Module(Location.from_int(loc), mod_type, mod_id))
+        _skip_, _insert_ = bits.read_ints([8, 4])
+        for m in range(_insert_):
+            _skip_ = bits.read_ints([6])
+        mod = Module(patch.data, Location.from_int(loc), mod_type, mod_id)
+        patch.modules.append(mod)
 
 
 def parse_cable_list(blob: bitarray, patch: Patch):
@@ -70,8 +74,8 @@ def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
         ctx['head_4d_count'] += 1
 
 
-def parse_pch2(pch2_file: str) -> Patch:
-    patch = Patch()
+def parse_pch2(data: ProjectData, pch2_file: str) -> Patch:
+    patch = Patch(data)
     with open(pch2_file, 'rb') as pch2:
         parse_header(pch2, patch)
         context = {'head_4d_count': 0}

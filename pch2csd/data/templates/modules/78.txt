@@ -1,0 +1,7 @@
+opcode sw18, 0, k   ; MULTIMODE support a/k? == sw14 !!!
+; Need to check..
+	kSw xin ;kSw = nomera shin
+	a1 zar 1 ; CHANGE  
+	zaw a1, kSw ; CHANGE
+	; poka bez Ctrl 
+endop

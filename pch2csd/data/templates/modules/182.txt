@@ -1,0 +1,20 @@
+opcode DlyStereo, 0, KKKKKKKKKK
+	kTimeL,kTimeR,kFBL,kFBR,kXFBL,kXFBR,kLP,kHP,kDW xin
+	
+	ain zar 2 ; CHANGE 
+	ainF tone ain, kLP ; check filter type etc
+	ainF atone ainF, kHP ; check filter type etc
+	atapL init 0
+	atapR init 0
+	
+	abufL delayr 2.7
+	atapL deltapi kTimeL
+	delayw ainF+atapL*kFBL+atapR*kXFBR
+	
+	abufR delayr 2.7
+	atapR deltapi kTimeR
+	delayw ainF+atapR*kFBR+atapL*kXFBL
+	
+	zaw atapL*kDW+ain*(1-kDW), 1 ; CHANGE 
+	zaw atapR*kDW+ain*(1-kDW), 1 ; CHANGE 
+endop

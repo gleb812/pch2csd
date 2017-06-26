@@ -1,0 +1,62 @@
+opcode ModAHD, 0, kkkkkkk
+	kAtt, kDec, kSW, kH, kMAtt, kMH, kMDec xin
+; NOT FORGET ABOUT KEYBOARD KB
+; NO SHAPE IMPLEMENTED
+	kIn zkr 1 ; CHANGE
+	kAM zkr 2; CHANGE
+	kTrig zkr 3; CHANGE
+	kMAIn zkr 4 ; CHANGE
+	kMHIn zkr 5; CHANGE
+	kMDIn zkr 6; CHANGE
+	
+	kTab[][] init 2,4 ;MAYBE GLOBAL?
+	kTab fillarray 1,-1,  1, -1,  0, 1,  -1, 0 ;double check
+	
+
+	kEnv init 0
+	kTimer init 0
+	kSet init 0	
+	kStage init 0	
+
+; CHECK MODULATIONS
+	kAtt -= kMAIn * kMAtt
+	kH -= kMHIn * kMH
+	kDec -= kMDIn * kMDec
+
+
+	if kTrig == 0 then goto Run 
+		kSet = 1
+		kStage = 1			
+Run:	
+	kTimer += kSet/kr ; KR TIME STEP
+
+
+	if kStage == 1 then
+		kEnv += kAtt/kr ; CHANGE SOMETHING use KAtt here	
+		if kAtt <= kTimer then
+			kStage = 2
+			kTimer = 0
+		endif		
+	endif
+
+	if kStage == 2 then
+		kEnv = 1
+		if kH <= kTimer then
+			kStage = 3
+			kTimer = 0
+		endif
+	endif
+
+	if kStage == 3 then
+		kEnv -= kDec/kr
+		if kDec <= kTimer then
+			kStage = 0
+			kTimer = 0
+		endif
+	endif
+
+
+	kEnvH = kTab[1][kSW]*kEnv*(1-kAM)+kTab[2][kSW] ; CHECK AM RANGE
+	zkw kEnvH, 1 ; CHANGE
+	zkw kIn*kEnvH, 2 ; CHANGE
+endop

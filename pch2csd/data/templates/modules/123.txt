@@ -1,0 +1,10 @@
+opcode Mix41C, 0, kkkkiiiii   ; MULTIMODE support a/k?
+kLev1, kLev2, kLev3, kLev4, iSW1, iSW2, iSW3, iSW4, iPad  xin 
+	a1 zar 1 ; CHANGE 
+	a2 zar 1 ; CHANGE 
+	a3 zar 1 ; CHANGE 
+	a4 zar 1 ; CHANGE 
+	a5 zar 1 ; CHANGE 
+	aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2 + a4*kLev3*iSW3 + a5*kLev4*iSW4
+	zaw aout*iPad, 2 ; CHANGE 
+endop
