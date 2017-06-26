@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from pch2csd.data import ProjectData
 from pch2csd.parsing.g2 import parse_pch2
-from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor, ModuleParameters
+from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor, ModuleParameters, \
+    transform_in2in_cables
 from tests.util import get_test_resource
 
 
@@ -35,3 +36,15 @@ class TestParsing(TestCase):
         self.assertTrue(parsed.modules == expected_modules_correct)
         self.assertFalse(parsed.modules == expected_modules)
         self.assertFalse(parsed.cables == expected_cables)
+
+
+class TestCableTracing(TestCase):
+    def setUp(self):
+        self.data = ProjectData()
+
+    def test_in2in__all_cables_from_the_first_module(self):
+        pch2 = get_test_resource('test_in2in.pch2')
+        patch = parse_pch2(self.data, pch2)
+        patch.cables = [transform_in2in_cables(patch, c) for c in patch.cables]
+        for c in patch.cables:
+            self.assertEqual(c.module_from, 1)

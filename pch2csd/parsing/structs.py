@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from pch2csd.data import ProjectData
 from pch2csd.parsing.util import AttrEqMixin, ReprStrMixin
@@ -17,25 +17,6 @@ class Location(Enum):
             return Location.VOICE_AREA
         else:
             raise ValueError(f'Wrong location code: {i}')
-
-
-class Patch(ReprStrMixin):
-    __slots__ = ['data', 'ver', 'type', 'modules', 'cables', 'mod_params']
-
-    def __init__(self, data: ProjectData):
-        self.data = data
-        self.description = PatchDescription()
-        self.modules: List[Module] = []
-        self.cables: List[Cable] = []
-        self.mod_params: List[ModuleParameters] = []
-
-    def find_module(self, id: int, loc=Location.VOICE_AREA):
-        for m in self.modules:
-            if m.id == id and m.location == loc:
-                return m
-
-    def find_incoming_cables(self, mod_id: int, inlet_id: int = None) -> List[Cable]:
-        pass
 
 
 class PatchDescription(ReprStrMixin):
@@ -123,3 +104,37 @@ class ModuleParameters(AttrEqMixin, ReprStrMixin):
 
     def __eq__(self, other):
         return self.attrs_equal(other)
+
+
+class Patch(ReprStrMixin):
+    __slots__ = ['data', 'ver', 'type', 'modules', 'cables', 'mod_params']
+
+    def __init__(self, data: ProjectData):
+        self.data = data
+        self.description = PatchDescription()
+        self.modules: List[Module] = []
+        self.cables: List[Cable] = []
+        self.mod_params: List[ModuleParameters] = []
+
+    def find_module(self, id: int, loc=Location.VOICE_AREA) -> Optional[Module]:
+        for m in self.modules:
+            if m.id == id and m.location == loc:
+                return m
+        return None
+
+    def find_incoming_cable(self, loc: Location, mod_to: int, jack_to: int = None) -> Optional[Cable]:
+        for c in self.cables:
+            if c.module_to == mod_to and c.jack_to == jack_to and c.loc == loc:
+                return c
+        return None
+
+
+def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
+    if cable.type == CableType.OUT_TO_IN:
+        return cable
+    c = cable
+    while c is not None:
+        if c.type == CableType.OUT_TO_IN:
+            break
+        c = patch.find_incoming_cable(c.loc, c.module_from, c.jack_from)
+    return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to, cable.jack_to)
