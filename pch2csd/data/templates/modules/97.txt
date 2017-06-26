@@ -1,3 +1,4 @@
+;@ iiiiii, kk, a
 opcode OscA, 0, KKKKKK
  ; Net knopok
 	kfn, kFreq, kFine, kPitch, kModLev xin

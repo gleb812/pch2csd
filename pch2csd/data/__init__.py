@@ -19,6 +19,7 @@ def _read_json(filename: str) -> Dict[str, Any]:
 
 class ProjectData:
     def __init__(self):
+        self._mod_params = None
         self._value_maps = None
         self._mod_type_connections = None
         self._mod_type_name = None
@@ -43,3 +44,10 @@ class ProjectData:
                                    in _read_json('mod_type_name.json').items()
                                    if v != 'Unknown'}
         return self._mod_type_name
+
+    @property
+    def mod_params(self) -> Dict[int, List[Any]]:
+        if self._mod_params is None:
+            self._mod_params = {int(k): v for k, v
+                                in _read_json('mod_params.json').items()}
+        return self._mod_params
