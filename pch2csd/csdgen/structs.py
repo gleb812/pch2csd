@@ -1,10 +1,34 @@
-from pch2csd.data import ProjectData
+from typing import List
+
+from pch2csd.csdgen.util import LogMixin
+from pch2csd.data import ProjectData, get_template_module_path
 from pch2csd.parsing.structs import Module, Patch
 
 
-class UdoTemplate:
-    def __init__(self, mod_type: int):
-        pass
+class UdoTemplate(LogMixin):
+    def __init__(self, mod: Module):
+        self._repr = f'{mod.type_name}({mod.type})'
+        self.logger_set_name('UdoTemplate')
+        with open(get_template_module_path(mod.type)) as f:
+            self.tpl_lines = [l.strip() for l in f]
+        self.headers = self._parse_headers()
+
+    def __repr__(self):
+        return f'UdoTemplate({self._repr})'
+
+    def _parse_headers(self) -> List[List[str]]:
+        headers: List[str] = []
+        for l in self.tpl_lines:
+            if l.startswith(';@'):
+                headers.append([s.strip() for s in l.replace(';@', '').split(',')])
+        if len(headers) == 0:
+            self.log.error('%s: no opcode headers were found in the template', self._repr)
+            return []
+        for h in headers:
+            if len(h) != 3:
+                self.log.error('%s: opcode header should have exactly three arguments', self._repr)
+                return []
+        return headers
 
 
 class CsModule:

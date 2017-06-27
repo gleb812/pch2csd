@@ -1,5 +1,6 @@
-opcode Constant, 0, k   ; MULTIMODE support a/k?
-	kVal xin
-	; BIPOLAR UNIPOLAR ????
-	zaw kVal, 2 ; CHANGE 
+;@ ii,,k
+opcode Constant, 0, iii
+    ; TODO: unipolar/bipolar switch
+    kVal, iPolSw, izOut xin
+    zkw kVal, izOut
 endop
