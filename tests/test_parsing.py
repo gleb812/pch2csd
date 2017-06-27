@@ -1,8 +1,9 @@
 from unittest import TestCase
 
-from pch2csd.data import ProjectData
-from pch2csd.parsing.g2 import parse_pch2, transform_in2in_cables
-from pch2csd.parsing.structs import Module, Location, Cable, CableType, CableColor, ModuleParameters
+from pch2csd.parse import parse_pch2
+from pch2csd.patch import Module, Location, Cable, CableType, CableColor, \
+    ModuleParameters, transform_in2in_cables
+from pch2csd.resources import ProjectData
 from tests.util import get_test_resource
 
 

@@ -1,10 +1,9 @@
 import os
-
 from io import StringIO
 from typing import Optional
 
-from pch2csd.data import get_template_module_path
-from pch2csd.parsing.structs import Patch
+from pch2csd.patch import Patch
+from pch2csd.resources import get_template_module_path
 
 
 def _all_modules_implemented(patch: Patch):

@@ -1,7 +1,7 @@
 from unittest import TestCase, skip
 
-from pch2csd.data import ProjectData
-from pch2csd.parsing.structs import ModuleParameters, Location, Module
+from pch2csd.patch import ModuleParameters, Location, Module
+from pch2csd.resources import ProjectData
 from pch2csd.util import AttrEqMixin
 
 

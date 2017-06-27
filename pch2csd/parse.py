@@ -3,9 +3,8 @@ from struct import unpack
 
 from bitarray import bitarray
 
-from pch2csd.data import ProjectData
-from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, \
-    ModuleParameters
+from pch2csd.patch import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters
+from pch2csd.resources import ProjectData
 from pch2csd.util import BitArrayStream
 
 
@@ -93,14 +92,3 @@ def parse_pch2(data: ProjectData, pch2_file: str) -> Patch:
             else:
                 break
     return patch
-
-
-def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
-    if cable.type == CableType.OUT_TO_IN:
-        return cable
-    c = cable
-    while c is not None:
-        if c.type == CableType.OUT_TO_IN:
-            break
-        c = patch.find_incoming_cable(c.loc, c.module_from, c.jack_from)
-    return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to, cable.jack_to)

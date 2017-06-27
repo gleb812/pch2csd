@@ -4,8 +4,8 @@ from glob import glob
 from io import StringIO
 from typing import List, Dict, Tuple
 
-from pch2csd.data import get_template_module_path, get_template_path, get_template_dir
-from pch2csd.parsing.structs import Module, Patch, CableColor, Cable
+from pch2csd.patch import Module, Patch, CableColor, Cable
+from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir
 from pch2csd.util import LogMixin, preprocess_csd_code
 
 

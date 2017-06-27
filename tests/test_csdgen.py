@@ -1,9 +1,9 @@
 from unittest import TestCase, skip
 
-from pch2csd.csdgen.structs import Udo, Csd, ZakSpace
-from pch2csd.data import ProjectData
-from pch2csd.parsing import parse_pch2
-from pch2csd.parsing.g2 import transform_in2in_cables
+from pch2csd.csdgen import Udo, Csd, ZakSpace
+from pch2csd.parse import parse_pch2
+from pch2csd.patch import transform_in2in_cables
+from pch2csd.resources import ProjectData
 from tests.util import get_test_resource, cmp_str_lines
 
 
