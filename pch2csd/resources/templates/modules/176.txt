@@ -1,0 +1,12 @@
+opcode DelayA, 0, KKKK
+	kTime, kFB, kFilter, kDW xin
+	
+	ain zar 2 ; CHANGE 
+	
+	abuf delayr 2.7
+	atap deltapi kTime
+	delayw ain+atap*kFB
+	
+	aout tone atap, kFilter ; check filter type etc
+	zaw aout*kDW+ain*(1-kDW), 1 ; CHANGE 
+endop

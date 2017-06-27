@@ -1,0 +1,9 @@
+opcode Eq3Band, 0, KKKKKKK
+; rbjeq ???
+	kFreqL, kFreqH, kGainL, kGainH, kFreqM, kGainM, kLev xin 
+	ain zar 2 ; CHANGE 
+	ai1 pareq ain, kFreqL, kGainL, sqrt(.5), 2
+	ai2 pareq ai1, kFreqH, kGainH, sqrt(.5), 1
+	aout pareq ai2, kFreqM, kGainM, sqrt(.5), 0 ; BW???
+	zaw aout*kLev, 2  ; CHANGE 
+endop

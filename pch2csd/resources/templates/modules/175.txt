@@ -1,0 +1,21 @@
+opcode DelayQuad, 0, kkkkiKKKK
+	kTime1, kTime2,kTime3, kTime4, imaxdel,kMod1,kMod2,kMod3,kMod4 xin
+	; TIME vs CLOCK button
+	ain1 zar 2 ; CHANGE 
+	adel1 zar 1 ; CHANGE 
+	adel2 zar 2 ; CHANGE
+	adel3 zar 2 ; CHANGE 
+	adel4 zar 1 ; CHANGE
+
+	aout1 vdelay ain, kTime1+adel1*kMod1, imaxdel
+	aout2 vdelay ain, kTime2+adel2*kMod2, imaxdel
+	aout3 vdelay ain, kTime3+adel1*kMod3, imaxdel
+	aout4 vdelay ain, kTime4+adel2*kMod4, imaxdel
+	aout delay ain, imaxdel
+	
+	zaw aout, 2  ; CHANGE 
+	zaw aout2, 2  ; CHANGE 
+	zaw aout1, 2  ; CHANGE 
+	zaw aout2, 2  ; CHANGE 
+	zaw aout2, 2  ; CHANGE 
+endop

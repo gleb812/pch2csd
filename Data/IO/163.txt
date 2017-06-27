@@ -1,6 +1,0 @@
-I k
-I k
-I a
-I a
-I a
-O a

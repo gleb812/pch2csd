@@ -1,0 +1,12 @@
+;@ iiiiii, kk, a
+opcode OscA, 0, KKKKKK
+ ; Net knopok
+	kfn, kFreq, kFine, kPitch, kModLev xin
+	
+	kPitch zkr 2 ; CHANGE 
+	kMod zkr 1 ; CHANGE 
+	; Proverit' amplitudu
+	kfine = cent(kFine)
+	aout oscilikt 0.5, kFreq*kfine+kPitch+kMod*kModLev, kfn   
+	zaw aout, 2  ; CHANGE 
+endop

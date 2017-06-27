@@ -1,0 +1,6 @@
+;@ ii,,k
+opcode Constant, 0, iii
+    ; TODO: unipolar/bipolar switch
+    kVal, iPolSw, izOut xin
+    zkw kVal, izOut
+endop
