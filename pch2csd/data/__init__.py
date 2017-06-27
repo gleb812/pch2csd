@@ -7,7 +7,7 @@ def get_template_path(name: str) -> str:
     return os.path.join(os.path.dirname(__file__), 'templates', f'{name}.txt')
 
 
-def get_template_module_path(name: str) -> str:
+def get_template_module_path(name: int) -> str:
     return os.path.join(os.path.dirname(__file__), 'templates', 'modules', f'{name}.txt')
 
 
