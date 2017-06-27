@@ -17,7 +17,7 @@ class UdoTemplate(LogMixin):
         return f'UdoTemplate({self._repr})'
 
     def _parse_headers(self) -> List[List[str]]:
-        headers: List[str] = []
+        headers = []
         for l in self.lines:
             if l.startswith(';@'):
                 headers.append([s.strip() for s in l.replace(';@', '').split(',')])
