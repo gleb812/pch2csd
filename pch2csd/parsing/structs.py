@@ -77,6 +77,25 @@ class CableColor(Enum):
         else:
             raise ValueError(f'Wrong cable color code {i}')
 
+    @staticmethod
+    def to_cs_rate_char(c):
+        if c == CableColor.RED:
+            return 'a'
+        elif c == CableColor.BLUE:
+            return 'k'
+        elif c == CableColor.YELLOW:
+            return 'k'
+        elif c == CableColor.ORANGE:
+            return 'a'
+        elif c == CableColor.GREEN:
+            raise NotImplementedError
+        elif c == CableColor.PURPLE:
+            raise NotImplementedError
+        elif c == CableColor.WHITE:
+            raise NotImplementedError
+        else:
+            raise ValueError(f'Unknown cable color: {c}')
+
 
 class Cable(AttrEqMixin, ReprStrMixin):
     def __init__(self, loc: Location, type: CableType, color: CableColor, module_from: int,
@@ -122,11 +141,16 @@ class Patch(ReprStrMixin):
                 return m
         return None
 
-    def find_incoming_cable(self, loc: Location, mod_to: int, jack_to: int = None) -> Optional[Cable]:
+    def find_incoming_cable(self, loc: Location,
+                            mod_to: int, jack_to: int = None) -> Optional[Cable]:
         for c in self.cables:
             if c.module_to == mod_to and c.jack_to == jack_to and c.loc == loc:
                 return c
         return None
+
+    def find_all_incoming_cables(self, loc: Location, mod_to: int) -> Optional[List[Cable]]:
+        cables = [c for c in self.cables if c.loc == loc and c.module_to == mod_to]
+        return cables if len(cables) > 0 else None
 
 
 def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
