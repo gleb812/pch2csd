@@ -1,6 +1,6 @@
-;k2a
+;@ ,k,a
 opcode K2A, 0, ii
-	iIn, iOut xin
-	kIn zkr i1
-	zaw a(kIn), iOut
+    izkIn, izaOut xin
+    kIn zkr izkIn
+    zaw a(kIn), izaOut
 endop

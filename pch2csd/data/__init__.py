@@ -3,6 +3,10 @@ import os
 from typing import Dict, Any, List
 
 
+def get_template_dir() -> str:
+    return os.path.join(os.path.dirname(__file__), 'templates')
+
+
 def get_template_path(name: str) -> str:
     return os.path.join(os.path.dirname(__file__), 'templates', f'{name}.txt')
 
@@ -23,6 +27,7 @@ class ProjectData:
         self._value_maps = None
         self._mod_type_connections = None
         self._mod_type_name = None
+        self._new_mod_id = 1023
 
     @property
     def value_maps(self) -> Dict[str, List[int]]:
@@ -51,3 +56,8 @@ class ProjectData:
             self._mod_params = {int(k): v for k, v
                                 in _read_json('mod_params.json').items()}
         return self._mod_params
+
+    @property
+    def new_mod_id(self) -> int:
+        self._new_mod_id += 1
+        return self._new_mod_id

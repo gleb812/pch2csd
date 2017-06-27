@@ -35,6 +35,16 @@ class Module(AttrEqMixin, ReprStrMixin):
         return self.attrs_equal(other)
 
 
+class ModuleA2K(Module):
+    def __init__(self, data: ProjectData, loc: Location):
+        super().__init__(data, loc, 999, data.new_mod_id)
+
+
+class ModuleK2A(Module):
+    def __init__(self, data: ProjectData, loc: Location):
+        super().__init__(data, loc, 1000, data.new_mod_id)
+
+
 class CableType(Enum):
     IN_TO_IN = 0
     OUT_TO_IN = 1
@@ -151,3 +161,13 @@ class Patch(ReprStrMixin):
     def find_all_incoming_cables(self, loc: Location, mod_to: int) -> Optional[List[Cable]]:
         cables = [c for c in self.cables if c.loc == loc and c.module_to == mod_to]
         return cables if len(cables) > 0 else None
+
+    def find_all_outgoing_cables(self, loc: Location, mod_from: int) -> Optional[List[Cable]]:
+        cables = [c for c in self.cables if c.loc == loc and c.module_from == mod_from]
+        return cables if len(cables) > 0 else None
+
+    def find_mod_params(self, loc: Location, mod_id: int) -> Optional[ModuleParameters]:
+        for p in self.mod_params:
+            if p.loc == loc and p.module_id == mod_id:
+                return p
+        return None

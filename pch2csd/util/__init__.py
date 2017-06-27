@@ -41,6 +41,7 @@ class LogMixin:
             self.__logger = logging.getLogger(self.__log_name)
         return self.__logger
 
+
 class BitArrayStream:
     def __init__(self, bits: bitarray):
         self.pos = 0
@@ -63,3 +64,10 @@ class BitArrayStream:
         if sum(bit_chunks) + self.pos > len(self.bits):
             raise ValueError("Don't have enough data to read")
         return [self._read_int(i) for i in bit_chunks]
+
+
+def preprocess_csd_code(code: str) -> str:
+    lines = code.splitlines()
+    if lines[-1] != '':
+        lines += ''
+    return '\n'.join(lines)

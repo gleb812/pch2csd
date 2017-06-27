@@ -1,6 +1,6 @@
-;a2k
+;@ ,a,k
 opcode A2K, 0, ii
-	iIn, iOut xin
-	aIn zar i1
-	zkw k(aIn), iOut
+    izaIn, izkOut xin
+    aIn zar izaIn
+    zkw k(aIn), izkOut
 endop

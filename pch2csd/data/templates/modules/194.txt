@@ -9,7 +9,7 @@ opcode Mix21A, 0, iiiiiiiii   ; MULTIMODE support a/k?
 	zkw aout, izOut
 endop
 
-;@ iii, aaa, a
+;@ iiiii, aaa, a
 opcode Mix21A, 0, iiiiiiiii   ; MULTIMODE support a/k?
     ; TODO: lin/log scale, chain input
     iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
