@@ -38,8 +38,10 @@ def parse_cable_list(blob: bitarray, patch: Patch):
     bits = BitArrayStream(blob)
     loc, _skip_, num_cables = bits.read_ints([2, 14, 8])
     for i in range(num_cables):
-        color, module_from, jack_from, cable_type, module_to, jack_to = bits.read_ints([3, 8, 6, 1, 8, 6])
-        c = Cable(Location.from_int(loc), CableType.from_int(cable_type), CableColor.from_int(color),
+        color, module_from, jack_from, cable_type, module_to, jack_to = bits.read_ints(
+            [3, 8, 6, 1, 8, 6])
+        c = Cable(Location.from_int(loc), CableType.from_int(cable_type),
+                  CableColor.from_int(color),
                   module_from, jack_from, module_to, jack_to)
         if c.type == CableType.IN_TO_IN:
             # By some reason, in2in cables have sources swapped back with destinations...
@@ -91,3 +93,14 @@ def parse_pch2(data: ProjectData, pch2_file: str) -> Patch:
             else:
                 break
     return patch
+
+
+def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
+    if cable.type == CableType.OUT_TO_IN:
+        return cable
+    c = cable
+    while c is not None:
+        if c.type == CableType.OUT_TO_IN:
+            break
+        c = patch.find_incoming_cable(c.loc, c.module_from, c.jack_from)
+    return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to, cable.jack_to)

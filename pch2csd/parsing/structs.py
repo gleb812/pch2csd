@@ -151,14 +151,3 @@ class Patch(ReprStrMixin):
     def find_all_incoming_cables(self, loc: Location, mod_to: int) -> Optional[List[Cable]]:
         cables = [c for c in self.cables if c.loc == loc and c.module_to == mod_to]
         return cables if len(cables) > 0 else None
-
-
-def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
-    if cable.type == CableType.OUT_TO_IN:
-        return cable
-    c = cable
-    while c is not None:
-        if c.type == CableType.OUT_TO_IN:
-            break
-        c = patch.find_incoming_cable(c.loc, c.module_from, c.jack_from)
-    return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to, cable.jack_to)
