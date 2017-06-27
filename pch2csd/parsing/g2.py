@@ -6,7 +6,7 @@ from bitarray import bitarray
 from pch2csd.data import ProjectData
 from pch2csd.parsing.structs import Patch, Module, Location, CableColor, CableType, Cable, \
     ModuleParameters
-from pch2csd.parsing.util import BitArrayStream
+from pch2csd.util import BitArrayStream
 
 
 def parse_header(pch2: FileIO, patch: Patch):

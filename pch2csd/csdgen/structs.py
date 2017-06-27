@@ -1,8 +1,8 @@
 from typing import List
 
-from pch2csd.csdgen.util import LogMixin
 from pch2csd.data import get_template_module_path
 from pch2csd.parsing.structs import Module, Patch, CableColor
+from pch2csd.util import LogMixin
 
 
 class UdoTemplate(LogMixin):

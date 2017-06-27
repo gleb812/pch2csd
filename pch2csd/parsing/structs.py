@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List, Optional
 
 from pch2csd.data import ProjectData
-from pch2csd.parsing.util import AttrEqMixin, ReprStrMixin
+from pch2csd.util import AttrEqMixin, ReprStrMixin
 
 
 class Location(Enum):
