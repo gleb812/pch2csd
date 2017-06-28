@@ -13,7 +13,8 @@ The converter can be installed as follows (Python 3 is required):
 ```
 git clone https://github.com/gleb812/pch2csd.git
 cd pch2csd
-sudo python setup.py install
+sudo pip3 install setuptools
+sudo python3 setup.py install
 ```
 
 ## Usage 
@@ -40,7 +41,7 @@ The new file will be generated in the same directory with the patch file. An
 example:
 
 ```
-pch2csd test_poly_mix2.pch
+pch2csd test_poly_mix2.pch2
 ```
 
 Option `-p` can be used to print the modules and the cables of a patch file.
