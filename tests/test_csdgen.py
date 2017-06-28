@@ -52,7 +52,7 @@ class TestParameterMapping(TestCase):
         params = [udo.get_params() for udo in udo_s]
         self.assertSequenceEqual(params, [[-99.9, 0, -6.2, 1, 2],
                                           [0.781, 1, 0.781, 1, 0],
-                                          [0, 0, 0],
+                                          [0., 0],
                                           [2, 1, 1]])
 
 
