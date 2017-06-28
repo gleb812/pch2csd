@@ -27,6 +27,9 @@ class ReprStrMixin:
         return self.__repr__()
 
 
+logging.basicConfig(format='%(levelname)s %(message)s')
+
+
 class LogMixin:
     __logger = None
     __log_name = None
