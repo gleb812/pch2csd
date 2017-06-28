@@ -8,7 +8,7 @@ The Clavia Nord Modular G2 Patch Converter Project
 
 ## Installation
 
-The converter can be installed as follows (Python 3 is required):
+The converter can be installed as follows (Python 3.6 is required):
 
 ```
 git clone https://github.com/gleb812/pch2csd.git
