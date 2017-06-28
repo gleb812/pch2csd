@@ -96,4 +96,4 @@ class TestUdoGen(TestCase):
         zak = ZakSpace()
         udos = zak.connect_patch(p)
         csd = Csd(p, zak, udos)
-        print(csd.get_code())
+        # print(csd.get_code())
