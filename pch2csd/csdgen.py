@@ -56,6 +56,7 @@ class UdoTemplate(LogMixin):
             if len(args[0][0]) != len(maps):
                 self.log.error("%s: the number of 'map' annotations should be equal to the number of module parameters",
                                self.__repr__())
+                valid = False
                 # TODO: validate map annotations
         return valid
 
@@ -74,7 +75,7 @@ class Udo(LogMixin):
 
     @property
     def header(self):
-        if len(self.tpl.args) == 0:
+        if len(self.tpl.udo_lines) == 0 and len(self.tpl.args) == 0 and len(self.tpl.maps) == 0:
             self.log.error(f"Can't create a UDO because {self.tpl} wasn't parsed properly (see log for details).")
             raise ValueError
         return self.tpl.args[self.udo_variant]
