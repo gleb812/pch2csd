@@ -1,6 +1,7 @@
 import argparse
 import os
 
+import pch2csd
 from pch2csd.csdgen import ZakSpace, Csd
 from pch2csd.parse import parse_pch2
 from pch2csd.patch import Patch, CableType, transform_in2in_cables
@@ -69,13 +70,14 @@ def convert_pch2(fn: str):
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(prog='pch2csd',
                                          description='convert Clavia Nord Modular G2 patches to the Csound code',
-                                         epilog='https://github.com/gleb812/pch2csd')
+                                         epilog=f'Version {pch2csd.__version__}, '
+                                                'homepage: https://github.com/gleb812/pch2csd/')
     arg_parser.add_argument('file', metavar='file', nargs=1, help='a patch or an UDO template file')
     arg_parser.add_argument('-p', '--parse', action='store_const', const=True,
                             help='parse the patch file and print its content')
     # arg_parser.add_argument('-u', '--validate-udo', action='store_const', const=True,
     #                               help="validate the UDO template file (overrides '-p')")
-    arg_parser.add_argument('--version', action='version', version='%(prog)s 0.0.1')
+    arg_parser.add_argument('--version', action='version', version='%(prog)s ' + pch2csd.__version__)
     args = arg_parser.parse_args()
     # if args.validate_udo:
     #     validate_udo(args.file[0])
