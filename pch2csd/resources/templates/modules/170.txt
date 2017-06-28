@@ -1,4 +1,8 @@
-;@ iii,,aa
+;@ map d BUT004
+;@ map d BUT004
+;@ map d BUT001
+
+;@ args iii,,aa
 opcode In2, 0, iiiii
     ; TODO: switch inputs
 	iInSw, iOnOffSw, iPad, izL, izR xin

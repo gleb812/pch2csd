@@ -1,4 +1,10 @@
-;@ iiiii, kkk, k
+;@ map s 5 CLA000 CLAEXP CLA999
+;@ map d BUT002
+;@ map s 5 CLA000 CLAEXP CLA999
+;@ map d BUT002
+;@ map d BUT003
+
+;@ args iiiii, kkk, k
 opcode Mix21A, 0, iiiiiiiii   ; MULTIMODE support a/k?
     ; TODO: lin/log scale, chain input
     iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
@@ -9,7 +15,7 @@ opcode Mix21A, 0, iiiiiiiii   ; MULTIMODE support a/k?
 	zkw aout, izOut
 endop
 
-;@ iiiii, aaa, a
+;@ args iiiii, aaa, a
 opcode Mix21A, 0, iiiiiiiii   ; MULTIMODE support a/k?
     ; TODO: lin/log scale, chain input
     iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin

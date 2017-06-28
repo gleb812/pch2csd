@@ -11,28 +11,53 @@ from pch2csd.util import LogMixin, preprocess_csd_code
 
 class UdoTemplate(LogMixin):
     def __init__(self, mod: Module):
-        self._repr = f'{mod.type_name}({mod.type})'
+        self.mod_type = mod.type
+        self.mod_type_name = mod.type_name
         self.logger_set_name('UdoTemplate')
         with open(get_template_module_path(mod.type)) as f:
             self.lines = [l.strip() for l in f]
-        self.headers = self._parse_headers()
+        self.udo_lines, self.args, self.maps = self._parse_headers()
 
     def __repr__(self):
-        return f'UdoTemplate({self._repr})'
+        return f'UdoTemplate({self.mod_type_name}, {self.mod_type}.txt)'
 
-    def _parse_headers(self) -> List[List[str]]:
-        headers = []
-        for l in self.lines:
-            if l.startswith(';@'):
-                headers.append([s.strip() for s in l.replace(';@', '').split(',')])
-        if len(headers) == 0:
-            self.log.error('%s: no opcode headers were found in the template', self._repr)
-            return []
-        for h in headers:
-            if len(h) != 3:
-                self.log.error('%s: opcode header should have exactly three arguments', self._repr)
-                return []
-        return headers
+    def __str__(self):
+        return self.__repr__()
+
+    def _parse_headers(self):
+        udo_lines = []
+        args = []  # List[List[str]]
+        maps = []  # List[List[str]]
+
+        for i, l in enumerate(self.lines):
+            if l.startswith(';@ args'):
+                udo_lines.append(i)
+                a = [s.strip() for s in l.replace(';@ args', '').split(',')]
+                args.append(a)
+            elif l.startswith(';@ map'):
+                m = [s.strip() for s in l.replace(';@ map', '').split(',')]
+                maps.append(m)
+        if self._validate_headers(udo_lines, args, maps):
+            return udo_lines, args, maps
+        else:
+            return [], [], []
+
+    def _validate_headers(self, udo_lines, args, maps):
+        valid = True
+        if len(args) == 0:
+            self.log.error("%s: no opcode 'args' annotations were found in the template", self.__repr__())
+            valid = False
+        else:
+            for i, a in enumerate(args):
+                if len(a) != 3:
+                    self.log.error("%s:%d the 'args' annotation should have exactly three arguments",
+                                   self.__repr__(), udo_lines[i])
+                    valid = False
+            if len(args[0][0]) != len(maps):
+                self.log.error("%s: the number of 'map' annotations should be equal to the number of module parameters",
+                               self.__repr__())
+                # TODO: validate map annotations
+        return valid
 
 
 class Udo(LogMixin):
@@ -49,32 +74,37 @@ class Udo(LogMixin):
 
     @property
     def header(self):
-        return self.tpl.headers[self.udo_variant]
+        if len(self.tpl.args) == 0:
+            self.log.error(f"Can't create a UDO because {self.tpl} wasn't parsed properly (see log for details).")
+            raise ValueError
+        return self.tpl.args[self.udo_variant]
 
     def get_name(self) -> str:
-        if len(self.tpl.headers) < 2:
+        if len(self.tpl.args) < 2:
             return self.mod.type_name
         else:
             return f'{self.mod.type_name}_v{self.udo_variant}'
 
     def get_src(self) -> str:
-        if len(self.tpl.headers) < 2:
-            return '\n'.join(self.tpl.lines)
-        v = self.udo_variant
-        lines = self.tpl.lines
-        h_pos = [i for i, l in enumerate(lines) if l.startswith(';@')] + [len(lines)]
-        udo_lines = lines[h_pos[v] + 1:h_pos[v + 1]]
-        udo_lines[0] = udo_lines[0].replace(self.mod.type_name, self.get_name())
-        return '\n'.join(udo_lines)
+        if len(self.tpl.args) < 2:
+            return '\n'.join(self.tpl.lines[self.tpl.udo_lines[0] + 1:])
+        offset = self.tpl.udo_lines[self.udo_variant] + 1
+        udo_src = []
+        for l in self.tpl.lines[offset:]:
+            udo_src.append(l)
+            if l.strip().startswith('endop'):
+                break
+        udo_src[0] = udo_src[0].replace(self.mod.type_name, self.get_name())
+        return '\n'.join(udo_src)
 
     def _choose_udo_variant(self) -> int:
         v = 0
         cables = self.patch.find_all_incoming_cables(self.mod.location, self.mod.id)
-        if len(self.tpl.headers) < 2 or cables is None:
+        if len(self.tpl.args) < 2 or cables is None:
             return v
         cs_rates = {c.jack_to: CableColor.to_cs_rate_char(c.color) for i, c in enumerate(cables)}
-        tpl_v0_ins = self.tpl.headers[0][1]
-        tpl_v1_ins = self.tpl.headers[1][1]
+        tpl_v0_ins = self.tpl.args[0][1]
+        tpl_v1_ins = self.tpl.args[1][1]
         for i, r in cs_rates.items():
             if tpl_v0_ins[i] != r and tpl_v1_ins[i] == r:
                 v = 1
@@ -82,7 +112,7 @@ class Udo(LogMixin):
         return v
 
     def get_params(self) -> List[float]:
-        tpl_param_def = self.tpl.headers[self.udo_variant][0]
+        tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
         if len(tpl_param_def) != len(params.values):
             self.log.error(f"Template '{self.tpl}' has different number of parameters "
