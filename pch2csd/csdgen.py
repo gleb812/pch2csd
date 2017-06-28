@@ -35,7 +35,7 @@ class UdoTemplate(LogMixin):
                 a = [s.strip() for s in l.replace(';@ args', '').split(',')]
                 args.append(a)
             elif l.startswith(';@ map'):
-                m = [s.strip() for s in l.replace(';@ map', '').split(',')]
+                m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
                 maps.append(m)
         if self._validate_headers(udo_lines, args, maps):
             return udo_lines, args, maps
@@ -120,7 +120,7 @@ class Udo(LogMixin):
                            "Returning -1s for now.")
             return [-1] * params.num_params
         # TODO mappings
-        return params.values
+        return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
 
     def get_statement(self):
         s = StringIO()
@@ -138,6 +138,18 @@ class Udo(LogMixin):
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
         return [ZakSpace.trash_bus] * len(ins), [ZakSpace.zero_bus] * len(outs)
+
+    def _map_value(self, i, v, all_vals):
+        m = self.tpl.maps[i]
+        if m[0] == 'd':
+            table = self.patch.data.value_maps[m[1]]
+        elif m[0] == 's':
+            dependent_val = all_vals[int(m[1]) - 1]
+            table = self.patch.data.value_maps[m[dependent_val + 2]]
+        else:
+            self.log.error(f'Mapping type {m[0]} is not supported')
+            raise ValueError
+        return table[v]
 
 
 class ZakSpace:

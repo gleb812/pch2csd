@@ -1,6 +1,6 @@
-;@ map s 5 CLA000 CLAEXP CLA999
+;@ map s 5 CLA000 CLAEXP MIXdbl
 ;@ map d BUT002
-;@ map s 5 CLA000 CLAEXP CLA999
+;@ map s 5 CLA000 CLAEXP MIXdbl
 ;@ map d BUT002
 ;@ map d BUT003
 

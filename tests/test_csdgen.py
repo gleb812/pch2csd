@@ -1,4 +1,4 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 
 from pch2csd.csdgen import Udo, Csd, ZakSpace
 from pch2csd.parse import parse_pch2
@@ -41,7 +41,6 @@ endop
         self.assertTrue(cmp_str_lines(udo_s[1].get_src(), self.udo_mix2_a))
 
 
-@skip('Parameter mapping is not implemented yet')
 class TestParameterMapping(TestCase):
     def setUp(self):
         self.data = ProjectData()
@@ -51,6 +50,10 @@ class TestParameterMapping(TestCase):
         p = self.poly_mix2
         udo_s = [Udo(p, m) for m in p.modules]
         params = [udo.get_params() for udo in udo_s]
+        self.assertSequenceEqual(params, [[-99.9, 0, -6.2, 1, 2],
+                                          [0.781, 1, 0.781, 1, 0],
+                                          [0, 0, 0],
+                                          [2, 1, 1]])
 
 
 class TestUdoGen(TestCase):
