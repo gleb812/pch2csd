@@ -4,7 +4,7 @@ from glob import glob
 from io import StringIO
 from typing import List, Dict, Tuple
 
-from pch2csd.patch import Module, Patch, CableColor, Cable
+from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType
 from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir
 from pch2csd.util import LogMixin, preprocess_csd_code
 
@@ -176,7 +176,7 @@ class ZakSpace:
             if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
                 self._zak_connect_direct(c, udos)
             else:
-                raise NotImplementedError('Patch cord type conversion is not implemented yet.')
+                self._zak_connect_convert_rates(c, udos, p)
         return list(udos.values())
 
     def _aloc_new(self) -> int:
@@ -199,6 +199,18 @@ class ZakSpace:
         zak_id = zak[out_id]
         udos[mf].outlets[jf] = zak_id
         udos[mt].inlets[jt] = zak_id
+
+    def _zak_connect_convert_rates(self, c: Cable, udos: Dict[int, Udo], p: Patch):
+        mf, jf, mt, jt = c.module_from, c.jack_from, c.module_to, c.jack_to
+        rate_from, rate_to = udos[mf].out_types[jf], udos[mt].in_types[jt]
+        converter = ModuleK2A(p.data, c.loc) if rate_from == 'k' else ModuleA2K(p.data, c.loc)
+        u = udos.setdefault(converter.id, Udo(p, converter))
+        c1 = Cable(c.loc, CableType.OUT_TO_IN, converter.get_io_cable_colors()[0],
+                   mf, jf, converter.id, 0)
+        c2 = Cable(c.loc, CableType.OUT_TO_IN, converter.get_io_cable_colors()[1],
+                   converter.id, 0, mt, jt)
+        self._zak_connect_direct(c1, udos)
+        self._zak_connect_direct(c2, udos)
 
 
 class Csd:

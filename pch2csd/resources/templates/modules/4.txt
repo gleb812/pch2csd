@@ -1,3 +1,8 @@
+;@ map d BUT007
+;@ map d BUT007
+;@ map d BUT007
+
+;@ args iii,aa,
 opcode Out2, 0, iiiii
 	isource, iMute, iPad, iL, iR xin
 	aL zar iL 

@@ -56,6 +56,35 @@ class TestParameterMapping(TestCase):
                                           [2, 1, 1]])
 
 
+class TestRateConversion(TestCase):
+    def setUp(self):
+        self.data = ProjectData()
+        self.r2b_b2r_fn = get_test_resource('test_convert_r2b_b2r.pch2')
+
+    def test_r2b_b2r(self):
+        p = parse_pch2(self.data, self.r2b_b2r_fn)
+        zak = ZakSpace()
+        udos = zak.connect_patch(p)
+        in2, out2, envh, a2k, k2a = udos
+        # sends a
+        self.assertSequenceEqual(in2.outlets, [3, 0])
+        # a -> k
+        self.assertSequenceEqual(a2k.inlets, [3])
+        self.assertSequenceEqual(a2k.outlets, [3])
+        # receives k
+        self.assertSequenceEqual(envh.inlets, [1, 3, 1])
+        # sends k
+        self.assertSequenceEqual(envh.outlets, [0, 4])
+        # k -> a
+        self.assertSequenceEqual(k2a.inlets, [4])
+        self.assertSequenceEqual(k2a.outlets, [4])
+        # receives a
+        self.assertSequenceEqual(out2.inlets, [4, 1])
+
+        csd = Csd(p, zak, udos)
+        print(csd.get_code())
+
+
 class TestUdoGen(TestCase):
     def setUp(self):
         self.data = ProjectData()

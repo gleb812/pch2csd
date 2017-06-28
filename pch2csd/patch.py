@@ -39,10 +39,16 @@ class ModuleA2K(Module):
     def __init__(self, data: ProjectData, loc: Location):
         super().__init__(data, loc, 999, data.new_mod_id)
 
+    def get_io_cable_colors(self):
+        return CableColor.RED, CableColor.BLUE
+
 
 class ModuleK2A(Module):
     def __init__(self, data: ProjectData, loc: Location):
         super().__init__(data, loc, 1000, data.new_mod_id)
+
+    def get_io_cable_colors(self):
+        return CableColor.BLUE, CableColor.RED
 
 
 class CableType(Enum):

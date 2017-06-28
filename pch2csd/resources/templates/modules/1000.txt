@@ -1,4 +1,4 @@
-;@ ,k,a
+;@ args ,k,a
 opcode K2A, 0, ii
     izkIn, izaOut xin
     kIn zkr izkIn

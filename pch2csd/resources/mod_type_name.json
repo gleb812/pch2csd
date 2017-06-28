@@ -206,5 +206,7 @@
   "205": "RndTrig",
   "206": "RndClkB",
   "207": "Unknown",
-  "208": "RndPattern"
+  "208": "RndPattern",
+  "999": "A2K",
+  "1000": "K2A"
 }
