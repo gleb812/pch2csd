@@ -29,5 +29,10 @@ setup(
     packages=['pch2csd', 'tests'],
     include_package_data=True,
     platforms='any',
-    install_requires=['bitarray']
+    install_requires=['bitarray'],
+    entry_points={
+        'console_scripts': [
+            'pch2csd = pch2csd.app:main'
+        ]
+    }
 )

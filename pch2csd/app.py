@@ -67,7 +67,7 @@ def convert_pch2(fn: str):
         f.write(csd.get_code())
 
 
-if __name__ == '__main__':
+def main():
     arg_parser = argparse.ArgumentParser(prog='pch2csd',
                                          description='convert Clavia Nord Modular G2 patches to the Csound code',
                                          epilog=f'Version {pch2csd.__version__}, '
@@ -85,3 +85,7 @@ if __name__ == '__main__':
         print_pch2(args.file[0])
     else:
         convert_pch2(args.file[0])
+
+
+if __name__ == '__main__':
+    main()

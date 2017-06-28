@@ -1,0 +1,6 @@
+include pch2csd/resources/__init__.py
+include pch2csd/resources/*.json
+include pch2csd/resources/templates/*.txt
+include pch2csd/resources/templates/modules/*.txt
+include tests/*.py
+include tests/resources/*.pch2
