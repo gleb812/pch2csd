@@ -76,20 +76,10 @@ class CableColor(Enum):
 
     @staticmethod
     def from_int(i: int):
-        if i == 0:
-            return CableColor.RED
-        elif i == 1:
-            return CableColor.BLUE
-        elif i == 2:
-            return CableColor.YELLOW
-        elif i == 3:
-            return CableColor.ORANGE
-        elif i == 4:
-            return CableColor.GREEN
-        elif i == 5:
-            return CableColor.PURPLE
-        elif i == 6:
-            return CableColor.WHITE
+        colors = [CableColor.RED, CableColor.BLUE, CableColor.YELLOW, CableColor.ORANGE, CableColor.GREEN,
+                  CableColor.PURPLE, CableColor.WHITE]
+        if 0 <= i < 7:
+            return colors[i]
         else:
             raise ValueError(f'Wrong cable color code {i}')
 
