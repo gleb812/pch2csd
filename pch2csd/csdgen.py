@@ -115,26 +115,29 @@ class Udo(LogMixin):
     def get_params(self) -> List[float]:
         tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
-        if len(tpl_param_def) != len(params.values):
+        if params is not None and len(tpl_param_def) != len(params.values):
             self.log.error(f"Template '{self.tpl}' has different number of parameters "
                            f"than it was found in the parsed module '{self.mod}'. "
                            "Returning -1s for now.")
             return [-1] * params.num_params
-        # TODO mappings
-        return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
+        if params is None:
+            return []
+        else:
+            return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
 
     def get_statement(self):
-        s = StringIO()
-        s.write(self.get_name())
-        s.write('(')
-        s.write('/* Params */ ')
-        s.write(', '.join([str(f) for f in self.get_params()]))
-        s.write(', /* Inlets */ ')
-        s.write(', '.join([str(i) for i in self.inlets]))
-        s.write(', /* Outlets */ ')
-        s.write(', '.join([str(i) for i in self.outlets]))
-        s.write(')')
-        return s.getvalue()
+        args = []
+        params = self.get_params()
+        if len(params) > 0:
+            args.append(f'/* Params */ {params[0]}')
+            args.extend([str(f) for f in params[1:]])
+        if len(self.inlets) > 0:
+            args.append(f'/* Inlets */ {self.inlets[0]}')
+            args.extend([str(i) for i in self.inlets[1:]])
+        if len(self.outlets) > 0:
+            args.append(f'/* Outlets */ {self.outlets[0]}')
+            args.extend([str(i) for i in self.outlets[1:]])
+        return f"{self.get_name()}({', '.join(args)})"
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
