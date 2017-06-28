@@ -18,6 +18,12 @@ class Location(Enum):
         else:
             raise ValueError(f'Wrong location code: {i}')
 
+    def short_str(self):
+        if self.value == 0:
+            return 'FX'
+        elif self.value == 1:
+            return 'VOICE'
+
 
 class PatchDescription(ReprStrMixin):
     def __init__(self):
@@ -64,6 +70,12 @@ class CableType(Enum):
         else:
             raise ValueError(f'Wrong cable type code: {i}')
 
+    def short_str(self):
+        if self.value == 0:
+            return 'in-in'
+        elif self.value == 1:
+            return 'out-in'
+
 
 class CableColor(Enum):
     RED = 0
@@ -73,6 +85,10 @@ class CableColor(Enum):
     GREEN = 4
     PURPLE = 5
     WHITE = 6
+
+    def short_str(self):
+        colors = ['red', 'blue', 'yellow', 'orange', 'green', 'purple', 'white']
+        return colors[self.value]
 
     @staticmethod
     def from_int(i: int):
