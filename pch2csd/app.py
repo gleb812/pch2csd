@@ -71,7 +71,10 @@ def convert_pch2(fn: str):
     p = parse_pch2(data, path)
     p.cables = [transform_in2in_cables(p, c) for c in p.cables]
     zak = ZakSpace()
-    udos = zak.connect_patch(p)
+    try:
+        udos = zak.connect_patch(p)
+    except ValueError:
+        exit(-1)
     csd = Csd(p, zak, udos)
     with open(csd_save_path, 'w') as f:
         f.write(csd.get_code())
