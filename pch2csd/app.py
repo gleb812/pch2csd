@@ -1,6 +1,6 @@
 import argparse
-import os
 
+import os
 from tabulate import tabulate
 
 import pch2csd
@@ -46,10 +46,11 @@ def print_pch2(fn: str):
     for c in patch.cables:
         mf_name = patch.find_module(c.module_from, c.loc).type_name
         mt_name = patch.find_module(c.module_to, c.loc).type_name
+        pin1, pin2 = c.type.short_str().split('-')
         cab_table.append([
-            '{}(id={}, out={})'.format(mf_name, c.module_from, c.jack_from),
+            '{}(id={}, {pin}={})'.format(mf_name, c.module_from, c.jack_from, pin=pin1),
             '->',
-            '{}(id={}, in={})'.format(mt_name, c.module_to, c.jack_to),
+            '{}(id={}, {pin}={})'.format(mt_name, c.module_to, c.jack_to, pin=pin2),
             c.color.short_str(),
             c.type.short_str(),
             c.loc.short_str()])
