@@ -16,7 +16,7 @@ setup(
     description='Convert Clavia Nord Modular G2 patches to the Csound code.',
     long_description=read('README.md'),
     keywords='csound code-generation',
-    url='https://github.com/gleb812/pch2csd/',
+    url=pch2csd.__homepage__,
     license='MIT',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
