@@ -8,8 +8,8 @@ The Clavia Nord Modular G2 Patch Converter Project
 
 ## Installation
 
-Assuming you have Python 3.5 and [pip](https://pip.pypa.io/en/stable/installing/)
-installed:
+Assuming you have Python 3.5 and
+[pip](https://pip.pypa.io/en/stable/installing/) installed:
 
 ```
 sudo pip3 install pch2csd
@@ -42,11 +42,16 @@ example:
 pch2csd test_poly_mix2.pch2
 ```
 
-Option `-p` can be used to print the modules and the cables of a patch file.
-`id` is a unique number of a module in the patch, `type_id` is a numerical
-representation of the module's type (also used to look up for templates in the
-`resources/modules`). In the square brackets are the raw MIDI mo~ule parameters
-are in the square brackets.
+Option `-p` can be used to print modules and cables present in of the patch.
+Module `ID` is a unique number of a module in the patch, module `Type` is a
+numerical representation of the module's type (also used to look up for
+templates in the `resources/modules`). In the square brackets are the raw MIDI
+module parameters. `Area` is the place the module or cable is located in; it can
+be either `VOICE` or `FX`. In the cable table notation `In2(id=1, out=0) ->
+Mix41B(id=2, in=0)` means, that the cable connects the 0th output of the module
+`In2` (`ID` 1) with the input 0 of the module `Mix41b` (`ID` 2). Note that the
+modules can connect either outputs (`out-in`) to inputs or intputs to inputs
+(`in-in`).
 
 ```
 $ pch2csd -p test_in2in.pch2
@@ -60,14 +65,14 @@ Mix41B     2      19  [100, 100, 100, 100, 0]  VOICE
 Mix41B     3      19  [100, 100, 100, 100, 0]  VOICE
 
 Cables
-From                     To                  Color    Type    Area
--------------------  --  ------------------  -------  ------  ------
-In2(id=1, out=0)     ->  Mix41B(id=2, in=0)  red      out-in  VOICE
-Mix41B(id=2, out=0)  ->  Mix41B(id=2, in=1)  red      in-in   VOICE
-Mix41B(id=2, out=1)  ->  Mix41B(id=2, in=2)  red      in-in   VOICE
-Mix41B(id=2, out=2)  ->  Mix41B(id=3, in=0)  red      in-in   VOICE
-Mix41B(id=3, out=0)  ->  Mix41B(id=3, in=1)  red      in-in   VOICE
-Mix41B(id=3, out=1)  ->  Mix41B(id=3, in=2)  red      in-in   VOICE
+From                    To                  Color    Type    Area
+------------------  --  ------------------  -------  ------  ------
+In2(id=1, out=0)    ->  Mix41B(id=2, in=0)  red      out-in  VOICE
+Mix41B(id=2, in=0)  ->  Mix41B(id=2, in=1)  red      in-in   VOICE
+Mix41B(id=2, in=1)  ->  Mix41B(id=2, in=2)  red      in-in   VOICE
+Mix41B(id=2, in=2)  ->  Mix41B(id=3, in=0)  red      in-in   VOICE
+Mix41B(id=3, in=0)  ->  Mix41B(id=3, in=1)  red      in-in   VOICE
+Mix41B(id=3, in=1)  ->  Mix41B(id=3, in=2)  red      in-in   VOICE
 ```
 
 ## History
