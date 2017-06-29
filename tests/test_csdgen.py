@@ -65,7 +65,7 @@ class TestRateConversion(TestCase):
         p = parse_pch2(self.data, self.r2b_b2r_fn)
         zak = ZakSpace()
         udos = zak.connect_patch(p)
-        in2, out2, envh, a2k, k2a = udos
+        in2, envh, out2, a2k, k2a = sorted(udos, key=lambda x: x.mod.id)
         # sends a
         self.assertSequenceEqual(in2.outlets, [3, 0])
         # a -> k
