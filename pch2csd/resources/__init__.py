@@ -8,11 +8,11 @@ def get_template_dir() -> str:
 
 
 def get_template_path(name: str) -> str:
-    return os.path.join(os.path.dirname(__file__), 'templates', f'{name}.txt')
+    return os.path.join(os.path.dirname(__file__), 'templates', '{}.txt'.format(name))
 
 
 def get_template_module_path(name: int) -> str:
-    return os.path.join(os.path.dirname(__file__), 'templates', 'modules', f'{name}.txt')
+    return os.path.join(os.path.dirname(__file__), 'templates', 'modules', '{}.txt'.format(name))
 
 
 def _read_json(filename: str) -> Dict[str, Any]:
