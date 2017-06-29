@@ -16,7 +16,7 @@ class Location(Enum):
         elif i == 1:
             return Location.VOICE_AREA
         else:
-            raise ValueError(f'Wrong location code: {i}')
+            raise ValueError('Wrong location code: {}'.format(i))
 
     def short_str(self):
         if self.value == 0:
@@ -68,7 +68,7 @@ class CableType(Enum):
         elif i == 1:
             return CableType.OUT_TO_IN
         else:
-            raise ValueError(f'Wrong cable type code: {i}')
+            raise ValueError('Wrong cable type code: {}'.format(i))
 
     def short_str(self):
         if self.value == 0:
@@ -97,7 +97,7 @@ class CableColor(Enum):
         if 0 <= i < 7:
             return colors[i]
         else:
-            raise ValueError(f'Wrong cable color code {i}')
+            raise ValueError('Wrong cable color code {}'.format(i))
 
     @staticmethod
     def to_cs_rate_char(c):
@@ -116,7 +116,7 @@ class CableColor(Enum):
         elif c == CableColor.WHITE:
             raise NotImplementedError
         else:
-            raise ValueError(f'Unknown cable color: {c}')
+            raise ValueError('Unknown cable color: {}'.format(c))
 
 
 class Cable(AttrEqMixin, ReprStrMixin):
@@ -153,9 +153,9 @@ class Patch(ReprStrMixin):
     def __init__(self, data: ProjectData):
         self.data = data
         self.description = PatchDescription()
-        self.modules: List[Module] = []
-        self.cables: List[Cable] = []
-        self.mod_params: List[ModuleParameters] = []
+        self.modules = []  # List[Module]
+        self.cables = []  # List[Cable]
+        self.mod_params = []  # List[ModuleParameters]
 
     def find_module(self, id: int, loc=Location.VOICE_AREA) -> Optional[Module]:
         for m in self.modules:

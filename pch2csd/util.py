@@ -21,7 +21,9 @@ class AttrEqMixin:
 
 class ReprStrMixin:
     def __repr__(self):
-        return f"{type(self).__name__}({', '.join([f'{k}={v}' for k, v in self.__dict__.items()])})"
+        return '{}({})'.format(type(self).__name__,
+                               ', '.join(['{}={}'.format(k, v)
+                                          for k, v in self.__dict__.items()]))
 
     def __str__(self):
         return self.__repr__()

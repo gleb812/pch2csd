@@ -32,22 +32,26 @@ def print_pch2(fn: str):
     path = os.path.abspath(fn)
     patch = parse_pch2(data, path)
 
-    print(f'Patch file: {os.path.basename(path)}')
+    print('Patch file: {}'.format(os.path.basename(path)))
     print()
     print('Modules:')
     for m in patch.modules:
         p = patch.find_mod_params(m.location, m.id)
-        print(f'  ({m.location.short_str()}) {m.type_name}(id={m.id})', end='\t')
+        print('  ')
+        print('({}) {}(id={})'.format(m.location.short_str(), m.type_name, m.id), end='\t')
         print(p.values, end=' ')
-        print(f'(type_id={m.type})')
+        print('(type_id={})'.format(m.type))
     print()
     print('Cables:')
     for c in patch.cables:
         mf = patch.find_module(c.module_from, c.loc)
         mt = patch.find_module(c.module_to, c.loc)
         pin1, pin2 = ('out', 'in') if c.type == CableType.OUT_TO_IN else ('in', 'in')
-        print(f'  ({c.loc.short_str()}) ({c.type.short_str()})\t{mf.type_name}(id={mf.id}, {pin1}={c.jack_from}) '
-              f'-> {mt.type_name}(id={mt.id}, {pin2}={c.jack_to})')
+        print('  ')
+        print('({loc})  (c_type)'.format(loc=c.loc.short_str(), c_type=c.type.short_str()), end='\t')
+        print('{}(id={}, {}={})'.format(mf.type_name, mf.id, pin1, c.jack_from), end=' ')
+        print('->', end=' ')
+        print('{}(id={}, {}={})'.format(mt.type_name, mt.id, pin2, c.jack_to))
 
 
 def convert_pch2(fn: str):
@@ -70,8 +74,8 @@ def convert_pch2(fn: str):
 def main():
     arg_parser = argparse.ArgumentParser(prog='pch2csd',
                                          description='convert Clavia Nord Modular G2 patches to the Csound code',
-                                         epilog=f'Version {pch2csd.__version__}, '
-                                                'homepage: https://github.com/gleb812/pch2csd/')
+                                         epilog='Version {}, homepage: {}'.format(pch2csd.__version__,
+                                                                                  pch2csd.__homepage__))
     arg_parser.add_argument('file', metavar='file', nargs=1, help='a patch or an UDO template file')
     arg_parser.add_argument('-p', '--parse', action='store_const', const=True,
                             help='parse the patch file and print its content')

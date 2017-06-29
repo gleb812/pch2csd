@@ -2,7 +2,7 @@ import os
 from copy import deepcopy
 from glob import glob
 from io import StringIO
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType
 from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir
@@ -19,7 +19,7 @@ class UdoTemplate(LogMixin):
         self.udo_lines, self.args, self.maps = self._parse_headers()
 
     def __repr__(self):
-        return f'UdoTemplate({self.mod_type_name}, {self.mod_type}.txt)'
+        return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
 
     def __str__(self):
         return self.__repr__()
@@ -71,12 +71,12 @@ class Udo(LogMixin):
         self.inlets, self.outlets = self._init_zak_connections()
 
     def __repr__(self):
-        return f'{self.get_name()}(type={self.mod.type}, id={self.mod.id})'
+        return '{}(type={}, id={})'.format(self.get_name(), self.mod.type, self.mod.id)
 
     @property
     def header(self):
         if len(self.tpl.udo_lines) == 0 and len(self.tpl.args) == 0 and len(self.tpl.maps) == 0:
-            self.log.error(f"Can't create a UDO because {self.tpl} wasn't parsed properly (see log for details).")
+            self.log.error("Can't create a UDO because {} wasn't parsed properly.".format(self.tpl))
             raise ValueError
         return self.tpl.args[self.udo_variant]
 
@@ -84,7 +84,7 @@ class Udo(LogMixin):
         if len(self.tpl.args) < 2:
             return self.mod.type_name
         else:
-            return f'{self.mod.type_name}_v{self.udo_variant}'
+            return '{}_v{}'.format(self.mod.type_name, self.udo_variant)
 
     def get_src(self) -> str:
         if len(self.tpl.args) < 2:
@@ -116,9 +116,9 @@ class Udo(LogMixin):
         tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
         if params is not None and len(tpl_param_def) != len(params.values):
-            self.log.error(f"Template '{self.tpl}' has different number of parameters "
-                           f"than it was found in the parsed module '{self.mod}'. "
-                           "Returning -1s for now.")
+            self.log.error("Template '{}' has different number of parameters "
+                           "than it was found in the parsed module '{}'. "
+                           "Returning -1s for now.".format(self.tpl, self.mod))
             return [-1] * params.num_params
         if params is None:
             return []
@@ -129,15 +129,15 @@ class Udo(LogMixin):
         args = []
         params = self.get_params()
         if len(params) > 0:
-            args.append(f'/* Params */ {params[0]}')
+            args.append('/* Params */ {}'.format(params[0]))
             args.extend([str(f) for f in params[1:]])
         if len(self.inlets) > 0:
-            args.append(f'/* Inlets */ {self.inlets[0]}')
+            args.append('/* Inlets */ {}'.format(self.inlets[0]))
             args.extend([str(i) for i in self.inlets[1:]])
         if len(self.outlets) > 0:
-            args.append(f'/* Outlets */ {self.outlets[0]}')
+            args.append('/* Outlets */ {}'.format(self.outlets[0]))
             args.extend([str(i) for i in self.outlets[1:]])
-        return f"{self.get_name()}({', '.join(args)})"
+        return '{}({})'.format(self.get_name(), ', '.join(args))
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
@@ -151,7 +151,7 @@ class Udo(LogMixin):
             dependent_val = all_vals[int(m[1]) - 1]
             table = self.patch.data.value_maps[m[dependent_val + 2]]
         else:
-            self.log.error(f'Mapping type {m[0]} is not supported')
+            self.log.error('Mapping type {} is not supported'.format(m[0]))
             raise ValueError
         return table[v]
 
@@ -163,18 +163,18 @@ class ZakSpace:
     def __init__(self):
         self.aloc_i = 2
         self.kloc_i = 2
-        self.zakk: Dict[Tuple[int, int], int] = {}  # Tuple[mod_id, inlet_id] -> zak_loc
-        self.zaka: Dict[Tuple[int, int], int] = {}  # Tuple[mod_id, inlet_id] -> zak_loc
+        self.zakk = {}  # Tuple[mod_id, inlet_id] -> zak_loc
+        self.zaka = {}  # Tuple[mod_id, inlet_id] -> zak_loc
 
     def _init_zak(self):
         self.aloc_i = 2
         self.kloc_i = 2
-        self.zakk: Dict[Tuple[int, int], int] = {}  # Tuple[mod_id, inlet_id] -> zak_loc
-        self.zaka: Dict[Tuple[int, int], int] = {}  # Tuple[mod_id, inlet_id] -> zak_loc
+        self.zakk = {}  # Tuple[mod_id, inlet_id] -> zak_loc
+        self.zaka = {}  # Tuple[mod_id, inlet_id] -> zak_loc
 
     def connect_patch(self, p: Patch) -> List[Udo]:
         self._init_zak()
-        udos: Dict[int, Udo] = deepcopy({m.id: Udo(p, m) for m in p.modules})
+        udos = deepcopy({m.id: Udo(p, m) for m in p.modules})
         for c in p.cables:
             mf, jf, mt, jt = c.module_from, c.jack_from, c.module_to, c.jack_to
             if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
@@ -195,7 +195,7 @@ class ZakSpace:
         mf, jf, mt, jt = c.module_from, c.jack_from, c.module_to, c.jack_to
         rate_type = udos[mf].out_types[jf]
         if rate_type not in 'ka':
-            raise ValueError(f'Unknown rate type: {rate_type}')
+            raise ValueError('Unknown rate type: {}'.format(rate_type))
         out_id = (mf, jf)
         zak = self.zakk if rate_type == 'k' else self.zaka
         if out_id not in zak:
@@ -257,7 +257,7 @@ class Csd:
 
     @property
     def zakinit(self) -> str:
-        return f'zakinit {self.zak.aloc_i}, {self.zak.kloc_i}'
+        return 'zakinit {}, {}'.format(self.zak.aloc_i, self.zak.kloc_i)
 
     @property
     def instr_va(self) -> str:
