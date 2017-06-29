@@ -8,13 +8,11 @@ The Clavia Nord Modular G2 Patch Converter Project
 
 ## Installation
 
-The converter can be installed as follows (Python 3.6 is required):
+Assuming you have Python 3.5 and [pip](https://pip.pypa.io/en/stable/installing/)
+installed:
 
 ```
-git clone https://github.com/gleb812/pch2csd.git
-cd pch2csd
-sudo pip3 install setuptools
-sudo python3 setup.py install
+sudo pip3 install pch2csd
 ```
 
 ## Usage 
@@ -54,18 +52,22 @@ are in the square brackets.
 $ pch2csd -p test_in2in.pch2
 Patch file: test_in2in.pch2
 
-Modules:
-  (VOICE) In2(id=1)	[0, 1, 1] (type_id=170)
-  (VOICE) Mix41B(id=2)	[100, 100, 100, 100, 0] (type_id=19)
-  (VOICE) Mix41B(id=3)	[100, 100, 100, 100, 0] (type_id=19)
+Modules
+Name      ID    Type  Parameters               Area
+------  ----  ------  -----------------------  ------
+In2        1     170  [0, 1, 1]                VOICE
+Mix41B     2      19  [100, 100, 100, 100, 0]  VOICE
+Mix41B     3      19  [100, 100, 100, 100, 0]  VOICE
 
-Cables:
-  (VOICE) (out-in)	In2(id=1, out=0) -> Mix41B(id=2, in=0)
-  (VOICE) (in-in)	Mix41B(id=2, in=0) -> Mix41B(id=2, in=1)
-  (VOICE) (in-in)	Mix41B(id=2, in=1) -> Mix41B(id=2, in=2)
-  (VOICE) (in-in)	Mix41B(id=2, in=2) -> Mix41B(id=3, in=0)
-  (VOICE) (in-in)	Mix41B(id=3, in=0) -> Mix41B(id=3, in=1)
-  (VOICE) (in-in)	Mix41B(id=3, in=1) -> Mix41B(id=3, in=2)
+Cables
+From                     To                  Color    Type    Area
+-------------------  --  ------------------  -------  ------  ------
+In2(id=1, out=0)     ->  Mix41B(id=2, in=0)  red      out-in  VOICE
+Mix41B(id=2, out=0)  ->  Mix41B(id=2, in=1)  red      in-in   VOICE
+Mix41B(id=2, out=1)  ->  Mix41B(id=2, in=2)  red      in-in   VOICE
+Mix41B(id=2, out=2)  ->  Mix41B(id=3, in=0)  red      in-in   VOICE
+Mix41B(id=3, out=0)  ->  Mix41B(id=3, in=1)  red      in-in   VOICE
+Mix41B(id=3, out=1)  ->  Mix41B(id=3, in=2)  red      in-in   VOICE
 ```
 
 ## History
