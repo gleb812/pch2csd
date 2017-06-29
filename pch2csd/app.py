@@ -1,10 +1,12 @@
 import argparse
 import os
 
+from tabulate import tabulate
+
 import pch2csd
 from pch2csd.csdgen import ZakSpace, Csd
 from pch2csd.parse import parse_pch2
-from pch2csd.patch import Patch, CableType, transform_in2in_cables
+from pch2csd.patch import Patch, transform_in2in_cables
 from pch2csd.resources import get_template_module_path, ProjectData
 
 
@@ -32,26 +34,30 @@ def print_pch2(fn: str):
     path = os.path.abspath(fn)
     patch = parse_pch2(data, path)
 
-    print('Patch file: {}'.format(os.path.basename(path)))
-    print()
-    print('Modules:')
+    mod_table = [['Name', 'ID', 'Type', 'Parameters', 'Area']]
     for m in patch.modules:
         p = patch.find_mod_params(m.location, m.id)
-        print('  ', end='')
-        print('({}) {}(id={})'.format(m.location.short_str(), m.type_name, m.id), end='\t')
-        print(p.values, end=' ')
-        print('(type_id={})'.format(m.type))
-    print()
-    print('Cables:')
+        mod_table.append([m.type_name,
+                          m.id,
+                          m.type,
+                          str(p.values),
+                          m.location.short_str()])
+    cab_table = [['From', '', 'To', 'Color', 'Type', 'Area']]
     for c in patch.cables:
-        mf = patch.find_module(c.module_from, c.loc)
-        mt = patch.find_module(c.module_to, c.loc)
-        pin1, pin2 = ('out', 'in') if c.type == CableType.OUT_TO_IN else ('in', 'in')
-        print('  ', end='')
-        print('({loc}) ({c_type})'.format(loc=c.loc.short_str(), c_type=c.type.short_str()), end='\t')
-        print('{}(id={}, {}={})'.format(mf.type_name, mf.id, pin1, c.jack_from), end=' ')
-        print('->', end=' ')
-        print('{}(id={}, {}={})'.format(mt.type_name, mt.id, pin2, c.jack_to))
+        mf_name = patch.find_module(c.module_from, c.loc).type_name
+        mt_name = patch.find_module(c.module_to, c.loc).type_name
+        cab_table.append([
+            '{}(id={}, out={})'.format(mf_name, c.module_from, c.jack_from),
+            '->',
+            '{}(id={}, in={})'.format(mt_name, c.module_to, c.jack_to),
+            c.color.short_str(),
+            c.type.short_str(),
+            c.loc.short_str()])
+    print('Patch file: {}\n'.format(os.path.basename(path)))
+    print('Modules')
+    print(tabulate(mod_table, headers='firstrow', tablefmt='simple'))
+    print('\nCables')
+    print(tabulate(cab_table, headers='firstrow', tablefmt='simple'))
 
 
 def convert_pch2(fn: str):
