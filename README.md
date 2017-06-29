@@ -15,6 +15,12 @@ Assuming you have Python 3.5 and
 sudo pip3 install pch2csd
 ```
 
+You may want to update the tool to a newer version after you have installed it, for example, when there are important bug fixes or new features available. Just run the following command to update the tool:
+
+```
+sudo pip3 install -U pch2csd
+```
+
 ## Usage 
 
 Command line options:
