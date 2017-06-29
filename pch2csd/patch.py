@@ -92,7 +92,8 @@ class CableColor(Enum):
 
     @staticmethod
     def from_int(i: int):
-        colors = [CableColor.RED, CableColor.BLUE, CableColor.YELLOW, CableColor.ORANGE, CableColor.GREEN,
+        colors = [CableColor.RED, CableColor.BLUE, CableColor.YELLOW, CableColor.ORANGE,
+                  CableColor.GREEN,
                   CableColor.PURPLE, CableColor.WHITE]
         if 0 <= i < 7:
             return colors[i]
@@ -185,7 +186,7 @@ class Patch(ReprStrMixin):
         return ModuleParameters(loc, mod_id, 0, [])
 
 
-def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
+def transform_in2in_cables(patch: Patch, cable: Cable) -> Optional[Cable]:
     if cable.type == CableType.OUT_TO_IN:
         return cable
     c = cable
@@ -193,4 +194,8 @@ def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
         if c.type == CableType.OUT_TO_IN:
             break
         c = patch.find_incoming_cable(c.loc, c.module_from, c.jack_from)
-    return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to, cable.jack_to)
+    if c is not None:
+        return Cable(c.loc, c.type, c.color, c.module_from, c.jack_from, cable.module_to,
+                     cable.jack_to)
+    else:
+        return None

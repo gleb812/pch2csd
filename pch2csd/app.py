@@ -1,6 +1,6 @@
 import argparse
-
 import os
+
 from tabulate import tabulate
 
 import pch2csd
@@ -70,7 +70,8 @@ def convert_pch2(fn: str):
     csd_save_path = os.path.join(dirname, os.path.basename(path) + '.csd')
     data = ProjectData()
     p = parse_pch2(data, path)
-    p.cables = [transform_in2in_cables(p, c) for c in p.cables]
+    p.cables = [c for c in [transform_in2in_cables(p, c) for c in p.cables]
+                if c is not None]
     zak = ZakSpace()
     try:
         udos = zak.connect_patch(p)
@@ -84,14 +85,16 @@ def convert_pch2(fn: str):
 def main():
     arg_parser = argparse.ArgumentParser(prog='pch2csd',
                                          description='convert Clavia Nord Modular G2 patches to the Csound code',
-                                         epilog='Version {}, homepage: {}'.format(pch2csd.__version__,
-                                                                                  pch2csd.__homepage__))
+                                         epilog='Version {}, homepage: {}'.format(
+                                             pch2csd.__version__,
+                                             pch2csd.__homepage__))
     arg_parser.add_argument('file', metavar='file', nargs=1, help='a patch or an UDO template file')
     arg_parser.add_argument('-p', '--parse', action='store_const', const=True,
                             help='parse the patch file and print its content')
     # arg_parser.add_argument('-u', '--validate-udo', action='store_const', const=True,
     #                               help="validate the UDO template file (overrides '-p')")
-    arg_parser.add_argument('--version', action='version', version='%(prog)s ' + pch2csd.__version__)
+    arg_parser.add_argument('--version', action='version',
+                            version='%(prog)s ' + pch2csd.__version__)
     args = arg_parser.parse_args()
     # if args.validate_udo:
     #     validate_udo(args.file[0])
