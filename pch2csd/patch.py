@@ -178,11 +178,11 @@ class Patch(ReprStrMixin):
         cables = [c for c in self.cables if c.loc == loc and c.module_from == mod_from]
         return cables if len(cables) > 0 else None
 
-    def find_mod_params(self, loc: Location, mod_id: int) -> Optional[ModuleParameters]:
+    def find_mod_params(self, loc: Location, mod_id: int) -> ModuleParameters:
         for p in self.mod_params:
             if p.loc == loc and p.module_id == mod_id:
                 return p
-        return None
+        return ModuleParameters(loc, mod_id, 0, [])
 
 
 def transform_in2in_cables(patch: Patch, cable: Cable) -> Cable:
