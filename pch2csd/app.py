@@ -42,7 +42,7 @@ def validate_udo(type_id: int):
     if mod is None:
         log.error("Unknown module type '%d'", type_id)
         exit(-1)
-    print('Found module of this type: {}'.format(mod.type_name))
+    print('Found a module of this type: {}'.format(mod.type_name))
     if not os.path.isfile(get_template_module_path(type_id)):
         log.error('No UDO template file found for this module. Please, consider writing one.\n'
                   '      More info: https://github.com/gleb812/pch2csd/wiki/Making-a-new-module')
