@@ -26,24 +26,24 @@ class UdoTemplate(LogMixin):
         return self.__repr__()
 
     def _parse_headers(self):
-        udo_lines = []
+        args_lines = []
         args = []  # List[List[str]]
         maps = []  # List[List[str]]
 
         for i, l in enumerate(self.lines):
             if l.startswith(';@ args'):
-                udo_lines.append(i)
+                args_lines.append(i)
                 a = [s.strip() for s in l.replace(';@ args', '').split(',')]
                 args.append(a)
             elif l.startswith(';@ map'):
                 m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
                 maps.append(m)
-        if self._validate_headers(udo_lines, args, maps):
-            return udo_lines, args, maps
+        if self._validate_headers(args_lines, args, maps):
+            return args_lines, args, maps
         else:
             return [], [], []
 
-    def _validate_headers(self, udo_lines, args, maps):
+    def _validate_headers(self, args_lines, args, maps):
         valid = True
         if len(args) == 0:
             self.log.error("%s: no opcode 'args' annotations were found in the template", self.__repr__())
@@ -52,13 +52,19 @@ class UdoTemplate(LogMixin):
             for i, a in enumerate(args):
                 if len(a) != 3:
                     self.log.error("%s:%d the 'args' annotation should have exactly three arguments",
-                                   self.__repr__(), udo_lines[i])
+                                   self.__repr__(), args_lines[i])
                     valid = False
             if len(args[0][0]) != len(maps):
                 self.log.error("%s: the number of 'map' annotations should be equal to the number of module parameters",
                                self.__repr__())
                 valid = False
-                # TODO: validate map annotations
+            for al in args_lines:
+                udo_str = self.lines[al + 1]
+        for i, m in enumerate(maps):
+            if m[0] not in 'ds':
+                self.log.error("Unknown mapping type '%s' in the map #%d", m[0], i)
+                valid = False
+                continue
         return valid
 
 
