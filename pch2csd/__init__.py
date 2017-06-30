@@ -1,2 +1,2 @@
-__version__ = '0.1.dev1'
+__version__ = '0.1.dev'
 __homepage__ = 'https://github.com/gleb812/pch2csd'
