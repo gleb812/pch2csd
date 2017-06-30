@@ -1,15 +1,15 @@
 language: python
 python: '3.5'
 install:
-  - pip install -r requirements.txt
+- pip install -r requirements.txt
 script:
-  - python setup.py test
+- python setup.py test
 before_deploy:
-  - sed -e "s/^\(__version__ = '[0-9]\.[0-9]\)\.dev/\1b$TRAVIS_BUILD_NUMBER/g" pch2csd/__init__.py > pch2csd/__init__.py
+- sed -e "s/^\(__version__ = '[0-9]\.[0-9]\)\.dev/\1b$TRAVIS_BUILD_NUMBER/g" pch2csd/__init__.py > pch2csd/__init__.py
 deploy:
   provider: pypi
   user: ech
   password:
-    secure: "iPqrqygnaNxc+j2xAoXqm6zOWtzUxeuCmMpF7yDNpJMyIAW/d7BJ7hAbH6i3wm+Uidi0o+NK6icbBPhPUaHZ/60B0fUMnNU6t1ADeZAv+rIJmJjjypmGG79VvhngmKIPKOhWF5Oqj4ZdYJSgTqlj9igaRZjobMtq+tzT26QZ+Vw7HLD7SqCT5e3Dk5uY1n5WCtMNZCTnlEEWa54uCA5acXJzq/Y63b5eL6JQD8IKtqosygwJaJEhmfUcS38dmI9aGOP/gvgGiv9H+gj+c53WtD3MLxDn6HmRnvc69+Nfv5D+kY971cniGP9pQkhTOBqYcI3FQYadoyGTWDvq8yjCNQEJo/N/OTUd/SL1PlC0M2qUS7UBMZs27lEeeVd4FEn8LarOPRkRc/+zExLtqZhJ1UR1FSLdNfWcbLvm+Qa4yFmr6CjukGLX/WFEVL0NojQbagx+cBhRyj6CDPztvG3L0mkXFcRUxgF58RgrDTY6L8qjUc3Uj8kFxXSnftSDYN2BPcmkIq/NFBE0IirpEpwBxTvZq3tYauTAU0DJbUIl2fFHeJUmqGhYin+bSjKWqVxaqKNsZ0YTU9uoC9BeP+NYUhIO6SAjqL21GfxLKu+F2lBWXemSIdkYxdbX2crg3X2o0Eeobf9Kk1d6wQbuFFMfUsT3603NpExRe/71tmSRjmo="
+    secure: hiFEMSQiNK49yjfycPQAwpMer7MLn0B+5BgBPs1sVm5cptCpY6QTUss2oOtAk4nUCDlA5vSnDFpteeVxydU3unAGQzbhgpxRuyKXN3XZroX0/K69nGLO2LjEXN6IANvPwDdyE5wVu4cmBK2XM+qJSTqm6MmOKpwXf0UAekJsbqZqta02J2sUv9qh0fCM5lOhEvlhevfl1vl1ZgzbcrPi5vQdakZYllpsMYL6s0X57BSSUl3dz8pEihzPDSVEtNWzFOHmQaSakqjH39xdT6a7yDoOegIvULEIGCa42BesgxpIs9r3Ez47fjlRKd9y0QhCwogsMfdU1BZFp9x+U68PWnpsF2Ktnj5EguabrhjOKQpLrZ9+3E8lNQFVk6wiItoAcbqy9WLLMG4SRPHM1dS3HRfcPKs7Z48YptvcEohwMRAjqe1oSHBUmPMK4MzIr86cujHpsICbIz5OcjTyJEfBpTWT6I/eDLTKD862qYLESe7gZGJ9/4t6n7glxdbh3GkKIQMi0GlJTMLCKcsdUuqMHbdi4oyUX/QvccYPFk2T0GDfxUKTRM0GvsiyiXPrBY++18wG45NDJpJGysmqlbbeYohsnkzLKTm8Sr/EfEvxVRaBGkmAW0m74qMQ8043xNVZcP1I96v2DC6Ox75MlKVDwJykEsk+oEDUI4SyJ/WYHfU=
   distributions: sdist bdist_wheel
 
