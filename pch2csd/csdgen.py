@@ -1,8 +1,9 @@
+from glob import glob
+from typing import List, Dict
+
 import os
 from copy import deepcopy
-from glob import glob
 from io import StringIO
-from typing import List, Dict
 
 from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType
 from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir

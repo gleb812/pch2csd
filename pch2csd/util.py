@@ -1,8 +1,8 @@
 import logging
-from struct import unpack
 from typing import List
 
 from bitarray import bitarray
+from struct import unpack
 
 
 class AttrEqMixin:
