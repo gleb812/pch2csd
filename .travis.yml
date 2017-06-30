@@ -1,11 +1,13 @@
 language: python
 python: '3.5'
 install:
-- pip install -r requirements.txt
+  - pip install -r requirements.txt
 script:
-- python setup.py test
+  - python setup.py test
 before_deploy:
-- sed -e "s/^\(__version__ = '[0-9]\.[0-9]\)\.dev/\1b$TRAVIS_BUILD_NUMBER/g" pch2csd/__init__.py > pch2csd/__init__.py
+  - sed -e "s/^\(__version__ = '[0-9]\.[0-9]\.\)dev/\1dev$TRAVIS_BUILD_NUMBER/g" pch2csd/__init__.py > pch2csd/__init__.py
+  - ls pch2csd
+  - cat pch2csd/__init__.py
 deploy:
   provider: pypi
   user: ech
