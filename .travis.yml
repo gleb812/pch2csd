@@ -5,7 +5,7 @@ install:
 script:
   - python setup.py test
 before_deploy:
-  - sed -i -e "s/^\(__version__ = '[0-9]\.[0-9]\.\)dev/\1dev$TRAVIS_JOB_ID/g" pch2csd/__init__.py
+  - sed -i -e "s/^\(__version__ = '[0-9]\.[0-9]\.\)dev/\1dev$TRAVIS_JOB_ID/g" "$TRAVIS_BUILD_DIR/pch2csd/__init__.py"
 deploy:
   provider: pypi
   user: ech
