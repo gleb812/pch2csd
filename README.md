@@ -1,10 +1,16 @@
-# pch2csd
+# pch2csd - The Clavia Nord Modular G2 Patch Converter Project
 
-The Clavia Nord Modular G2 Patch Converter Project
+![](https://travis-ci.org/gleb812/pch2csd.svg?branch=master)
 
-## Project status
+The goal of this project is to (re)implement the Clavia Nord Modular G2 sound
+engine in Csound, a well-known sound and music computing system. Important wiki
+pages:
 
-`TODO`
+- The full list of supported Nord modules: [Module implementation
+  status](https://github.com/gleb812/pch2csd/wiki/Module-implementation-status).
+- A guideline for porting Nord modules: [Making a new
+  module](https://github.com/gleb812/pch2csd/wiki/Making-a-new-module).
+
 
 ## Installation
 
@@ -15,7 +21,11 @@ Assuming you have Python 3.5 and
 sudo pip3 install pch2csd
 ```
 
-You may want to update the tool to a newer version after you have installed it, for example, when there are important bug fixes or new features available. Just run the following command to update the tool:
+Before the project has got more stable, we automatically build and upload every
+commit made to the repository, so you may want want to update the tool once in a
+while.  With newer versions you'll probably get new features and modules
+available, as well as bugs fixed. To update the tool just run the following
+command:
 
 ```
 sudo pip3 install -U pch2csd
@@ -27,17 +37,18 @@ Command line options:
 
 ```
 $ pch2csd -h
-usage: pch2csd [-h] [-p] [--version] file
+usage: pch2csd [-h] [-p] [-c] [--version] arg
 
 convert Clavia Nord Modular G2 patches to the Csound code
 
 positional arguments:
-  file         a patch or an UDO template file
+  arg              a pch2 file path or an UDO numerical ID
 
 optional arguments:
-  -h, --help   show this help message and exit
-  -p, --parse  parse the patch file and print its content
-  --version    show program's version number and exit
+  -h, --help       show this help message and exit
+  -p, --print      parse the patch file and print its content
+  -c, --check-udo  validate the UDO template file (overrides '-p')
+  --version        show program's version number and exit
 ```
 
 To generate a new Csound file just pass the `.pch2` file path as the argument.
@@ -60,25 +71,59 @@ modules can connect either outputs (`out-in`) to inputs or intputs to inputs
 (`in-in`).
 
 ```
-$ pch2csd -p test_in2in.pch2
-Patch file: test_in2in.pch2
+$ pch2csd -p test_3osc.pch2
+Patch file: test_3osc.pch2
 
 Modules
-Name      ID    Type  Parameters               Area
-------  ----  ------  -----------------------  ------
-In2        1     170  [0, 1, 1]                VOICE
-Mix41B     2      19  [100, 100, 100, 100, 0]  VOICE
-Mix41B     3      19  [100, 100, 100, 100, 0]  VOICE
+Name        ID    Type  Parameters               Area
+--------  ----  ------  -----------------------  ------
+OscA         1      97  [64, 51, 1, 0, 2, 1, 0]  VOICE
+OscA         2      97  [64, 78, 1, 0, 2, 1, 0]  VOICE
+OscA         3      97  [64, 64, 1, 0, 2, 1, 0]  VOICE
+Mix41B       4      19  [100, 112, 91, 117, 1]   VOICE
+EnvD         6      55  [54, 0]                  VOICE
+FltLP        5      87  [75, 34, 0, 1]           VOICE
+Out2         7       4  [2, 1, 0]                VOICE
+Keyboard     8       1  []                       VOICE
+FxIn         1     127  [0, 1, 1]                FX
+Clip         2      61  [0, 53, 1, 1]            FX
+Out2         3       4  [0, 1, 0]                FX
 
 Cables
-From                    To                  Color    Type    Area
-------------------  --  ------------------  -------  ------  ------
-In2(id=1, out=0)    ->  Mix41B(id=2, in=0)  red      out-in  VOICE
-Mix41B(id=2, in=0)  ->  Mix41B(id=2, in=1)  red      in-in   VOICE
-Mix41B(id=2, in=1)  ->  Mix41B(id=2, in=2)  red      in-in   VOICE
-Mix41B(id=2, in=2)  ->  Mix41B(id=3, in=0)  red      in-in   VOICE
-Mix41B(id=3, in=0)  ->  Mix41B(id=3, in=1)  red      in-in   VOICE
-Mix41B(id=3, in=1)  ->  Mix41B(id=3, in=2)  red      in-in   VOICE
+From                       To                  Color    Type    Area
+---------------------  --  ------------------  -------  ------  ------
+OscA(id=1, out=0)      ->  Mix41B(id=4, in=1)  red      out-in  VOICE
+OscA(id=2, out=0)      ->  Mix41B(id=4, in=2)  red      out-in  VOICE
+OscA(id=3, out=0)      ->  Mix41B(id=4, in=3)  red      out-in  VOICE
+Mix41B(id=4, out=0)    ->  EnvD(id=6, in=2)    red      out-in  VOICE
+EnvD(id=6, out=1)      ->  FltLP(id=5, in=0)   red      out-in  VOICE
+EnvD(id=6, out=0)      ->  FltLP(id=5, in=1)   blue     out-in  VOICE
+FltLP(id=5, out=0)     ->  Out2(id=7, in=0)    red      out-in  VOICE
+Out2(id=7, in=0)       ->  Out2(id=7, in=1)    red      in-in   VOICE
+Keyboard(id=8, out=1)  ->  EnvD(id=6, in=0)    yellow   out-in  VOICE
+FxIn(id=1, out=0)      ->  Clip(id=2, in=0)    red      out-in  FX
+Clip(id=2, out=0)      ->  Out2(id=3, in=0)    red      out-in  FX
+Out2(id=3, in=0)       ->  Out2(id=3, in=1)    red      in-in   FX
+```
+
+Option `-c` allows you to check whether the UDO for the specified module has
+been implemented or has errors in the implementation:
+
+```
+$ pch2csd -c 43
+Checking UDO for the type ID 43
+Found a module of this type: Constant
+The UDO template seems to be correct
+
+$ pch2csd -c 194
+Checking UDO for the type ID 194
+Found a module of this type: Mix21A
+ERROR Unknown table 'CLAEXP'
+
+$ pch2csd -c 100
+Checking UDO for the type ID 100
+Found a module of this type: Sw21
+ERROR UdoTemplate(Sw21, 100.txt): no opcode 'args' annotations were found in the template
 ```
 
 ## History
