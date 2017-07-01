@@ -63,7 +63,7 @@ Option `-p` can be used to print modules and cables present in of the patch.
 Module `ID` is a unique number of a module in the patch, module `Type` is a
 numerical representation of the module's type (also used to look up for
 templates in the `resources/modules`). In the square brackets are the raw MIDI
-module parameters. `Area` is the place the module or cable is located in; it can
+module parameters. `Area` is the part the module or cable is located; it can
 be either `VOICE` or `FX`. In the cable table notation `In2(id=1, out=0) ->
 Mix41B(id=2, in=0)` means, that the cable connects the 0th output of the module
 `In2` (`ID` 1) with the input 0 of the module `Mix41b` (`ID` 2). Note that the
