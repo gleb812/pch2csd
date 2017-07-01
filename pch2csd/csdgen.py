@@ -1,11 +1,12 @@
 from glob import glob
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import os
 from copy import deepcopy
 from io import StringIO
+from tabulate import tabulate
 
-from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType
+from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType, Location
 from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir
 from pch2csd.util import LogMixin, preprocess_csd_code
 
@@ -132,19 +133,16 @@ class Udo(LogMixin):
         else:
             return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
 
-    def get_statement(self):
-        args = []
-        params = self.get_params()
-        if len(params) > 0:
-            args.append('/* Params */ {}'.format(params[0]))
-            args.extend([str(f) for f in params[1:]])
+    def get_statement_parts(self) -> Tuple[str, str, str, str]:
+        name, params, inlets, outlets = self.get_name(), '', '', ''
+        p = self.get_params()
+        if len(p) > 0:
+            params = ','.join([str(f) for f in p]) + ','
         if len(self.inlets) > 0:
-            args.append('/* Inlets */ {}'.format(self.inlets[0]))
-            args.extend([str(i) for i in self.inlets[1:]])
+            inlets = ','.join([str(i) for i in self.inlets]) + ','
         if len(self.outlets) > 0:
-            args.append('/* Outlets */ {}'.format(self.outlets[0]))
-            args.extend([str(i) for i in self.outlets[1:]])
-        return '{}({})'.format(self.get_name(), ', '.join(args))
+            outlets = ','.join(str(i) for i in self.outlets)
+        return name, params, inlets, outlets
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
@@ -266,21 +264,26 @@ class Csd:
     def zakinit(self) -> str:
         return 'zakinit {}, {}'.format(self.zak.aloc_i, self.zak.kloc_i)
 
-    @property
-    def instr_va(self) -> str:
+    def _gen_instr(self, loc: Location) -> str:
         s = StringIO()
-        s.write('instr 1 ; Voice area\n')
-        s.write('\n'.join([udo.get_statement() for udo in self.udos]))
+        s.write('; --------------------\n')
+        s.write('; {} AREA\n'.format(loc.VOICE_AREA.short_str()))
+        s.write('instr 1\n')
+        statements = [udo.get_statement_parts() for udo in self.udos
+                      if udo.mod.location == loc]
+        table_head = ('; Module', 'Parameters', 'Inlets', 'Outlets')
+        table_str = tabulate(statements, table_head, tablefmt='plain')
+        s.write(table_str)
         s.write('\nendin\n')
         return s.getvalue()
 
     @property
+    def instr_va(self):
+        return self._gen_instr(Location.VOICE_AREA)
+
+    @property
     def instr_fx(self):
-        s = StringIO()
-        s.write('instr 2 ; FX area\n')
-        s.write('; TODO')
-        s.write('\nendin\n')
-        return s.getvalue()
+        return self._gen_instr(Location.FX_AREA)
 
     @property
     def udo_defs(self):
