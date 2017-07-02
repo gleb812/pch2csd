@@ -46,9 +46,9 @@ class UdoTemplate:
                 maps.append(m)
         return args_lines, args, maps
 
-    def validate(self, data: ProjectData):
+    def validate(self, data: ProjectData, io=sys.stdout):
         v = UdoTemplateValidation(data, self)
-        v.print_errors()
+        v.print_errors(io)
         if v.is_valid():
             return True
         else:
@@ -71,6 +71,7 @@ class UdoTemplateValidation:
 
     def is_valid(self):
         if self.no_args \
+                or self.no_tpl_file \
                 or self.not_3_args \
                 or self.num_params_ne_num_maps \
                 or len(self.unknown_map_types) > 0 \
@@ -83,21 +84,21 @@ class UdoTemplateValidation:
         txt = '{}.txt'.format(self.tpl.mod_type)
         mod_name = self.tpl.mod_type_name
         if self.no_tpl_file:
-            print('{}: no template file for this module'.format(mod_name))
+            print('error: {}: no template file for this module'.format(mod_name), file=io)
         if self.no_args:
-            print("{}: no opcode 'args' annotations were found in the template".format(txt),
+            print("error: {}: no opcode 'args' annotations were found in the template".format(txt),
                   file=io)
         if self.not_3_args:
-            print("{}: the 'args' annotation should have exactly three arguments".format(txt),
+            print("error: {}: the 'args' annotation should have exactly three arguments".format(txt),
                   file=io)
         if self.num_params_ne_num_maps:
-            print("{}: the number of 'map' annotations should be equal "
+            print("error: {}: the number of 'map' annotations should be equal "
                   "to the number of module parameters".format(txt), file=io)
         if len(self.unknown_map_types) > 0:
-            print('{}: unknown mapping types: {}'.format(txt, ', '.join(self.unknown_map_types)),
+            print('error: {}: unknown mapping types: {}'.format(txt, ', '.join(self.unknown_map_types)),
                   file=io)
         if len(self.unknown_map_tables) > 0:
-            print('{}: unknown mapping tables: {}'.format(txt, ', '.join(self.unknown_map_tables)),
+            print('error: {}: unknown mapping tables: {}'.format(txt, ', '.join(self.unknown_map_tables)),
                   file=io)
 
     def _validate_headers(self):
