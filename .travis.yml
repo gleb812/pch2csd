@@ -29,4 +29,6 @@ after_deploy:
   - rm pch2csd.wiki/Module-implementation-status.md
   - cp Module-implementation-status.md pch2csd.wiki/
   - cd pch2csd.wiki
+  - git add Module-implementation-status.md
+  - git commit -m 'Travis ${TRAVIS_BUILD_NUMBER}'
   - git push --quiet
