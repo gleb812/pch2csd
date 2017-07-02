@@ -1,5 +1,8 @@
 language: python
 python: '3.5'
+env:
+  global:
+    secure: RcfMs3uXep373BoDkEyvCKAqkrvVYRE/+r/vtc6kmuNcKgxR7PyQCIj9NWA0ExJ9SFuCzEmpH4JhuKdxDvF8aRXLQofNrreTzStWq7yECx66NOroxPXRD/3ZDyqvGKDUpG9VaOBJDYl77IDAVANcJHFfh3YzJc2qkOfyqgE5G38gFWHV8aNcyqUfIN4WwP2iAzNbTD5k6XUNH04zxpRnsh5hS4jFQANve5wQrZBtHGkzf1QDLj2IpVlnZUpM8eF6GSkRbgQfpCPEsvN/x0mhXZ4q3XqdzzwBO8z0bdxkm3W7EZbvi2E72TCuXfEZk+Nh0pF+1bMOxvf4rCx8Gk+oCWzgWKfZlRtH99WAb8/lJICq7Ki4gURM/qJZQz4iEGT7g1HcgewNsx50erHKgAR7Uoa+8gMXImty1y5HO4wOLQUo94RULAZr9+pwAnjvA9JHEGNxjscfPiA2bWA32AXxDB4jo282H05BXksHx+KbG3Bwbb37/SqH4o4Dbl6R9ECYMKFMXEpy7S3fhl4Hgp79thIS77Z86qkUvawUis0t0wmZVLVWhNaNLMrwso03CwAMI6aTiC4fOo1C+waTrEJGMAXiA9qDqQnTNog2LxgneM+Lm9bUJ4/4rBaQ8NdL3kJ4G1XwVGlOViPErTe/RsZ6jgVmlTYM1T5GqoA1TBn2B2U=
 install:
   - pip install -r requirements.txt
 script:
@@ -7,7 +10,8 @@ script:
 before_deploy:
   - echo $TRAVIS_JOB_ID
   - cat pch2csd/__init__.py
-  - sed -i -e "s/^\(__version__ = '[0-9]\.[0-9]\.\)dev/\1dev${TRAVIS_BUILD_NUMBER}/g" "pch2csd/__init__.py"
+  - sed -i -e "s/^\(__version__ = '[0-9]\.[0-9]\.\)dev/\1dev${TRAVIS_BUILD_NUMBER}/g"
+    "pch2csd/__init__.py"
   - cat pch2csd/__init__.py
 deploy:
   provider: pypi
@@ -16,4 +20,12 @@ deploy:
     secure: hiFEMSQiNK49yjfycPQAwpMer7MLn0B+5BgBPs1sVm5cptCpY6QTUss2oOtAk4nUCDlA5vSnDFpteeVxydU3unAGQzbhgpxRuyKXN3XZroX0/K69nGLO2LjEXN6IANvPwDdyE5wVu4cmBK2XM+qJSTqm6MmOKpwXf0UAekJsbqZqta02J2sUv9qh0fCM5lOhEvlhevfl1vl1ZgzbcrPi5vQdakZYllpsMYL6s0X57BSSUl3dz8pEihzPDSVEtNWzFOHmQaSakqjH39xdT6a7yDoOegIvULEIGCa42BesgxpIs9r3Ez47fjlRKd9y0QhCwogsMfdU1BZFp9x+U68PWnpsF2Ktnj5EguabrhjOKQpLrZ9+3E8lNQFVk6wiItoAcbqy9WLLMG4SRPHM1dS3HRfcPKs7Z48YptvcEohwMRAjqe1oSHBUmPMK4MzIr86cujHpsICbIz5OcjTyJEfBpTWT6I/eDLTKD862qYLESe7gZGJ9/4t6n7glxdbh3GkKIQMi0GlJTMLCKcsdUuqMHbdi4oyUX/QvccYPFk2T0GDfxUKTRM0GvsiyiXPrBY++18wG45NDJpJGysmqlbbeYohsnkzLKTm8Sr/EfEvxVRaBGkmAW0m74qMQ8043xNVZcP1I96v2DC6Ox75MlKVDwJykEsk+oEDUI4SyJ/WYHfU=
   distributions: sdist bdist_wheel
   skip_cleanup: true
-
+after_deploy:
+  - git config --global user.email "travis@travis-ci.org"
+  - git config --global user.name "Travis CI"
+  - python3 -m pch2csd.app gen_udo_status_doc
+  - git clone https://${GH_TOKEN}@github.com/gleb812/pch2csd.wiki.git > /dev/null 2>&1
+  - rm pch2csd.wiki/Module-implementation-status.md
+  - cp Module-implementation-status.md pch2csd.wiki/
+  - cd pch2csd.wiki
+  - git push --quiet > /dev/null 2>&1
