@@ -23,6 +23,7 @@ deploy:
 after_deploy:
   - git config --global user.email "travis@travis-ci.org"
   - git config --global user.name "Travis CI"
+  - git config --global push.default simple
   - python3 -m pch2csd.app gen_udo_status_doc
   - git clone https://${GH_TOKEN}@github.com/gleb812/pch2csd.wiki.git
   - rm pch2csd.wiki/Module-implementation-status.md
