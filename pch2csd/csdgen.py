@@ -1,24 +1,29 @@
-from glob import glob
-from typing import List, Dict, Tuple
-
 import os
+import sys
 from copy import deepcopy
+from glob import glob
 from io import StringIO
+from typing import List, Dict, Tuple, TextIO
+
 from tabulate import tabulate
 
-from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType, Location
-from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir
-from pch2csd.util import LogMixin, preprocess_csd_code
+from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType, \
+    Location
+from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir, \
+    ProjectData
+from pch2csd.util import preprocess_csd_code
 
 
-class UdoTemplate(LogMixin):
+class UdoTemplate:
     def __init__(self, mod: Module):
         self.mod_type = mod.type
         self.mod_type_name = mod.type_name
-        self.logger_set_name('UdoTemplate')
-        with open(get_template_module_path(mod.type)) as f:
-            self.lines = [l.strip() for l in f]
-        self.udo_lines, self.args, self.maps = self._parse_headers()
+        try:
+            with open(get_template_module_path(mod.type), 'r') as f:
+                self.lines = [l.strip() for l in f]
+        except IOError:
+            self.lines = []
+        self.args_lines, self.args, self.maps = self._parse_headers()
 
     def __repr__(self):
         return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
@@ -39,41 +44,91 @@ class UdoTemplate(LogMixin):
             elif l.startswith(';@ map'):
                 m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
                 maps.append(m)
-        if self._validate_headers(args_lines, args, maps):
-            return args_lines, args, maps
-        else:
-            return [], [], []
+        return args_lines, args, maps
 
-    def _validate_headers(self, args_lines, args, maps):
-        valid = True
-        if len(args) == 0:
-            self.log.error("%s: no opcode 'args' annotations were found in the template", self.__repr__())
-            valid = False
+    def validate(self, data: ProjectData):
+        v = UdoTemplateValidation(data, self)
+        v.print_errors()
+        if v.is_valid():
+            return True
         else:
-            for i, a in enumerate(args):
+            return False
+
+
+class UdoTemplateValidation:
+    def __init__(self, data: ProjectData, tpl: UdoTemplate):
+        self.data = data
+        self.tpl = tpl
+
+        self.no_tpl_file = False
+        self.no_args = False
+        self.not_3_args = False
+        self.num_params_ne_num_maps = False
+        self.unknown_map_types = set()
+        self.unknown_map_tables = set()
+
+        self._validate_headers()
+
+    def is_valid(self):
+        if self.no_args \
+                or self.not_3_args \
+                or self.num_params_ne_num_maps \
+                or len(self.unknown_map_types) > 0 \
+                or len(self.unknown_map_tables) > 0:
+            return False
+        else:
+            return True
+
+    def print_errors(self, io: TextIO = sys.stdout):
+        txt = '{}.txt'.format(self.tpl.mod_type)
+        mod_name = self.tpl.mod_type_name
+        if self.no_tpl_file:
+            print('{}: no template file for this module'.format(mod_name))
+        if self.no_args:
+            print("{}: no opcode 'args' annotations were found in the template".format(txt),
+                  file=io)
+        if self.not_3_args:
+            print("{}: the 'args' annotation should have exactly three arguments".format(txt),
+                  file=io)
+        if self.num_params_ne_num_maps:
+            print("{}: the number of 'map' annotations should be equal "
+                  "to the number of module parameters".format(txt), file=io)
+        if len(self.unknown_map_types) > 0:
+            print('{}: unknown mapping types: {}'.format(txt, ', '.join(self.unknown_map_types)),
+                  file=io)
+        if len(self.unknown_map_tables) > 0:
+            print('{}: unknown mapping tables: {}'.format(txt, ', '.join(self.unknown_map_tables)),
+                  file=io)
+
+    def _validate_headers(self):
+        tpl_path = get_template_module_path(self.tpl.mod_type)
+        if not os.path.isfile(tpl_path):
+            self.no_tpl_file = True
+            return
+        if len(self.tpl.args) == 0:
+            self.no_args = True
+        else:
+            for i, a in enumerate(self.tpl.args):
                 if len(a) != 3:
-                    self.log.error("%s:%d the 'args' annotation should have exactly three arguments",
-                                   self.__repr__(), args_lines[i])
-                    valid = False
-            if len(args[0][0]) != len(maps):
-                self.log.error("%s: the number of 'map' annotations should be equal to the number of module parameters",
-                               self.__repr__())
-                valid = False
-            for al in args_lines:
-                udo_str = self.lines[al + 1]
-        for i, m in enumerate(maps):
+                    self.not_3_args = True
+            if len(self.tpl.args[0][0]) != len(self.tpl.maps):
+                self.num_params_ne_num_maps = True
+        for m in self.tpl.maps:
             if m[0] not in 'ds':
-                self.log.error("Unknown mapping type '%s' in the map #%d", m[0], i)
-                valid = False
-                continue
-        return valid
+                self.unknown_map_types.add(m[0])
+            offset = 2 if m[0] == 's' else 1
+            for t in m[offset:]:
+                if t not in self.data.value_maps:
+                    self.unknown_map_tables.add(t)
 
 
-class Udo(LogMixin):
+class Udo:
     def __init__(self, patch: Patch, mod: Module):
         self.patch = patch
         self.mod = mod
         self.tpl = UdoTemplate(mod)
+        if not self.tpl.validate(patch.data):
+            raise ValueError("Can't create the UDO: template validation error")
         self.udo_variant = self._choose_udo_variant()
         _, self.in_types, self.out_types = self.header
         self.inlets, self.outlets = self._init_zak_connections()
@@ -83,9 +138,6 @@ class Udo(LogMixin):
 
     @property
     def header(self):
-        if len(self.tpl.udo_lines) == 0 and len(self.tpl.args) == 0 and len(self.tpl.maps) == 0:
-            self.log.error("Can't create a UDO because {} wasn't parsed properly.".format(self.tpl))
-            raise ValueError
         return self.tpl.args[self.udo_variant]
 
     def get_name(self) -> str:
@@ -96,8 +148,8 @@ class Udo(LogMixin):
 
     def get_src(self) -> str:
         if len(self.tpl.args) < 2:
-            return '\n'.join(self.tpl.lines[self.tpl.udo_lines[0] + 1:])
-        offset = self.tpl.udo_lines[self.udo_variant] + 1
+            return '\n'.join(self.tpl.lines[self.tpl.args_lines[0] + 1:])
+        offset = self.tpl.args_lines[self.udo_variant] + 1
         udo_src = []
         for l in self.tpl.lines[offset:]:
             udo_src.append(l)
@@ -124,9 +176,9 @@ class Udo(LogMixin):
         tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
         if params is not None and len(tpl_param_def) != len(params.values):
-            self.log.error("Template '{}' has different number of parameters "
-                           "than it was found in the parsed module '{}'. "
-                           "Returning -1s for now.".format(self.tpl, self.mod))
+            print("warning: template '{}' has different number of parameters "
+                  "than it was found in the parsed module '{}'. "
+                  "Returning -1s for now.".format(self.tpl, self.mod))
             return [-1] * params.num_params
         if params is None:
             return []
@@ -156,8 +208,7 @@ class Udo(LogMixin):
             dependent_val = all_vals[int(m[1]) - 1]
             table = self.patch.data.value_maps[m[dependent_val + 2]]
         else:
-            self.log.error('Mapping type {} is not supported'.format(m[0]))
-            raise ValueError
+            raise ValueError('Mapping type {} is not supported'.format(m[0]))
         return table[v]
 
 
