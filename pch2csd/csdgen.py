@@ -319,8 +319,8 @@ class Csd:
     def _gen_instr(self, loc: Location) -> str:
         s = StringIO()
         s.write('; --------------------\n')
-        s.write('; {} AREA\n'.format(loc.VOICE_AREA.short_str()))
-        s.write('instr 1\n')
+        s.write('; {} AREA\n'.format(loc.short_str()))
+        s.write('instr {}\n'.format(2 - loc.value))
         statements = [udo.get_statement_parts() for udo in self.udos
                       if udo.mod.location == loc]
         table_head = ('; Module', 'Parameters', 'Inlets', 'Outlets')
