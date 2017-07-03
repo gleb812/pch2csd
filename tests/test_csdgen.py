@@ -11,7 +11,8 @@ class TestPolymorphism(TestCase):
     def setUp(self):
         self.data = ProjectData()
         self.poly_mix2 = parse_pch2(self.data, get_test_resource('test_poly_mix2.pch2'))
-        self.udo_mix2_k = """opcode Mix21A_v0, 0, iiiiiiiii   ; MULTIMODE support a/k?
+        self.udo_mix2_k = """;@ args iiiii, kkk, k
+opcode Mix21A_v0, 0, iiiiiiiii   ; MULTIMODE support a/k?
 ; TODO: lin/log scale, chain input
 iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
 k1 zkr izIn1
@@ -21,7 +22,8 @@ aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
 zkw aout, izOut
 endop
 """
-        self.udo_mix2_a = """opcode Mix21A_v1, 0, iiiiiiiii   ; MULTIMODE support a/k?
+        self.udo_mix2_a = """;@ args iiiii, aaa, a
+opcode Mix21A_v1, 0, iiiiiiiii   ; MULTIMODE support a/k?
 ; TODO: lin/log scale, chain input
 iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
 k1 zar izIn1
@@ -96,4 +98,4 @@ class TestUdoGen(TestCase):
         zak = ZakSpace()
         udos = zak.connect_patch(p)
         csd = Csd(p, zak, udos)
-        # print(csd.get_code())
+        csd.get_code()
