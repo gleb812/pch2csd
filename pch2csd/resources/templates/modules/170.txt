@@ -5,8 +5,8 @@
 ;@ args iii,,aa
 opcode In2, 0, iiiii
     ; TODO: switch inputs
-	iInSw, iOnOffSw, iPad, izL, izR xin
-	aL, aR ins
-	zaw aL, izL
-	zaw aR, izR
+  iInSw, iOnOffSw, iPad, izL, izR xin
+  aL, aR ins
+  zaw aL, izL
+  zaw aR, izR
 endop
