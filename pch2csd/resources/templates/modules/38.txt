@@ -1,3 +1,9 @@
+;@ map s 3 LOGsub LOGlow LOGhii
+;@ map d CLA000
+;@ map d BUT003
+;@ map d BUT002
+
+;@ args iii,kk,k
 opcode Pulse, 0, kk
   kIn, kMod, kTime, kPN xin ; P- positive, N - negative
   ; WHAT TO DO WITH RANGES? LO_HI_MD

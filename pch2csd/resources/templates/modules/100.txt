@@ -1,3 +1,4 @@
+;@ args i,kk,kk
 opcode sw211, 0, k   ; MULTIMODE support a/k?
 ; Need to check..
   kSw xin ;kSw = 0 / 1

@@ -1,3 +1,7 @@
+;@ map d DLYsmp
+;@ map d BUT002
+
+;@ args i,kk,k
 opcode ClkDiv, 0, ii
   iDivider, iType xin
   kyClk zkr 1 ; CHANGE 

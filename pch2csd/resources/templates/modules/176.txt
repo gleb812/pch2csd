@@ -1,3 +1,12 @@
+;@ map s 7 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT007
+
+;@ args iiiiii,a,a
 opcode DelayA, 0, KKKK
   kTime, kFB, kFilter, kDW xin
   

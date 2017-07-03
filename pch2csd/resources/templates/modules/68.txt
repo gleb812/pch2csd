@@ -1,3 +1,4 @@
+;@ args iiiii,k,kkkk
 opcode ClkGen, 0, kki
 ; SWING ???
 kReset, kBPM, iSEB xin

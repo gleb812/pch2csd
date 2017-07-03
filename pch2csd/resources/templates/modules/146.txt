@@ -1,3 +1,4 @@
+;@ args iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii,kkkkkk,kkk
 opcode SeqLev, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ;...
   kSeq[] init 16
   kTr[] init 16

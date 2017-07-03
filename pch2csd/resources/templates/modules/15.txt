@@ -1,3 +1,4 @@
+;@ args i,kkkkkkkk,kk
 opcode sw811, 0, k   ; MULTIMODE support a/k? == sw411 !!!
 ; Need to check..
   kSw xin ;kSw = nomera shin

@@ -1,3 +1,4 @@
+;@ args i,k,kkk
 opcode sw12, 0, k   ; MULTIMODE support a/k? == sw12M
 ; THIS opcode is for RT only.. Need to check..
   kSw xin ;kSw = 0 / 1

@@ -1,3 +1,4 @@
+;@ args i,kkk,k
 opcode ValSw2, 0, ik   ; MULTIMODE support a/k? == sw14 !!!
 ; Need to check..
   iVal, kSw xin 

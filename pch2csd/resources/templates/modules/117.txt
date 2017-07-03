@@ -1,3 +1,7 @@
+;@ map d CLA000
+;@ map d MID000
+
+;@ args ii,kkk,k
 opcode LevMod, 0, kk   
   kMod, kBal xin
   kModD 	zkr 1 ; CHANGE 

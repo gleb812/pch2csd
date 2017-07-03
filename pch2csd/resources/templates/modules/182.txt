@@ -1,3 +1,17 @@
+;@ map s 12 DLY500 DLY_1s DLY135
+;@ map s 12 DLY500 DLY_1s DLY135
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT003
+
+;@ args iiiiiiiiiii,a,aa
 opcode DlyStereo, 0, KKKKKKKKKK
   kTimeL,kTimeR,kFBL,kFBR,kXFBL,kXFBR,kLP,kHP,kDW xin
   

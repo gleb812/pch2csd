@@ -1,3 +1,11 @@
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+
+;@ args iiiii,k,a
 opcode OscD, 0, KKiiiii
 
   kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin

@@ -1,3 +1,4 @@
+;@ args ,kk,kkkkkkkk
 opcode DlyShiftReg, 0, 0
   kin zkr 2 ; CHANGE 
   kClk zkr 1 ; CHANGE

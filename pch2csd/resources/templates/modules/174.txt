@@ -1,3 +1,10 @@
+;@ map s 5 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d CLA000
+;@ map s 5 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d CLA000
+;@ map h BUT007
+
+;@ args iiii,aaa,aa
 opcode DelayDual, 0, iiikk
   iTime1, iTime2, imaxdel, kMod1, kMod2 xin
   ain1 zar 2 ; CHANGE 

@@ -1,3 +1,8 @@
+;@ map s 3 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d CLA000
+;@ map d BUT007
+
+;@ args ii,aa,a
 opcode DlySingleB, 0, iik
   iTime, imaxdel, kMod xin
   ain zar 2 ; CHANGE 

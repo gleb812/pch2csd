@@ -1,3 +1,4 @@
+;@ args iiiii,a,a
 opcode EqPeak, 0, KKKK
   kFreq, kGain, kBW, kLev xin ;i  - ON/OFF button?
   ain zar 2 ; CHANGE 

@@ -1,3 +1,4 @@
+;@ args ,kk,k
 opcode TH, 0, 0 ; ???? EQUAL TO S&H ??
   kCtrl zkr 1; CHANGE
   kIn zkr 2; CHANGE

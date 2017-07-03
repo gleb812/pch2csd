@@ -1,3 +1,6 @@
+;@ map no parameters
+
+;@ args ,aaaa,a
 opcode Mix41A, 0, iiiii   ; MULTIMODE support a/k?
   i1, i2, i3, i4, iOut xin
   a1 zar i1 

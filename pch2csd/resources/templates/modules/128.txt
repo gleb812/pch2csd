@@ -1,3 +1,4 @@
+;@ args ,kk,kk
 opcode MinMax, 0, 0
   kA zkr 1  ;CHANGE
   kB zkr 2 ;CHANGE

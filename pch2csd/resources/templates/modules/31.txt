@@ -1,3 +1,7 @@
+;@ map d CLA000
+;@ map d CLA000
+
+;@ args ii,,a
 opcode Noise, 0, Kii ;
   kColor, iMute, iOut  xin
   aout rand 0.5, 0.1 ; seed value ?

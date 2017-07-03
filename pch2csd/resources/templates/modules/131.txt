@@ -1,3 +1,4 @@
+;@ args ,k,kkkkkkkk
 opcode ADConv, 0, 0
   kyin zkr 1 ; CHANGE 
   zkw int(kyin*.5), 1 ; CHANGE 

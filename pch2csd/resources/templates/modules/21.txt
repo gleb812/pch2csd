@@ -1,3 +1,4 @@
+;@ args ,kk,kkkkkkkk
 opcode Mux18, 0, 0
 
   kM1[] fillarray 1,0,0,0,0,0,0,0

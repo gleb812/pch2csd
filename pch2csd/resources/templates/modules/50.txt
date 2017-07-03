@@ -1,3 +1,8 @@
+;@ map s 3 LVLlev LVLpos
+;@ map d BUT002
+;@ map d BUT002
+
+;@ args iii,,k
 opcode ConstSwT, 0, kk   ; MULTIMODE support a/k?
 ; Need to check..
   kSw, kVal xin ;kSw = 0 / 1

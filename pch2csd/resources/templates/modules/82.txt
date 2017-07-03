@@ -1,3 +1,7 @@
+;@ map d BUT004
+;@ map d BUT002
+
+
 opcode  Rect, 0, i
   iTable xin 
   a1 zar 1 ; CHANGE

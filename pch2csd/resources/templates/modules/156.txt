@@ -1,3 +1,6 @@
+;@ map MID000
+
+;@ args i,,kkk
 opcode NoteDet, 0, k
   kNote xin
   iVal notnum

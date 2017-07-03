@@ -1,3 +1,4 @@
+;@ args i,k,kk
 opcode swOnOffT, 0, k   ; MULTIMODE support a/k?
 ; Need to check..
   kSw xin ;kSw = 0 / 1

@@ -1,3 +1,4 @@
+;@ args iiiiii,a,a
 opcode Eq2Band, 0, KKKKK
 ; rbjeq ???
   kFreqL, kFreqH, kGainL, kGainH, kLev xin 

@@ -1,3 +1,4 @@
+;@ args ,,kkkkkk
 opcode Keyboard, 0, 0
   
   kstatus, kchan, kdata1, kdata2 midiin

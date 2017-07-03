@@ -1,3 +1,9 @@
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d BUT002
+
+
 opcode Clip, 0, ikk
   iSW, klimit, kMod xin ; iSW = 0/1 
   a1 zar 1 ; CHANGE

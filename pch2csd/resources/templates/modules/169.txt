@@ -1,3 +1,4 @@
+;@ args iiiiiiii,kkkkkk,kk
 opcode ModAHD, 0, kkkkkkk
   kAtt, kDec, kSW, kH, kMAtt, kMH, kMDec xin
 ; NOT FORGET ABOUT KEYBOARD KB

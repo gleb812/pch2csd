@@ -1,3 +1,4 @@
+;@ args ,kk,kkkkkkkk
 opcode 8Counter, 0, kk
   kClk, kRst xin
   kCount init 0

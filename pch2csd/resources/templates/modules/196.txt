@@ -1,3 +1,4 @@
+;@ args iiiiiiiii,kka,a
 opcode OscPerc, 0, iKK
  ; Net punch i Click
   kDcy, kFreq, kFine xin

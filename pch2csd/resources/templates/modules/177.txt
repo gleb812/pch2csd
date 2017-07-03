@@ -1,3 +1,16 @@
+;@ map w 8 9 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT007
+
+
 opcode DelayB, 0, KKKKKKKK
   kTime, kFB, kLP, kHP,  kDW, kFBmod, kDWmod xin
   

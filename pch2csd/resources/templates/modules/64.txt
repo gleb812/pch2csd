@@ -1,3 +1,7 @@
+;@ map d BUT006
+;@ map d BUT006
+
+;@ args ,kkkk,kk
 opcode Gate, 0, ii
 iType1, iType2 xin
   ky1 zkr 1 ; CHANGE 
