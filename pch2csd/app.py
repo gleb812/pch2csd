@@ -90,7 +90,7 @@ def convert_pch2(fn: str):
         print("error: the patch file should have extension '.pch2'")
         exit(-1)
     data = ProjectData()
-    path = os.path.abspath(fn)
+    path = os.path.abspath(os.path.expanduser(fn))
     p = parse_pch2(data, path)
     p.cables = [c for c in [transform_in2in_cables(p, c) for c in p.cables]
                 if c is not None]
