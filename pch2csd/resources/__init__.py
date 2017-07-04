@@ -7,12 +7,26 @@ def get_template_dir() -> str:
     return os.path.join(os.path.dirname(__file__), 'templates')
 
 
+def get_template_user_dir() -> str:
+    return os.path.join(os.path.expanduser('~'), 'pch2csd')
+
+
 def get_template_path(name: str) -> str:
-    return os.path.join(get_template_dir(), '{}.txt'.format(name))
+    fn = '{}.txt'.format(name)
+    user_tpl = os.path.join(get_template_user_dir(), fn)
+    if os.path.isfile(user_tpl):
+        return user_tpl
+    else:
+        return os.path.join(get_template_dir(), '{}.txt'.format(name))
 
 
 def get_template_module_path(name: int) -> str:
-    return os.path.join(get_template_dir(), 'modules', '{}.txt'.format(name))
+    fn = '{}.txt'.format(name)
+    user_tpl = os.path.join(get_template_user_dir(), 'modules', fn)
+    if os.path.isfile(user_tpl):
+        return user_tpl
+    else:
+        return os.path.join(get_template_dir(), 'modules', fn)
 
 
 def _read_json(filename: str) -> Dict[str, Any]:
