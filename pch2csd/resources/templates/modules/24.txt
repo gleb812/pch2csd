@@ -1,0 +1,27 @@
+;@ map d RNDlow
+;@ map d BUT006
+;@ map d BUT006
+;@ map d BUT006
+;@ map d BUT002
+
+
+;@ args kkkkk,k,k
+opcode LfoC, 0, kkkkkkk
+; kOutType not impl
+; kKBT not impl
+; only 4 first waves implemented - sin,tri,saw,quad
+; Modulation not implemented
+; kMod - blue - -64..+64
+; kTuneMode only default works
+
+k1[] fillarray 1,1,0.5,0.5,0.5,0.5
+k2[] fillarray 0,0,0.5,0.5,-0.5,-0.5
+k3[] fillarray 1,-1,1,-1,1,-1
+ 
+	kRate,kMode,kOutType,kRange,kON, kRateIn,kOut xin
+	
+	kout oscilikt 1, kRate, 1 ; problems with kwave
+	kout = (kout*k1[kRange]+k2[kRange])*k3[kRange]
+
+	zkw kout*kON, kOut 
+endop

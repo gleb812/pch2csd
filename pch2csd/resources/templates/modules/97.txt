@@ -1,12 +1,28 @@
-;@ iiiiii, kk, a
-opcode OscA, 0, KKKKKK
- ; Net knopok
-  kfn, kFreq, kFine, kPitch, kModLev xin
-  
-  kPitch zkr 2 ; CHANGE 
-  kMod zkr 1 ; CHANGE 
-  ; Proverit' amplitudu
-  kfine = cent(kFine)
-  aout oscilikt 0.5, kFreq*kfine+kPitch+kMod*kModLev, kfn   
-  zaw aout, 2  ; CHANGE 
+;@ map d OSCsem
+;@ map d OSCcnt
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT006
+;@ map d BUT002
+;@ map d BUT006
+
+;@ args kkkkkkk,kk,a
+opcode OscA, 0, kkkkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; kTuneMode only default works
+
+ 
+	kCoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
+		
+	kMod zkr kModIn
+
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+	kPitch zkr kPitchIn  
+Run:	
+	kFreq = cpsmidinn(kPitch+kModLev*kMod+gkNote+kCoarse+kFine*0.01) 
+	aout oscilikt 0.5, kFreq, kWave+1   
+	zaw aout*kON, kOut 
 endop

@@ -1,21 +1,22 @@
-;@ map s 7 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map d DLY500
 ;@ map d CLA000
 ;@ map d CLA000
 ;@ map d CLA000
 ;@ map d BUT002
 ;@ map d BUT002
-;@ map d BUT007
 
-;@ args iiiiii,a,a
-opcode DelayA, 0, KKKK
-  kTime, kFB, kFilter, kDW xin
-  
-  ain zar 2 ; CHANGE 
-  
-  abuf delayr 2.7
-  atap deltapi kTime
-  delayw ain+atap*kFB
-  
-  aout tone atap, kFilter ; check filter type etc
-  zaw aout*kDW+ain*(1-kDW), 1 ; CHANGE 
+
+;@ args kkkkkk, a, a
+opcode DelayA, 0, kkkkkkkk
+	kTime, kFB, kFilter, kDW, kOn, kClk, kIn, kOut xin
+	
+	ain zar kIn 
+	kTime /= 1000
+
+	abuf delayr 2.7 ;max time for #176
+	atap deltapi kTime
+	delayw ain+atap*kFB
+	
+	;no filter 
+	zaw atap*kDW+ain*(1-kDW), kOut
 endop

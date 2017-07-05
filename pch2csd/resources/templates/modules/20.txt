@@ -1,0 +1,128 @@
+;@ map d BUT004
+;@ map d ENVtim
+;@ map d ENVtim
+;@ map d OSCunD
+;@ map d ENVtim
+;@ map d BUT006
+;@ map d BUT002
+;@ map d BUT002
+
+;@ args kkkkkkkk, kkk, kk
+opcode EnvADSR, 0, kkkkkkkkkkkkk
+	kShape,kA,kD,kS,kR,kOutType,kKB,kReset, kin,kGatei,kAMi,kEnvo,kOut xin
+; currently only lin Shape
+; no KB
+; only Pos outtype
+; no AM
+	kIn zkr kin
+	kAM zkr kAMi
+	kGate zkr kGatei
+
+	kEnv init 0
+	kTimer init 0
+	kState init 0
+	
+	kA /= 1000
+	kD /= 1000
+	kR /= 1000
+	kS /= 64
+
+
+if kGate <= 0 goto Halt
+	
+	if kState = 2 goto Decay
+	if kState = 3 goto ESust
+	kState = 1
+Attack:
+	kEnv += 1/(kA*kr)
+	kEnv limit kEnv, 0, 1
+	kTimer += 1/kr
+	if kTimer < kA goto Over
+	kState = 2
+	kTimer = 0
+	 
+Decay:
+	kEnv -= (1-kS)/(kD*kr)
+	kEnv limit kEnv, kS, 1
+	kTimer += 1/kr
+	if kTimer < kD goto Over
+	kState = 3
+ESust:
+	kEnv = kS	  
+	goto Over
+
+
+Halt:
+	if kState == 0 goto Over
+	
+	kEnv -= kS/(kR*kr)
+	kEnv limit kEnv,0,1
+	if kEnv > 0 goto Over
+	kTimer = 0
+	kState = 0
+	
+Over:		
+	zkw kEnv, kEnvo
+	zkw kEnv*kIn, kOut
+	
+endop
+
+;@ args kkkkkkkk, akk, ka
+opcode EnvADSR, 0, kkkkkkkkkkkkk
+	kShape,kA,kD,kS,kR,kOutType,kKB,kReset, kin,kGatei,kAMi,kEnvo,kOut xin
+; currently only lin Shape
+; no KB
+; only Pos outtype
+; no AM
+	aIn zar kin
+	kAM zkr kAMi
+	kGate zkr kGatei
+
+	kEnv init 0
+	kTimer init 0
+	kState init 0
+	
+	kA /= 1000
+	kD /= 1000
+	kR /= 1000
+	kS /= 64
+
+
+if kGate <= 0 goto Halt
+	
+	if kState = 2 goto Decay
+	if kState = 3 goto ESust
+	kState = 1
+Attack:
+	kEnv += 1/(kA*kr)
+	kEnv limit kEnv, 0, 1
+	kTimer += 1/kr
+	if kTimer < kA goto Over
+	kState = 2
+	kTimer = 0
+	 
+Decay:
+	kEnv -= (1-kS)/(kD*kr)
+	kEnv limit kEnv, kS, 1
+	kTimer += 1/kr
+	if kTimer < kD goto Over
+	kState = 3
+ESust:
+	kEnv = kS	  
+	goto Over
+
+
+Halt:
+	if kState == 0 goto Over
+	
+	kEnv -= kS/(kR*kr)
+	kEnv limit kEnv,0,1
+	if kEnv > 0 goto Over
+	kTimer = 0
+	kState = 0
+	
+Over:		
+	zkw kEnv, kEnvo
+	zaw kEnv*aIn, kOut
+	
+endop
