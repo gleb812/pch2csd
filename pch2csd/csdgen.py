@@ -190,11 +190,15 @@ class Udo:
         name, params, inlets, outlets = self.get_name(), '', '', ''
         p = self.get_params()
         if len(p) > 0:
-            params = ','.join([str(f) for f in p]) + ','
+            params = ','.join([str(f) for f in p])
         if len(self.inlets) > 0:
-            inlets = ','.join([str(i) for i in self.inlets]) + ','
+            inlets = ','.join([str(i) for i in self.inlets])
         if len(self.outlets) > 0:
             outlets = ','.join(str(i) for i in self.outlets)
+        if params != '' and (inlets != '' or outlets != ''):
+            params += ','
+        if inlets != '' and outlets != '':
+            inlets += ','
         return name, params, inlets, outlets
 
     def _init_zak_connections(self):
