@@ -320,7 +320,12 @@ class Csd:
 
     @property
     def zakinit(self) -> str:
-        return 'zakinit {}, {}'.format(self.zak.aloc_i, self.zak.kloc_i)
+        s = StringIO()
+        s.write('gkNote init 64\n')
+        s.write('zakinit {}, {}\n'.format(self.zak.aloc_i, self.zak.kloc_i))
+        s.write('massign 1,0\n')
+        s.write('massign 2,0\n')
+        return s.getvalue()
 
     def _gen_instr(self, loc: Location) -> str:
         s = StringIO()
