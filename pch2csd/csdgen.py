@@ -222,14 +222,14 @@ class ZakSpace:
     trash_bus = 1
 
     def __init__(self):
-        self.aloc_i = 2
-        self.kloc_i = 2
+        self.aloc_i = 6
+        self.kloc_i = 6
         self.zakk = {}  # Tuple[mod_id, inlet_id] -> zak_loc
         self.zaka = {}  # Tuple[mod_id, inlet_id] -> zak_loc
 
     def _init_zak(self):
-        self.aloc_i = 2
-        self.kloc_i = 2
+        self.aloc_i = 6
+        self.kloc_i = 6
         self.zakk = {}  # Tuple[mod_id, inlet_id] -> zak_loc
         self.zaka = {}  # Tuple[mod_id, inlet_id] -> zak_loc
 
