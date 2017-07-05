@@ -69,19 +69,19 @@ class TestRateConversion(TestCase):
         udos = zak.connect_patch(p)
         in2, envh, out2, a2k, k2a = sorted(udos, key=lambda x: x.mod.id)
         # sends a
-        self.assertSequenceEqual(in2.outlets, [3, 0])
+        self.assertSequenceEqual(in2.outlets, [7, 0])
         # a -> k
-        self.assertSequenceEqual(a2k.inlets, [3])
-        self.assertSequenceEqual(a2k.outlets, [3])
+        self.assertSequenceEqual(a2k.inlets, [7])
+        self.assertSequenceEqual(a2k.outlets, [7])
         # receives k
-        self.assertSequenceEqual(envh.inlets, [1, 3, 1])
+        self.assertSequenceEqual(envh.inlets, [1, 7, 1])
         # sends k
-        self.assertSequenceEqual(envh.outlets, [0, 4])
+        self.assertSequenceEqual(envh.outlets, [0, 8])
         # k -> a
-        self.assertSequenceEqual(k2a.inlets, [4])
-        self.assertSequenceEqual(k2a.outlets, [4])
+        self.assertSequenceEqual(k2a.inlets, [8])
+        self.assertSequenceEqual(k2a.outlets, [8])
         # receives a
-        self.assertSequenceEqual(out2.inlets, [4, 1])
+        self.assertSequenceEqual(out2.inlets, [8, 1])
 
         csd = Csd(p, zak, udos)
         print(csd.get_code())
