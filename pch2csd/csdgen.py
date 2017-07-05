@@ -40,6 +40,8 @@ class UdoTemplate:
             if l.startswith(';@ args'):
                 args_lines.append(i)
                 a = [s.strip() for s in l.replace(';@ args', '').split(',')]
+                # for those who are used to put 0 to declare noargs
+                a = [x if x != '0' else '' for x in a]
                 args.append(a)
             elif l.startswith(';@ map'):
                 m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
