@@ -23,5 +23,5 @@ k3[] fillarray 1,-1,1,-1,1,-1
 	kout oscilikt 1, kRate, 1 ; problems with kwave
 	kout = (kout*k1[kRange]+k2[kRange])*k3[kRange]
 
-	zkw kout*kON, kOut 
+	zkw kout*kON*64, kOut 
 endop
