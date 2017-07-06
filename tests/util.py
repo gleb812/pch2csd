@@ -1,4 +1,5 @@
 import os
+import string
 
 
 def get_test_resource(path: str) -> str:
@@ -13,3 +14,7 @@ def cmp_str_lines(s1: str, s2: str) -> bool:
         if l1.strip() != l2.strip():
             return False
     return True
+
+
+def clean_up_string(s: str) -> str:
+    return ''.join(c for c in s if c in string.printable)

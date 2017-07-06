@@ -12,6 +12,7 @@ from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K
 from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir, \
     ProjectData
 from pch2csd.util import preprocess_csd_code
+from tests.util import clean_up_string
 
 
 class UdoTemplate:
@@ -36,7 +37,8 @@ class UdoTemplate:
         args = []  # List[List[str]]
         maps = []  # List[List[str]]
 
-        for i, l in enumerate(self.lines):
+        for i, line in enumerate(self.lines):
+            l = clean_up_string(line)
             if l.startswith(';@ args'):
                 args_lines.append(i)
                 a = [s.strip() for s in l.replace(';@ args', '').split(',')]
