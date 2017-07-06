@@ -19,7 +19,7 @@ class TestParsing(TestCase):
                                  CableColor.WHITE, 1, 1, 1, 0)]
         expected_mod_params = [ModuleParameters(Location.VOICE_AREA, 1, 3, [0, 1, 0]),
                                ModuleParameters(Location.VOICE_AREA, 2, 5, [127, 127, 0, 2, 0])]
-        parsed = parse_pch2(self.data, gleb_2_pch)
+        parsed = parse_pch2(self.data, gleb_2_pch, convert_in2in=False)
         self.assertSequenceEqual(parsed.modules, expected_modules)
         self.assertSequenceEqual(parsed.cables, expected_cables)
         self.assertSequenceEqual(parsed.mod_params, expected_mod_params)
@@ -32,7 +32,7 @@ class TestParsing(TestCase):
                             Module(self.data, Location.VOICE_AREA, 100, 2)]
         expected_cables = [
             Cable(Location.VOICE_AREA, CableType.IN_TO_IN, CableColor.WHITE, 1, 0, 141, 1)]
-        parsed = parse_pch2(self.data, gleb_2_pch)
+        parsed = parse_pch2(self.data, gleb_2_pch, convert_in2in=False)
         self.assertTrue(parsed.modules == expected_modules_correct)
         self.assertFalse(parsed.modules == expected_modules)
         self.assertFalse(parsed.cables == expected_cables)

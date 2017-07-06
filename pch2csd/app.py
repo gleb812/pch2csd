@@ -8,7 +8,7 @@ from tabulate import tabulate
 from pch2csd import __version__, __homepage__
 from pch2csd.csdgen import ZakSpace, Csd, UdoTemplate
 from pch2csd.parse import parse_pch2
-from pch2csd.patch import Patch, transform_in2in_cables
+from pch2csd.patch import Patch
 from pch2csd.resources import get_template_module_path, ProjectData
 
 
@@ -92,8 +92,6 @@ def convert_pch2(fn: str):
     data = ProjectData()
     path = os.path.abspath(os.path.expanduser(fn))
     p = parse_pch2(data, path)
-    p.cables = [c for c in [transform_in2in_cables(p, c) for c in p.cables]
-                if c is not None]
     zak = ZakSpace()
     try:
         udos = zak.connect_patch(p)

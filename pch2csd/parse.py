@@ -1,8 +1,10 @@
-from bitarray import bitarray
 from io import FileIO
 from struct import unpack
 
-from pch2csd.patch import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters
+from bitarray import bitarray
+
+from pch2csd.patch import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters, \
+    transform_in2in_cables
 from pch2csd.resources import ProjectData
 from pch2csd.util import BitArrayStream
 
@@ -75,7 +77,7 @@ def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
         ctx['head_4d_count'] += 1
 
 
-def parse_pch2(data: ProjectData, pch2_file: str) -> Patch:
+def parse_pch2(data: ProjectData, pch2_file: str, convert_in2in=True) -> Patch:
     patch = Patch(data)
     with open(pch2_file, 'rb') as pch2:
         parse_header(pch2, patch)
@@ -90,4 +92,8 @@ def parse_pch2(data: ProjectData, pch2_file: str) -> Patch:
                 parse_data_object(obj_header, blob_bits, patch, context)
             else:
                 break
+    if convert_in2in:
+        patch.cables = [c for c in [transform_in2in_cables(patch, c)
+                                    for c in patch.cables]
+                        if c is not None]
     return patch
