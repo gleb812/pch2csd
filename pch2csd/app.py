@@ -44,6 +44,7 @@ def validate_udo(type_id: int, io=sys.stdout):
         print('found a module of this type: {}'.format(mod.type_name), file=io)
         udo = UdoTemplate(mod)
         valid = udo.validate(data, io)
+        print('the module seems to be OK', file=io)
         return valid
     else:
         print("error: unknown module type '{}'".format(type_id), file=io)
