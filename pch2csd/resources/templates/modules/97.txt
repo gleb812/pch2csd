@@ -1,4 +1,4 @@
-;@ map d OSCsem
+;@ map s 7 OSCsem OSCsem OSCsem OSCprt
 ;@ map d OSCcnt
 ;@ map d BUT002
 ;@ map d CLA000
@@ -32,14 +32,7 @@ if kTuneMode==3 goto Part
 	kFreq = cpsmidinn(kM_+kCoarse)
 	goto Out
 Part:
-kCoarse += 1 ; 1..128
-if kCoarse <= 64 goto RunPart1
-	kFrPart=kCoarse-64
-	goto RunPart
-RunPart1:
-	kFrPart=kCoarse/64
-RunPart:
-kFreq = kCoarse*cpsmidinn(kM_+kCoarse*kFrPart)
+kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 aout oscilikt 0.5, kFreq, kWave+1
 zaw aout*kON, kOut

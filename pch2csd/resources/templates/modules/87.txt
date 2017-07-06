@@ -1,8 +1,25 @@
-opcode FltLP, 0, iikk
+;@ map d FLTfrq
+;@ map d CLA000
+;@ map d MID000
+;@ map d MID000
+
+;@ args kkkk,ak,a
+opcode FltLP, 0, kkkkkkk
 ; KBT !!!!!
-  iKBT, iOrder, kMod, kCF xin ;i  - ON/OFF button?
-  ain zar 2 ; CHANGE 
-  kmod zkr 1 ; CHANGE 
-  aout tonex ain, kCF+kmod*kMOd, iOrder
-  zaw aout, 2  ; CHANGE 
+	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin
+	ain zar kin  
+	kMod zkr kmod  
+	aout tonex ain, kFreq+kFreqMod*kMod, 4 ; ORDER IN MODES!
+	zaw aout, kout 
+endop
+
+
+;@ args kkkk,aa,a
+opcode FltLP, 0, kkkkkkk
+; KBT !!!!!
+	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin
+	ain zar kin  
+	aMod zar kmod  
+	aout tonex ain, kFreq+kFreqMod*aMod, 4 ; ORDER IN MODES!
+	zaw aout, kout 
 endop

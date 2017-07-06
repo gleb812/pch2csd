@@ -1,12 +1,25 @@
-;@ map no parameters
+; nothing to map
+
+;@ args ,kkkk,k
+opcode Mix41A, 0, kkkkk
+	k1,k2,k3,k4,k5 xin
+	ks1 zkr k1
+	ks2 zkr k2
+	ks3 zkr k3
+	ks4 zkr k4
+
+kOut = (ks1+ks2+ks3+ks4)/4
+	zkw kOut,k5
+endop
 
 ;@ args ,aaaa,a
-opcode Mix41A, 0, iiiii   ; MULTIMODE support a/k?
-  i1, i2, i3, i4, iOut xin
-  a1 zar i1 
-  a2 zar i2  
-  a3 zar i3 
-  a4 zar i4 
-  aout = a1 + a2 + a3 + a4
-  zaw aout, iOut
+opcode Mix41A, 0, kkkkk
+	k1,k2,k3,k4,k5 xin
+	as1 zar k1
+	as2 zar k2
+	as3 zar k3
+	as4 zar k4
+
+aOut = (as1+as2+as3+as4)/4
+	zaw aOut,k5
 endop
