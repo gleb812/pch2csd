@@ -2,7 +2,7 @@
 ;@ map d BUT002
 
 ;@ args ii,,k
-opcode Constant, 0, iii
+opcode Constant, 0, kii
     ; TODO: unipolar/bipolar switch
     kVal, iPolSw, izOut xin
     zkw kVal, izOut
