@@ -10,19 +10,37 @@
 opcode OscA, 0, kkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; kTuneMode only default works
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
 
- 
-	kCoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
-		
-	kMod zkr kModIn
+kMod zkr kModIn
 
+if kKBT != 1 goto NoKBT
+	kNote = gkNote
+	goto KBT
+NoKBT:
+	kNote = 64
+KBT:
 
 kPitch init 64
 if kPitchIn == 0 goto Run
-	kPitch zkr kPitchIn  
-Run:	
-	kFreq = cpsmidinn(kPitch+kModLev*kMod+gkNote+kCoarse+kFine*0.01) 
-	aout oscilikt 0.5, kFreq, kWave+1   
-	zaw aout*kON, kOut 
+kPitch zkr kPitchIn
+Run:
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+	kFreq = cpsmidinn(kM_+kCoarse)
+	goto Out
+Part:
+kCoarse += 1 ; 1..128
+if kCoarse <= 64 goto RunPart1
+	kFrPart=kCoarse-64
+	goto RunPart
+RunPart1:
+	kFrPart=kCoarse/64
+RunPart:
+kFreq = kCoarse*cpsmidinn(kM_+kCoarse*kFrPart)
+Out:
+aout oscilikt 0.5, kFreq, kWave+1
+zaw aout*kON, kOut
 endop
