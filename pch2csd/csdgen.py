@@ -322,9 +322,11 @@ class Csd:
     def zakinit(self) -> str:
         s = StringIO()
         s.write('gkNote init 64\n')
+        s.write('gkGate init 0\n')
         s.write('zakinit {}, {}\n'.format(self.zak.aloc_i, self.zak.kloc_i))
         s.write('massign 1,0\n')
         s.write('massign 2,0\n')
+        s.write('massign 3,0\n')
         return s.getvalue()
 
     def _gen_instr(self, loc: Location) -> str:

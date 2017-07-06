@@ -1,6 +1,18 @@
+; GLOBAL MIDI
+instr 3
+  kstat, kchan, kdata1, kdata2 midiin
+  if kstat!=144 goto Next
+  gkGate = 1
+  gkNote = kdata1
+  Next:
+  if kstat!=128 goto Over
+  gkGate = 0
+  Over:
+endin
 </CsInstruments>
 <CsScore>
 i1 0 [60*60*24*7]
 i2 0 [60*60*24*7]
+i3 0 [60*60*24*7]
 </CsScore>
 </CsoundSynthesizer>
