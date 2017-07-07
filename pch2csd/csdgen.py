@@ -86,7 +86,6 @@ class UdoTemplateValidation:
     def print_errors(self, io: TextIO = sys.stdout):
         txt = '{}.txt'.format(self.tpl.mod_type)
         errors = []
-        todos = []
         if self.no_tpl_file:
             errors.append('no template file for this module')
         if self.no_args:
@@ -100,15 +99,15 @@ class UdoTemplateValidation:
             errors.append('unknown mapping types: {}'.format(', '.join(self.unknown_map_types)))
         if len(self.unknown_map_tables) > 0:
             errors.append('unknown mapping tables: {}'.format(', '.join(self.unknown_map_tables)))
-        if len(errors) == 0 and len(todos) == 0:
+        if len(errors) == 0 and len(self.todos) == 0:
             print('{} appears to be OK'.format(txt), file=io)
         if len(errors) > 0:
             print('errors:', file=io)
             for e in errors:
                 print('  - {}'.format(e), file=io)
-        if len(todos) > 0:
+        if len(self.todos) > 0:
             print('TODOs:', file=io)
-            for t in todos:
+            for t in self.todos:
                 print('  - {}'.format(t), file=io)
 
     def _validate_headers(self):
@@ -131,7 +130,7 @@ class UdoTemplateValidation:
             for t in m[offset:]:
                 if t not in self.data.value_maps:
                     self.unknown_map_tables.add(t)
-        todos = [l[l.find(';'):].replace(';', '').replace('TODO', '').strip()
+        todos = [l[l.find(';'):].replace(';', '').replace(':', '').replace('TODO', '').strip()
                  for l in self.tpl.lines if 'TODO' in l]
         self.todos = [t for t in todos if t != '']
 
