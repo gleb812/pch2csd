@@ -47,7 +47,7 @@ def validate_udo(type_id: int, io=sys.stdout, print_action=True):
         udo = UdoTemplate(mod)
         v = UdoTemplateValidation(data, udo)
         v.print_errors(io)
-        return v.is_valid()
+        return v.is_valid(with_todos=True)
     else:
         print("error: unknown module type '{}'".format(type_id), file=io)
         return False

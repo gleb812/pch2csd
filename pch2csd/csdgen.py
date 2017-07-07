@@ -52,10 +52,7 @@ class UdoTemplate:
 
     def validate(self, data: ProjectData):
         v = UdoTemplateValidation(data, self)
-        if v.is_valid():
-            return True
-        else:
-            return False
+        return v.is_valid()
 
 
 class UdoTemplateValidation:
@@ -73,16 +70,17 @@ class UdoTemplateValidation:
 
         self._validate_headers()
 
-    def is_valid(self):
+    def is_valid(self, with_todos=False):
         if self.no_args \
                 or self.no_tpl_file \
                 or self.not_3_args \
                 or self.num_params_ne_num_maps \
-                or len(self.todos) > 0 \
                 or len(self.unknown_map_types) > 0 \
                 or len(self.unknown_map_tables) > 0:
             return False
         else:
+            if with_todos and len(self.todos) > 0:
+                return False
             return True
 
     def print_errors(self, io: TextIO = sys.stdout):
