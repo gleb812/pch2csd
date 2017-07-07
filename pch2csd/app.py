@@ -6,7 +6,7 @@ from io import StringIO
 from tabulate import tabulate
 
 from pch2csd import __version__, __homepage__
-from pch2csd.csdgen import ZakSpace, Csd, UdoTemplate
+from pch2csd.csdgen import ZakSpace, Csd, UdoTemplate, UdoTemplateValidation
 from pch2csd.parse import parse_pch2
 from pch2csd.patch import Patch
 from pch2csd.resources import get_template_module_path, ProjectData
@@ -29,9 +29,10 @@ def _all_modules_implemented(patch: Patch):
     return True
 
 
-def validate_udo(type_id: int, io=sys.stdout):
-    print("validating template for the module of type '{id}' ({id}.txt)".format(id=type_id),
-          file=io)
+def validate_udo(type_id: int, io=sys.stdout, print_action=True):
+    if print_action:
+        print("checking module type '{id}' ({id}.txt)".format(id=type_id),
+              file=io)
     pch2_files = [get_test_resource(s) for s in ['test_all_modules_1.pch2',
                                                  'test_all_modules_2.pch2']]
     data, mod, patch = ProjectData(), None, None
@@ -41,11 +42,12 @@ def validate_udo(type_id: int, io=sys.stdout):
                 mod, patch = m, p
                 break
     if mod is not None:
-        print('found a module of this type: {}'.format(mod.type_name), file=io)
+        if print_action:
+            print('module name: {}'.format(mod.type_name), file=io)
         udo = UdoTemplate(mod)
-        valid = udo.validate(data, io)
-        print('the module seems to be OK', file=io)
-        return valid
+        v = UdoTemplateValidation(data, udo)
+        v.print_errors(io)
+        return v.is_valid()
     else:
         print("error: unknown module type '{}'".format(type_id), file=io)
         return False
@@ -116,18 +118,12 @@ def gen_udo_status_doc():
                   in ['test_all_modules_1.pch2', 'test_all_modules_2.pch2']]:
             for m in p.modules:
                 status = StringIO()
-                valid = validate_udo(m.type, status)
-                if valid:
-                    status.write('the template seems to be OK')
-                error_lines = [l for l in status.getvalue().splitlines()
-                               if 'error' in l or 'warning' in l]
-                if valid:
-                    error_lines.append('the template seems to be OK')
+                validate_udo(m.type, status, print_action=False)
                 md.write('| [{}]({}) | {} | {} |\n'.format(
                     '{}.txt'.format(m.type),
                     tpl_url.format(m.type),
                     m.type_name,
-                    '<br>'.join(error_lines)))
+                    '<br>'.join(status.getvalue().splitlines())))
 
 
 def main():

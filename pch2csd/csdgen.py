@@ -50,9 +50,8 @@ class UdoTemplate:
                 maps.append(m)
         return args_lines, args, maps
 
-    def validate(self, data: ProjectData, io=sys.stdout):
+    def validate(self, data: ProjectData):
         v = UdoTemplateValidation(data, self)
-        v.print_errors(io)
         if v.is_valid():
             return True
         else:
@@ -70,6 +69,7 @@ class UdoTemplateValidation:
         self.num_params_ne_num_maps = False
         self.unknown_map_types = set()
         self.unknown_map_tables = set()
+        self.todos = []
 
         self._validate_headers()
 
@@ -78,6 +78,7 @@ class UdoTemplateValidation:
                 or self.no_tpl_file \
                 or self.not_3_args \
                 or self.num_params_ne_num_maps \
+                or len(self.todos) > 0 \
                 or len(self.unknown_map_types) > 0 \
                 or len(self.unknown_map_tables) > 0:
             return False
@@ -86,24 +87,31 @@ class UdoTemplateValidation:
 
     def print_errors(self, io: TextIO = sys.stdout):
         txt = '{}.txt'.format(self.tpl.mod_type)
-        mod_name = self.tpl.mod_type_name
+        errors = []
+        todos = []
         if self.no_tpl_file:
-            print('error: {}: no template file for this module'.format(mod_name), file=io)
+            errors.append('no template file for this module')
         if self.no_args:
-            print("error: {}: no opcode 'args' annotations were found in the template".format(txt),
-                  file=io)
+            errors.append("no opcode 'args' annotations were found in the template")
         if self.not_3_args:
-            print("error: {}: the 'args' annotation should have exactly three arguments".format(txt),
-                  file=io)
+            errors.append("the 'args' annotation should have exactly three arguments")
         if self.num_params_ne_num_maps:
-            print("error: {}: the number of 'map' annotations should be equal "
-                  "to the number of module parameters".format(txt), file=io)
+            errors.append("the number of 'map' annotations should be equal "
+                          "to the number of module parameters")
         if len(self.unknown_map_types) > 0:
-            print('error: {}: unknown mapping types: {}'.format(txt, ', '.join(self.unknown_map_types)),
-                  file=io)
+            errors.append('unknown mapping types: {}'.format(', '.join(self.unknown_map_types)))
         if len(self.unknown_map_tables) > 0:
-            print('error: {}: unknown mapping tables: {}'.format(txt, ', '.join(self.unknown_map_tables)),
-                  file=io)
+            errors.append('unknown mapping tables: {}'.format(', '.join(self.unknown_map_tables)))
+        if len(errors) == 0 and len(todos) == 0:
+            print('{} appears to be OK'.format(txt), file=io)
+        if len(errors) > 0:
+            print('errors:', file=io)
+            for e in errors:
+                print('  - {}'.format(e), file=io)
+        if len(todos) > 0:
+            print('TODOs:', file=io)
+            for t in todos:
+                print('  - {}'.format(t), file=io)
 
     def _validate_headers(self):
         tpl_path = get_template_module_path(self.tpl.mod_type)
@@ -125,6 +133,9 @@ class UdoTemplateValidation:
             for t in m[offset:]:
                 if t not in self.data.value_maps:
                     self.unknown_map_tables.add(t)
+        todos = [l[l.find(';'):].replace(';', '').replace('TODO', '').strip()
+                 for l in self.tpl.lines if 'TODO' in l]
+        self.todos = [t for t in todos if t != '']
 
 
 class Udo:
