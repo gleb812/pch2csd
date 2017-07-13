@@ -14,8 +14,7 @@ opcode EnvD, 0, kkkkkkk
 	kTime init 0
 	
 	aIn zar kIn
-	;kGate zkr kTrig
-	kGate = gkGate
+	kGate zkr kTrig
 	
 	kD /= 1000
 	
