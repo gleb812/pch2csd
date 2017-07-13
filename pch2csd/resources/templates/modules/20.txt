@@ -1,4 +1,4 @@
-﻿;@ map d BUT004
+;@ map d BUT004
 ;@ map d ENVtim
 ;@ map d ENVtim
 ;@ map d OSCunD
@@ -6,158 +6,233 @@
 ;@ map d BUT006
 ;@ map d BUT002
 ;@ map d BUT002
-
+;TODO Completed. Check for optimization (if u can)
 ;@ args kkkkkkkk,kkk,kk
 opcode EnvADSR, 0, kkkkkkkkkkkkk
-kShape,kA,kD,kS,kR,kOutType,kKB,kReset, kin,kGatei,kAMi,kEnvo,kOut xin
-; currently only lin Shape
-
-k1[] fillarray 1,-1, 1,-1, 2,-2
-k2[] fillarray 0, 1,-1, 0,-1, 1
-
-
-kIn zkr kin
-kGate zkr kGatei
-
-if kKB != 1 goto Next2
-	kGate += gkGate
-	kGate limit kGate, -1, 1
-Next2:
-
-
-kAM init 64
-kEnv init 0
-kState init 0
-
-kA /= 1000
-kD /= 1000
-kR /= 1000
-kS /= 64
-
-
-if kAMi == 1 goto Main
-	kAM zkr kAMi
-
-Main:
-kTrig trigger kGate,0.00001 , 1
-if kTrig == 1 then
-	kState = 4
-endif
-
-if kGate <= 0 goto Halt
-	if kState==4 then
-		if kReset==0 goto Next
-			kEnv=0
-	endif
+	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
+	
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+	
+	aIn zar kin
+	kGate zkr kGatei
+	
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 64
+	
+	kA /= 1000
+	kD /= 1000
+	kS /= 64
+	kR /= 1000
+	
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
 Next:
-if kState = 2 goto Decay
-if kState = 3 goto ESust
-kState = 1
-Attack:
-kEnv += 1/(kA*kr)
-kEnv limit kEnv, 0, 1
-if kEnv != 1 goto Over
-kState = 2
+	if kGate == 0 goto Free
+		if kstate = 4 then
+			if kReset == 0 goto NoRes
+				kEnv = 0
+				kTime = 0
+				kEnv0 = 0
+				kTime0 = 0		
+				kgoto OutRes
+NoRes:
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif		
+OutRes:
+		if kstate == 2 goto Decay
+		if kstate == 3 goto ESustain
+	
+		kstate = 1 ;Attack
+		
+		if kShape == 0 then 
+			kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
+		elseif kShape == 2 then
+			kEnv = kEnv0 +(1-kEnv0)*(exp((kTime-kTime0)/(kA*kr - kTime0)*1.791759)-1)/5
+		else
+			kEnv += 1/(kr*kA)
+		endif
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+		
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Decay
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+Decay: 
+		if kShape < 3 then
+			kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
+		else
+			kEnv -= (kEnv0 - kS)/(kr*kD-kTime0)
+		endif		
+		kTime += 1
+	if (kEnv > kS) goto EnvOut
+		kstate = 3 ; Sustain
+ESustain:
+		kEnv = kS
+		kgoto EnvOut
+	
+Free:
+	if kstate == 0 goto EnvOut
+	
+	if kstate == 4 goto Release
+		kstate = 4
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+	
+Release:	
+	if kShape < 3 then
+			kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		else
+			kEnv -= kEnv0/(kr*kR-kTime0)
+	endif		
+		kTime += 1
+	
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
 
-Decay:
-kEnv -= (1-kS)/(kD*kr)
-kEnv limit kEnv, kS, 1
-if kEnv != kS goto Over
-kState = 3
-ESust:
-kEnv = kS
-goto Over
-
-
-Halt:
-if kState == 0 goto Over
-
-kEnv -= kS/(kR*kr)
-kEnv limit kEnv,0,1
-if kEnv > 0 goto Over
-kState = 0
-
-Over:
-kEnv *= kAM/64
-kEnv1 = kEnv*k1[kOutType]+k2[kOutType]
-zkw kEnv1, kEnvo
-zaw kEnv1*kIn, kOut
+	kEnv *= kAM/64
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+		;out a(kEnv1)*0.97 ;TEST
 endop
-
 
 ;@ args kkkkkkkk,akk,ka
 opcode EnvADSR, 0, kkkkkkkkkkkkk
-kShape,kA,kD,kS,kR,kOutType,kKB,kReset, kin,kGatei,kAMi,kEnvo,kOut xin
-; currently only lin Shape
-
-k1[] fillarray 1,-1, 1,-1, 2,-2
-k2[] fillarray 0, 1,-1, 0,-1, 1
-
-
-aIn zar kin
-kGate zkr kGatei
-
-if kKB != 1 goto Next2
-	kGate += gkGate
-	kGate limit kGate, -1, 1
-Next2:
-
-
-kAM init 64
-kEnv init 0
-kState init 0
-
-kA /= 1000
-kD /= 1000
-kR /= 1000
-kS /= 64
-
-
-if kAMi == 1 goto Main
-	kAM zkr kAMi
-
-Main:
-kTrig trigger kGate,0.00001 , 1
-if kTrig == 1 then
-	kState = 4
-endif
-
-if kGate <= 0 goto Halt
-	if kState==4 then
-		if kReset==0 goto Next
-			kEnv=0
-	endif
+	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
+	
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+	
+	aIn zar kin
+	kGate zkr kGatei
+	
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 64
+	
+	kA /= 1000
+	kD /= 1000
+	kS /= 64
+	kR /= 1000
+	
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
 Next:
-if kState = 2 goto Decay
-if kState = 3 goto ESust
-kState = 1
-Attack:
-kEnv += 1/(kA*kr)
-kEnv limit kEnv, 0, 1
-if kEnv != 1 goto Over
-kState = 2
+	if kGate == 0 goto Free
+		if kstate = 4 then
+			if kReset == 0 goto NoRes
+				kEnv = 0
+				kTime = 0
+				kEnv0 = 0
+				kTime0 = 0		
+				kgoto OutRes
+NoRes:
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif		
+OutRes:
+		if kstate == 2 goto Decay
+		if kstate == 3 goto ESustain
+	
+		kstate = 1 ;Attack
+		
+		if kShape == 0 then 
+			kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
+		elseif kShape == 2 then
+			kEnv = kEnv0 +(1-kEnv0)*(exp((kTime-kTime0)/(kA*kr - kTime0)*1.791759)-1)/5
+		else
+			kEnv += 1/(kr*kA)
+		endif
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+		
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Decay
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+Decay: 
+		if kShape < 3 then
+			kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
+		else
+			kEnv -= (kEnv0 - kS)/(kr*kD-kTime0)
+		endif		
+		kTime += 1
+	if (kEnv > kS) goto EnvOut
+		kstate = 3 ; Sustain
+ESustain:
+		kEnv = kS
+		kgoto EnvOut
+	
+Free:
+	if kstate == 0 goto EnvOut
+	
+	if kstate == 4 goto Release
+		kstate = 4
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+	
+Release:	
+	if kShape < 3 then
+			kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		else
+			kEnv -= kEnv0/(kr*kR-kTime0)
+	endif		
+		kTime += 1
+	
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
 
-Decay:
-kEnv -= (1-kS)/(kD*kr)
-kEnv limit kEnv, kS, 1
-if kEnv != kS goto Over
-kState = 3
-ESust:
-kEnv = kS
-goto Over
-
-
-Halt:
-if kState == 0 goto Over
-
-kEnv -= kS/(kR*kr)
-kEnv limit kEnv,0,1
-if kEnv > 0 goto Over
-kState = 0
-
-Over:
-kEnv *= kAM/64
-kEnv1 = kEnv*k1[kOutType]+k2[kOutType]
-zkw kEnv1, kEnvo
-zaw kEnv1*aIn, kOut
+	kEnv *= kAM/64
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+		;out a(kEnv1)*0.97 ;TEST
 endop
