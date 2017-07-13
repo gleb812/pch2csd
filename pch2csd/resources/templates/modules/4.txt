@@ -2,12 +2,13 @@
 ;@ map d BUT007
 ;@ map d BUT007
 
-;@ args iii,aa,
-opcode Out2, 0, iiiii
-  isource, iMute, iPad, iL, iR xin
-  aL zar iL 
-  aR zar iR 
-  outs aL, aR
-  ;outs aL*iPad, aR*iPad 
-  ; iPad = 2 (+6dB) ili iPad = 1
-endop 
+;@ args kkk,aa,
+opcode Out2, 0, kkkkk
+ksource, kMute, kPad, kL, kR xin
+kpad = kPad + 1 
+aL zar kL
+aR zar kR
+outs aL*kMute*kpad,aR*kMute*kpad
+endop
+
+;TODO Source selection. Check FX and BUS numeration in ZAK 
