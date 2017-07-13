@@ -51,3 +51,53 @@ kGateT trigger kGate, 0.000001, 0
 	zaw kEnv1*aIn, kout
 	out a(kEnv1)
 endop
+
+;@ args kk,kka,ka
+opcode EnvD, 0, kkkkkkk
+	kD,kType,  kGate,kAMi,kIn,kEnvO,kout xin
+	
+	k1[] fillarray 1,-1, 1,-1
+	k2[] fillarray 0, 1,-1, 0
+	kstate init 0
+	kEnv init 0
+	kAM init 64
+	kTime init 0
+	
+	aIn zar kIn
+	;kGate zkr kTrig
+	kGate = gkGate
+	
+	kD /= 1000
+	
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:	
+	kTime limit kTime,0,kD*kr
+	if kTime != kD*kr goto skip 	
+		kTime = 0
+		kstate = 0
+		kEnv = 0
+skip:
+kGateT trigger kGate, 0.000001, 0
+	if kGateT == 1 then 
+		if kstate == 1 then
+			kTime += 1
+			kEnv = exp(-8*kTime/(kD*kr))
+		else
+			kstate = 1
+			kEnv = 1
+			kTime = 0
+		endif
+	else
+		if kstate == 1 then
+			kTime += 1
+			kEnv = exp(-8*kTime/(kD*kr))
+		endif
+	endif
+	
+	kEnv *= kAM/64
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+	out a(kEnv1)
+endop
