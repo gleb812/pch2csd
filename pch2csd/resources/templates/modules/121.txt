@@ -1,0 +1,139 @@
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
+
+;@ args kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk,kkkkkkkk,kkk
+opcode seqNote,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+;16 steps
+;16 events
+;cycles
+;length
+;pulse
+;clear
+;rand
+
+;inputs:
+; clk
+; rst
+; loop
+; park
+; note
+; trig
+; recval
+; recenable
+;
+;outputs:
+; link
+; note
+; trig
+
+kNote[] fillarray 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64, 70
+kGate[] fillarray 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kG10,kG11,kG12,kG13,kG14,kG15,kG16,
+kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kN10,kN11,kN12,kN13,kN14,kN15,kN16,kCyc,kLen,kPulse,kClr,krnd,
+kclki,krsti,kloopi,kparki,knotei,ktrigi,krecvali,kreci, klinko,knoteo,ktrigo xin
+; TODO Randomize and clear - 
+; TODO No Rec now
+; TODO Link & Park
+kNote[0] = kN1
+kNote[1] = kN2
+kNote[2] = kN3
+kNote[3] = kN4
+kNote[4] = kN5
+kNote[5] = kN6
+kNote[6] = kN7
+kNote[7] = kN8
+kNote[8] = kN9
+kNote[9] = kN10
+kNote[10] = kN11
+kNote[11] = kN12
+kNote[12] = kN13
+kNote[13] = kN14
+kNote[14] = kN15
+kNote[15] = kN16
+
+kGate[0] = kG1
+kGate[1] = kG2
+kGate[2] = kG3
+kGate[3] = kG4
+kGate[4] = kG5
+kGate[5] = kG6
+kGate[6] = kG7
+kGate[7] = kG8
+kGate[8] = kG9
+kGate[9] = kG10
+kGate[10] = kG11
+kGate[11] = kG12
+kGate[12] = kG13
+kGate[13] = kG14
+kGate[14] = kG15
+kGate[15] = kG16
+
+kClk zkr kclki
+kRst zkr krsti
+
+kndx init 0
+kndx_prev init -1
+
+kRst trigger krsti, 0.001, 0
+if kRst != 1 goto Norm
+	kndx = 0
+	kndx_prev = -1
+Norm:
+if kClk != 1 goto skip
+	if (kCyc == 1)&&(kndx >= kLen-1) then
+		kndx = 16
+	else
+		kndx += 1
+		kndx = kndx%kLen
+	endif
+skip:
+kNoteo = kNote[kndx]
+kTrigo = kGate[kndx]
+
+if kPulse == 0 goto Gate
+if (kndx_prev != kndx) && (ktrigo != 0) then
+	kTrigo = 1
+	kndx_prev = kndx
+else 
+	kTrigo = 0
+endif
+Gate:
+zkw kNoteo, knoteo
+zkw kTrigo, ktrigo
+
+endop
