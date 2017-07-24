@@ -131,7 +131,7 @@ def main():
         prog='pch2csd',
         description='convert Clavia Nord Modular G2 patches to the Csound code',
         epilog='Version {}, homepage: {}'.format(__version__, __homepage__))
-    arg_parser.add_argument('arg', metavar='arg', nargs=1,
+    arg_parser.add_argument('arg', metavar='arg', nargs='?', default='patch.pch2',
                             help='a pch2 file path or an UDO numerical ID')
     group = arg_parser.add_mutually_exclusive_group()
     group.add_argument('-p', '--print', action='store_const', const=True,
@@ -140,6 +140,8 @@ def main():
                        help="validate the UDO template file (overrides '-p')")
     group.add_argument('-v', '--version', action='version',
                        version='%(prog)s ' + __version__)
+    group.add_argument('-e', action='store_const', const=True,
+                       help='show the elephant and exit')
     args = arg_parser.parse_args()
     if args.check_udo:
         try:
@@ -149,11 +151,46 @@ def main():
             print("you should pass the integer as the 'arg' parameter when using '--check-udo'")
     elif args.print:
         print_pch2(args.arg[0])
+    elif args.e:
+        show_elephant()
     else:
         if args.arg[0] == 'gen_udo_status_doc':
             gen_udo_status_doc()
         else:
             convert_pch2(args.arg[0])
+
+
+def show_elephant():
+    print('///////////////////osyyo///////////////////////////////////////////////////////')
+    print('//////////////+oshmNMMMmNmhyso+//////////////////+++++////////////////////+o///')
+    print('///////////+oshydNMMMMMMMMMMMNh++++++++++ossssyysssyshhys+//////////////+hNmhys')
+    print('/////////+oydmmNNNNNNNNNNNMMNNdhyyyyyyyhhddy+++::/ooossyyhs+///////////omMMMNNN')
+    print('///////+oyyhhhdhhhhhhdmdmmddhyshhyysys++ossys+--+syyyyyysoo++/////////+hmmmmmdy')
+    print('///+++++++++ooooooosossssoo+++syyyssyyss+-..`.ydmmddyo+/+++/++++++++++shhhhhyys')
+    print('+++                        oooyhyyhyyyhhdso+/:sddyo+//++/////++++++++++ooosssss')
+    print('+++ Clavia Nord Modular G2 sshhhyyyyyys+-+hho/ys+///++/////:+++++++++++++++++++')
+    print('+++     Patch Converter    ooossosyyy+:``.--`.//+/+/://+/o+++++++++++++++++++++')
+    print('+++                        oo+oysysso/:-.``````.-:/+/-/+syso+++++++++++++++++++')
+    print('++oooooooooooooooooooooooooooosssysoosys+-``` ``-:////://oosooooooooo++++++++++')
+    print('ooooooooooooosssssooosssssssssshyyso+shdh.`    `-/:-:-:--/++ooooooooooooooooyso')
+    print('ssssssssyyyyyyyyyyyyyyyyyssssooooso+++yhh-     .:/--````-::-/oooooooooooosyhhdd')
+    print('ossosssssssssssssssssssssssss/++++/--/+hs`   `.`-...````-..`oooooooosssyssssyyy')
+    print('ooooooosssssssssssssssyysssss/////-`  sNm     `   .`   ``` /oooosoosyhdhysooyhd')
+    print('oooooosssssssssssssshdyysssym/:::-`/.:mmo         `       :sssssyyyyyysoosyyyyy')
+    print('osssssssssssssssyyhdy+++shmNs-.```.Ny``                   +ssssyyyhhyyyyyssssoo')
+    print('sssshddhysyssyyyhdds/oyhsdysh-.   omm-       -.          :.+yssssyyyyysyhyyysyh')
+    print('yhhhdhhhhhyyyyyhhhh/.:ysydmNh.   .hmmy      `:-`  ``    `yo-ohyyyyyyyyyyyysssss')
+    print('syyyyyyyyyyhddhddmmy.`.:/++o/`  `yhhdh.     ..` ````    ohhyyyyyyyyyyyyyyyyyyss')
+    print('hysyyyyhhhyhhhhhyyhhy/`  `-:. `/yyhhhyo    `.` ``      +yyyyyyyyyyyyysyssssssss')
+    print('hyyhhyyhhdhhhhyyyyyyyyyo+///+syyyyyyyhy-   ..``:yo`   :hhyyyyysyyyssyysssssssss')
+    print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyo  .-.``syy-   syyyyyyssssssssssssssssss')
+    print('ssssyyyyyyyyyyyyyyyysssssosssoooooooooos-`--.`-sss.  `ssssooooooooooooooooooooo')
+    print('sssyyysssssssssssssooooooooossssssssssss+-:-.`oysy   -yyyyyyyyyyyyyyyyyysyysyyy')
+    print('yyyyyyyyyyyyyhhhhyhhhhhdhhdddddddhdddddd/.:-``yddy   :ddddhhdddddddddhhhhhhdhhh')
+    print('hhddddddddddddddddddddddmmmmmmmdddmmdddh/.:.../hd+   .ddddddddddddhhhyhhhhhhhhh')
+    print('hhhhhhhhhhhhdddhdddddddddhhhhhhhhdhhhhhh-.o+/--hy.    -osyhhhddddhhhhyyyyyyyyys')
+    print('dddhhhhhhhhhhhhdddhdhhhhhhhhhhyyyssyo//:`-hyys:` ```.-::/+osyyysyyyyyyyyyhyyhys')
+    print('hhhyyhhhhhdhddhhhhyyysosoysosooo//:----.`+yysssssossooyyysyhhhhyhhyyyyyyhhyyyyy')
 
 
 if __name__ == '__main__':
