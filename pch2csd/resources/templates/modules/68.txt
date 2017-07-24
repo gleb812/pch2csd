@@ -3,7 +3,7 @@
 ;@ map d MID000
 ;@ map d MID000
 ;@ map d CLA000
-;TODO Completed. Needs checking & optimization 
+;TODO Something wrong with SWING
 ;@ args kkkkk,k,kkkk
 opcode ClkGen,0, kkkkkkkkkk
 kBPM,kOn,kSource,kSync,kSwing, kRsti,k96o,k16o,kClkAo,kSynco xin
@@ -53,7 +53,8 @@ skip:
 ;outs a(kSy)*kOn*0.9,a(k16)*kOn*0.9
 	zkw kOn, kClkAo
 	zkw kClk * kOn, k96o
-	zkw k16, k16o
+	zkw k16 * kOn, k16o
+	zkw kSy * kOn, kSynco
 k16 = 0 ; kill if need 1 on the whole period 'twin ticks
 kSy = 0
 endop
