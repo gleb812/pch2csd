@@ -37,7 +37,7 @@ Command line options:
 
 ```
 $ pch2csd -h
-usage: pch2csd [-h] [-p] [-c] [--version] arg
+usage: pch2csd [-h] [-p | -c | -v | -e] [arg]
 
 convert Clavia Nord Modular G2 patches to the Csound code
 
@@ -48,7 +48,8 @@ optional arguments:
   -h, --help       show this help message and exit
   -p, --print      parse the patch file and print its content
   -c, --check-udo  validate the UDO template file (overrides '-p')
-  --version        show program's version number and exit
+  -v, --version    show program's version number and exit
+  -e               show the elephant and exit
 ```
 
 To generate a new Csound file just pass the `.pch2` file path as the argument.
