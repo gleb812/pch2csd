@@ -8,15 +8,13 @@
 opcode ClkGen,0, kkkkkkkkkk
 kBPM,kOn,kSource,kSync,kSwing, kRsti,k96o,k16o,kClkAo,kSynco xin
 
-kRst zkr kRsti
-kSync = 2^kSync
-if kSource == 0 goto InterS;internal
+krst zkr kRsti
+if kSource == 0 goto InterS ;internal
 	kBPM = gkBPM
 InterS:
+kClkFr = kBPM * 4 * 6 / 60
 
-kClkFr = kBPM * 96 / 60
-
-kRst trigger kRst,0.00001,0
+kRst trigger krst,0.00001,0 
 kOnT trigger kOn,0.5,0
 kST trigger kSource,0.5,0
 
@@ -29,14 +27,14 @@ kClk metro kClkFr,0
 kCount1 init 0
 if kClk != 1 goto nextOut
 	kCount1 += 1
-if kCount1 != 15 goto next2
+if kCount1 != 6 goto next2   ; 1/16 = 6 * 1/96
 	kCount1 = 0
 next2:
 k16 trigger kCount1, 0.5, 0
 
 kCount2 init 0
 kCount2 += 1
-if kCount2 != (15 * kSync) goto next3
+if kCount2 != (6 * 4 * kSync) goto next3
 	kCount2 = 0
 next3:
 kSy trigger kCount2, 0.5, 0
@@ -46,19 +44,16 @@ kSwap init 1
 if kSwap == 1 goto next
 
 
-k16 vdel_k k16, 60/kBPM/16*kSwing*2*0.75, 0.76*60/24/16, 0
+k16 vdel_k k16, 60/kBPM/16*(kSwing-0.5)*2, 0.76*60/24/16, 0
 next:
 if k16 == 1 then
 	kSwap *= -1
 endif
 skip:
-
-;outs a(k16)*kOn*0.9,a(k16)*kOn*0.9
+;outs a(kSy)*kOn*0.9,a(k16)*kOn*0.9
 	zkw kOn, kClkAo
 	zkw kClk * kOn, k96o
-	zkw k16 * kOn, k16o
-	zkw kSy * kOn, kSynco
-	
-k16 = 0
+	zkw k16, k16o
+k16 = 0 ; kill if need 1 on the whole period 'twin ticks
 kSy = 0
 endop
