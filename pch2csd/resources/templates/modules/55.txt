@@ -52,7 +52,7 @@ endop
 
 ;@ args kk,kka,ka
 opcode EnvD, 0, kkkkkkk
-	kD,kType,  kGate,kAMi,kIn,kEnvO,kout xin
+	kD,kType,  kTrig,kAMi,kIn,kEnvO,kout xin
 	
 	k1[] fillarray 1,-1, 1,-1
 	k2[] fillarray 0, 1,-1, 0
