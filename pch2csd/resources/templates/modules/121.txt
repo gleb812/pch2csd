@@ -63,8 +63,9 @@ opcode seqNote,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 
 kNote[] fillarray 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64, 70
 kGate[] fillarray 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kN10,kN11,kN12,kN13,kN14,kN15,kN16,
 kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kG10,kG11,kG12,kG13,kG14,kG15,kG16,
-kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kN10,kN11,kN12,kN13,kN14,kN15,kN16,kCyc,kLen,kPulse,kClr,krnd,
+kCyc,kLen,kPulse,kClr,krnd,
 kclki,krsti,kloopi,kparki,knotei,ktrigi,krecvali,kreci, klinko,knoteo,ktrigo xin
 ; TODO Randomize and clear - 
 ; TODO No Rec now
