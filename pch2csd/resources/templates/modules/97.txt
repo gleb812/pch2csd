@@ -27,6 +27,7 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
+kPitch -= 64
 kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
 	kFreq = cpsmidinn(kM_+kCoarse)
