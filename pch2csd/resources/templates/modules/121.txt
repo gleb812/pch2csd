@@ -115,7 +115,7 @@ if kRst != 1 goto Norm
 	kndx_prev = -1
 Norm:
 if kClk != 1 goto skip
-	if (kCyc == 1)&&(kndx >= kLen-1) then
+	if (kCyc == 0)&&(kndx >= kLen-1) then
 		kndx = 16
 	else
 		kndx += 1
