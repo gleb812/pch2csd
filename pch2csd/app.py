@@ -145,19 +145,19 @@ def main():
     args = arg_parser.parse_args()
     if args.check_udo:
         try:
-            type_id = int(args.arg[0])
+            type_id = int(args.arg)
             validate_udo(type_id)
         except ValueError:
             print("you should pass the integer as the 'arg' parameter when using '--check-udo'")
     elif args.print:
-        print_pch2(args.arg[0])
+        print_pch2(args.arg)
     elif args.e:
         show_elephant()
     else:
         if args.arg[0] == 'gen_udo_status_doc':
             gen_udo_status_doc()
         else:
-            convert_pch2(args.arg[0])
+            convert_pch2(args.arg)
 
 
 def show_elephant():
