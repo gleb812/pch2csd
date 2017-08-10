@@ -2,7 +2,7 @@
 ;@ map d MID000
 ;@ map d MID000
 ;@ map d MID000
-;@ map d CLA000
+;@ map d CLKswi
 ;TODO Something wrong with SWING
 ;@ args kkkkk,k,kkkk
 opcode ClkGen,0, kkkkkkkkkk
