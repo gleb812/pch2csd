@@ -44,7 +44,7 @@ kSwap init 1
 if kSwap == 1 goto next
 
 
-k16 vdel_k k16, 60/kBPM/16*(kSwing-0.5)*2, 0.76*60/24/16, 0
+k16 vdel_k k16, 60/kBPM/16*(kSwing*0.01-0.5)*2, 0.76*60/24/16, 0
 next:
 if k16 == 1 then
 	kSwap *= -1
