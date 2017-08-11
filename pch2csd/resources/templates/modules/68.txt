@@ -34,7 +34,7 @@ k8 trigger kCount1, 0.5, 0
 
 kCount2 init 0
 kCount2 += 1
-if kCount2 != (6 * 4 * kSync) goto next3
+if kCount2 != (12 * 4 * kSync) goto next3
 	kCount2 = 0
 next3:
 kSy trigger kCount2, 0.5, 0
