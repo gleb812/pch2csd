@@ -30,8 +30,8 @@ skip:
 kGateT trigger kGate, 0.000001, 0
 	if kGateT == 1 then 
 		if kstate == 1 then
-			kTime += 1
-			kEnv = exp(-4.2*kTime/(kD*kr))
+			kTime = 0
+			kEnv = 1
 		else
 			kstate = 1
 			kEnv = 1
@@ -78,8 +78,8 @@ skip:
 kGateT trigger kGate, 0.000001, 0
 	if kGateT == 1 then 
 		if kstate == 1 then
-			kTime += 1
-			kEnv = exp(-4.2*kTime/(kD*kr))
+			kTime = 0
+			kEnv = 1
 		else
 			kstate = 1
 			kEnv = 1
