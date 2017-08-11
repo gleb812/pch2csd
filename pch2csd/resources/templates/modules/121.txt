@@ -116,20 +116,19 @@ if kRst != 1 goto Norm
 	kndx_prev = -1
 Norm:
 if kClk != 1 goto skip
-	if (kCyc == 0)&&(kndx >= kLen-1) then
+	if (kCyc == 0)&&(kndx > kLen) then
 		kndx = 16
 	else
 		kndx += 1
-		kndx = kndx%kLen
+		kndx = kndx%(kLen+1)
 	endif
 skip:
 kNoteo = kNote[kndx]
 kTrigo = kGate[kndx]
 
-if kPulse == 0 goto Gate
-if (kndx_prev != kndx) && (ktrigo != 0) then
+if kPulse == 1 goto Gate
+if (kClk != 0) && (kTrigo == 1) then
 	kTrigo = 1
-	kndx_prev = kndx
 else 
 	kTrigo = 0
 endif
