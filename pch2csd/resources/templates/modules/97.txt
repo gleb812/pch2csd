@@ -17,21 +17,20 @@ kCoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
 kMod zkr kModIn
 
 if kKBT != 1 goto NoKBT
-	kNote = gkNote
-	goto KBT
+kNote = gkNote
+goto KBT
 NoKBT:
-	kNote = 64
+kNote = 64
 KBT:
 
 kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-kPitch -= 64
 kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-	kFreq = cpsmidinn(kM_+kCoarse)
-	goto Out
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
 Part:
 kFreq = cpsmidinn(kM_)*kCoarse
 Out:
