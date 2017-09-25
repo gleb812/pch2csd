@@ -1,7 +1,3 @@
-;@ map s 2 LVLamp LVLdb0
-;@ map d BUT002
-
-;@ args ii,k,k
 opcode LevAmp, 0, k   ; MULTIMODE support a/k?
 ; Need to check..
   kVal xin
