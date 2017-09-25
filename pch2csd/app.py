@@ -98,7 +98,8 @@ def convert_pch2(fn: str):
     zak = ZakSpace()
     try:
         udos = zak.connect_patch(p)
-    except ValueError:
+    except ValueError as e:
+        print('error: {}'.format(e))
         exit(-1)
     csd = Csd(p, zak, udos)
     dirname = os.path.dirname(path)

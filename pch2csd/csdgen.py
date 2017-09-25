@@ -141,7 +141,10 @@ class Udo:
         self.mod = mod
         self.tpl = UdoTemplate(mod)
         if not self.tpl.validate(patch.data):
-            raise ValueError("Can't create the UDO: template validation error")
+            raise ValueError(
+                "can't validate UDO {0} of type {1}."
+                "Please run 'pch2csd -c {1}' to check the implementation.".format(
+                    self.mod.type_name, self.mod.type))
         self.udo_variant = self._choose_udo_variant()
         _, self.in_types, self.out_types = self.header
         self.inlets, self.outlets = self._init_zak_connections()
