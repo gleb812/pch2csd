@@ -154,7 +154,7 @@ def main():
     elif args.e:
         show_elephant()
     else:
-        if args.arg[0] == 'gen_udo_status_doc':
+        if args.arg == 'gen_udo_status_doc':
             gen_udo_status_doc()
         else:
             convert_pch2(args.arg)
