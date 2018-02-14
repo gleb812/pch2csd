@@ -12,24 +12,24 @@ class TestPolymorphism(TestCase):
         self.data = ProjectData()
         self.poly_mix2 = parse_pch2(self.data, get_test_resource('test_poly_mix2.pch2'))
         self.udo_mix2_k = """;@ args iiiii, kkk, k
-opcode Mix21A_v0, 0, iiiiiiiii   ; MULTIMODE support a/k?
+opcode Mix21A_v0, 0, iiiiiiiii
 ; TODO: lin/log scale, chain input
 iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
 k1 zkr izIn1
 k2 zkr izIn2
 k3 zkr izInChain
-aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
-zkw aout, izOut
+kout = k1 + k2*iLev1*iSW1 + k3*iLev2*iSW2
+zkw kout, izOut
 endop
 """
         self.udo_mix2_a = """;@ args iiiii, aaa, a
-opcode Mix21A_v1, 0, iiiiiiiii   ; MULTIMODE support a/k?
+opcode Mix21A_v1, 0, iiiiiiiii
 ; TODO: lin/log scale, chain input
 iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
-k1 zar izIn1
-k2 zar izIn2
-k3 zar izInChain
-aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
+a1 zar izIn1
+a2 zar izIn2
+a3 zar izInChain
+aout = a1 + a2*iLev1*iSW1 + a3*iLev2*iSW2
 zaw aout, izOut
 endop
 """
