@@ -34,5 +34,10 @@ setup(
         'console_scripts': [
             'pch2csd = pch2csd.app:main'
         ]
+    },
+    options={
+        'build_scripts': {
+            'executable': '/usr/bin/env python3'
+        }
     }
 )
