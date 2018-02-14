@@ -11,7 +11,7 @@ opcode Mix21A, 0, iiiiiiiii
   k1 zkr izIn1
   k2 zkr izIn2
   k3 zkr izInChain
-  kout = k1 + k2*kLev1*iSW1 + k3*kLev2*iSW2
+  kout = k1 + k2*iLev1*iSW1 + k3*iLev2*iSW2
   zkw kout, izOut
 endop
 
@@ -22,6 +22,6 @@ opcode Mix21A, 0, iiiiiiiii
   a1 zar izIn1
   a2 zar izIn2
   a3 zar izInChain
-  aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
+  aout = a1 + a2*iLev1*iSW1 + a3*iLev2*iSW2
   zaw aout, izOut
 endop
