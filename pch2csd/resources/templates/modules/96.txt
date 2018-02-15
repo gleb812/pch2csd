@@ -1,19 +1,37 @@
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
+;@ map s 7 OSCsem OSCsem OSCsem OSCprt
+;@ map d OSCcnt
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT006
+;@ map d BUT002
+;@ map d BUT006
 
-;@ args iiiii,k,a
-opcode OscD, 0, KKiiiii
+;@ args kkkkkk,k,a
+opcode OscD, 0, kkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kWave,kON,kTuneMode,kPitchIn,kOut xin
 
-  kPitch, kFine, iKBT, iSel, iMute, iPitchMod, iOut xin
-  
-  ;kPitchM zkr iPitchMod 
-  ; Proverit' amplitudu
-  kfine = cent(kFine)
-  
-  aout oscil 0.5, cpsmidinn(kPitch)*kfine 
-  zaw aout, iOut 
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+kM_ = kPitch+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+aout oscilikt 0.5, kFreq, kWave+1
+zaw aout*kON, kOut
 endop
