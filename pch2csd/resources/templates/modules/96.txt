@@ -1,7 +1,6 @@
 ;@ map s 7 OSCsem OSCsem OSCsem OSCprt
 ;@ map d OSCcnt
 ;@ map d BUT002
-;@ map d CLA000
 ;@ map d BUT006
 ;@ map d BUT002
 ;@ map d BUT006
