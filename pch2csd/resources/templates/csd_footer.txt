@@ -9,10 +9,20 @@ instr 3
   gkGate = 0
   Over:
 endin
+
+; FOR OFFLINE RENDERING
+instr 4
+  xtratim 0.1
+  gkGate linsegr 1, p3, 1, 0, 0
+  gkNote = p4 ; in 7b MIDI format
+endin
 </CsInstruments>
 <CsScore>
 i1 0 [60*60*24*7]
 i2 0 [60*60*24*7]
 i3 0 [60*60*24*7]
+; use i4 to emultate MIDI commands if needed
+; p4 is pitch
+;i4 0 1 64 
 </CsScore>
 </CsoundSynthesizer>
