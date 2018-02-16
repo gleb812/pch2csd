@@ -340,6 +340,7 @@ class Csd:
         s.write('massign 1,0\n')
         s.write('massign 2,0\n')
         s.write('massign 3,0\n')
+        s.write('massign 4,0\n')
         return s.getvalue()
 
     def _gen_instr(self, loc: Location) -> str:
