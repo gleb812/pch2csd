@@ -3,6 +3,7 @@
 ;@ map d FLTeqq
 ;@ map d BUT002
 ;@ map d BUT003
+;@ map d BUT003
 
 ;@ args kkkkkk,a,a
 opcode Eq2Band, 0, kkkkkkkk
