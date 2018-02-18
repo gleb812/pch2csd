@@ -1,9 +1,30 @@
-;@ args iiiiii,a,a
-opcode Eq2Band, 0, KKKKK
-; rbjeq ???
-  kFreqL, kFreqH, kGainL, kGainH, kLev xin 
-  ain zar 2 ; CHANGE 
-  ai1 pareq ain, kFreqL, kGainL, sqrt(.5), 2
-  aout pareq ai1, kFreqH, kGainH, sqrt(.5), 1
-  zaw aout*kLev, 2  ; CHANGE 
+;@ map d FLTgai
+;@ map d FLTgai
+;@ map d FLTeqq
+;@ map d BUT002
+;@ map d BUT003
+
+;@ args kkkkkk,a,a
+opcode Eq2Band, 0, kkkkkkkk
+  kLsel[] fillarray 60,110,160
+  kHsel[] fillarray 6000,3000,4000
+
+  kGainL, kGainH, kLev, kOn, kFreqL, kFreqH, kIn, kOut xin
+  ain zar kIn
+
+  kGLU = 10^(kGainL/20)
+  kGHU = 10^(kGainH/20)
+
+  if kGainL >= 0 goto LowP
+    aLow  rbjeq ain, kLsel[kFreqL], kGLU/2, 2, 0.5, 10
+  LowP:
+  aLow  rbjeq ain, kLsel[kFreqL], kGLU, 2, 0.5, 10
+
+  if kGainH >= 0 goto HighP
+    aHigh rbjeq aLow,kHsel[kFreqH], kGHU/2, 2, 0.5, 12
+  HighP:
+  aHigh rbjeq aLow,kHsel[kFreqH], kGHU, 2, 0.5, 12
+
+  zaw aHigh*kLev*kOn, kOut
 endop
+; TODO check if OK
