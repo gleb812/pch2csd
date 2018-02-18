@@ -21,7 +21,7 @@ opcode EqPeak, 0, kkkkkkk
  Norm:
  aout pareq ain, kFreq, kGU, kq
  Out:
- zaw aout*kLev, kOut
+ zaw aout*kLev*kON, kOut
 endop
 
 ; TODO check if works
