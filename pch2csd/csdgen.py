@@ -24,7 +24,7 @@ class UdoTemplate:
                 self.lines = [l.strip() for l in f]
         except IOError:
             self.lines = []
-        self.args_lines, self.args, self.maps = self._parse_headers()
+        self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
 
     def __repr__(self):
         return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
@@ -34,6 +34,7 @@ class UdoTemplate:
 
     def _parse_headers(self):
         args_lines = []
+        maps_lines = []
         args = []  # List[List[str]]
         maps = []  # List[List[str]]
 
@@ -46,9 +47,10 @@ class UdoTemplate:
                 a = [x if x != '0' else '' for x in a]
                 args.append(a)
             elif l.startswith(';@ map'):
+                maps_lines.append(i)
                 m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
                 maps.append(m)
-        return args_lines, args, maps
+        return args_lines, maps_lines, args, maps
 
     def validate(self, data: ProjectData):
         v = UdoTemplateValidation(data, self)
@@ -164,7 +166,7 @@ class Udo:
 
     def get_src(self) -> str:
         if len(self.tpl.args) < 2:
-            return '\n'.join(self.tpl.lines[self.tpl.args_lines[0] + 1:])
+            return '\n'.join(self.tpl.lines[self.tpl.args_lines[0]:])
         offset = self.tpl.args_lines[self.udo_variant]
         udo_src = []
         for l in self.tpl.lines[offset:]:
@@ -172,7 +174,7 @@ class Udo:
             if l.strip().startswith('endop'):
                 break
         udo_src[1] = udo_src[1].replace(self.mod.type_name, self.get_name())
-        return '\n'.join(udo_src)
+        return '\n'.join(udo_src).strip()
 
     def _choose_udo_variant(self) -> int:
         v = 0
@@ -226,7 +228,13 @@ class Udo:
             table = self.patch.data.value_maps[m[1]]
         elif m[0] == 's':
             dependent_val = all_vals[int(m[1]) - 1]
-            table = self.patch.data.value_maps[m[dependent_val + 2]]
+            try:
+                table_name = m[dependent_val + 2]
+            except IndexError:
+                raise ValueError("{}.txt line {}: couldn't retrieve map {}".format(self.tpl.mod_type,
+                                                                                   self.tpl.maps_lines[i] + 1,
+                                                                                   dependent_val))
+            table = self.patch.data.value_maps[table_name]
         else:
             raise ValueError('Mapping type {} is not supported'.format(m[0]))
         return table[v]

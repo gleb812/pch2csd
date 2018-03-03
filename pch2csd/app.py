@@ -134,6 +134,8 @@ def main():
         epilog='Version {}, homepage: {}'.format(__version__, __homepage__))
     arg_parser.add_argument('arg', metavar='arg', nargs='?', default='patch.pch2',
                             help='a pch2 file path or an UDO numerical ID')
+    arg_parser.add_argument('-d', '--debug', action='store_const', const=True,
+                            help='print a stack trace in case of error')
     group = arg_parser.add_mutually_exclusive_group()
     group.add_argument('-p', '--print', action='store_const', const=True,
                        help='parse the patch file and print its content')
@@ -158,7 +160,16 @@ def main():
         if args.arg == 'gen_udo_status_doc':
             gen_udo_status_doc()
         else:
-            convert_pch2(args.arg)
+            try:
+                convert_pch2(args.arg)
+            except Exception as e:
+                print(e)
+                if args.debug:
+                    import traceback
+                    _, _, tb = sys.exc_info()
+                    print()
+                    print('-----------')
+                    traceback.print_tb(tb, file=sys.stdout)
 
 
 def show_elephant():
