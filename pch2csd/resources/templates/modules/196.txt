@@ -1,14 +1,78 @@
-;@ args iiiiiiiii,kka,a
-opcode OscPerc, 0, iKK
- ; Net punch i Click
-  kDcy, kFreq, kFine xin
-  
-  kPitch zkr 2 ; CHANGE 
-  kMod zkr 1 ; CHANGE  
-  ; Proverit' amplitudu
-  kfine = cent(kFine)
-  
-  kEnv expseg 0.00001, 0.001, 1, kDcy, 0.00001
-  aout oscili kEnv, kFreq*kfine+kPitch+kMod*kModLev  
-  zaw aout, 2  ; CHANGE 
+;@ map s 3 OSCsem OSCsem OSCsem OSCprt
+;@ map d OSCcnt
+;@ map d BUT006
+;@ map d BUT002
+;@ map d CLA000
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+;@ map d BUT002
+
+;@ args kkkkkkkkk,kka,a
+; TODO CODE is NOT ready yet. Just testing
+opcode OscPerc, 0, kkkkkkkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+; OSCPERC = OSCA + ENVD
+kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kOn,kPitchIn,kModIn,kTrig,kOut xin
+
+	kstate init 0
+	kEnv init 0
+	kEnvP init 1
+	kTime init 0
+	kD /= 1000
+	kGate zkr kTrig
+kMod zkr kModIn
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+
+	kTime limit kTime,0,kD*kr
+	if kTime != kD*kr goto skip
+		kTime = 0
+		kstate = 0
+		kEnv = 0
+		kEnvP = kPunch+1
+skip:
+	kGateT trigger kGate, 0.000001, 0
+	if kGateT == 1 then
+		if kstate == 1 then
+			kTime = 0
+			kEnv = 1
+			kEnvP = kPunch+1
+		else
+			kstate = 1
+			kEnv = 1
+			kTime = 0
+			kEnvP = kPunch+1
+		endif
+	else
+		if kstate == 1 then
+			kTime += 1
+			kEnv = exp(-4.2*kTime/(kD*kr))
+			kEnvP = 2 - 2*kFreq*kTime/kr
+		endif
+	endif
+
+aout oscilikt 0.5, kFreq*kEnvP
+	zaw aout*kON*kEnv, kOut
+
 endop
