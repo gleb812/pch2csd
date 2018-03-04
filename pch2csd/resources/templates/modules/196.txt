@@ -79,7 +79,7 @@ skip:
 		endif
 	endif
 ; we use oscilikts 'cos we need phase sync
-aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, 0
+aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, kClick
 	zaw aout*kON*kEnv, kOut
 
 endop
@@ -156,7 +156,7 @@ skip:
 		endif
 	endif
 ; we use oscilikts 'cos we need a phase sync
-aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, 0
+aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, kClick
 	zaw aout*kON*kEnv, kOut
 
 endop
