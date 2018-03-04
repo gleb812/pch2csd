@@ -1,4 +1,4 @@
-;@ map d RNDlow
+;@ map s 4 RNDsub RNDlow RNDhir RNDbpm
 ;@ map d BUT006
 ;@ map d BUT006
 ;@ map d BUT006
@@ -13,15 +13,17 @@ opcode LfoC, 0, kkkkkkk
 ; Modulation not implemented
 ; kMod - blue - -64..+64
 ; kTuneMode only default works
+; kWave (a MODE, not a PARAMETER) is not detected by the parser!
 
-k1[] fillarray 1,1,0.5,0.5,0.5,0.5
-k2[] fillarray 0,0,0.5,0.5,-0.5,-0.5
-k3[] fillarray 1,-1,1,-1,1,-1
+;                0    1     2     3  4   5  
+k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
+k2[] fillarray 0.5, -0.5, -0.5, 0.5, 0,  0
+k3[] fillarray 1,   -1,     1,   -1, 1, -1
  
 	kRate,kMode,kOutType,kRange,kON, kRateIn,kOut xin
 	
 	kout oscilikt 1, kRate, 1 ; problems with kwave
-	kout = (kout*k1[kRange]+k2[kRange])*k3[kRange]
+	kout = (kout*k1[kOutType]+k2[kOutType])*k3[kOutType]
 
 	zkw kout*kON*64, kOut 
 endop

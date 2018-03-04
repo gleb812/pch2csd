@@ -1,0 +1,44 @@
+;@ map s 8 RNDsub RNDlow RNDhir RNDbpm
+;@ map d BUT006
+;@ map d BUT006
+;@ map d CLA000
+;@ map d BUT006
+;@ map d BUT002
+;@ map d BUT006
+;@ map d BUT004
+
+
+;@ args kkkkkkkk,k,k
+opcode LfoA, 0, kkkkkkkkkk
+; only 4 first waves implemented - sin,tri,saw,quad
+; Modulation not implemented
+; kMod - blue - -64..+64
+
+;                0    1     2     3  4   5  
+k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
+k2[] fillarray 0.5, -0.5, -0.5, 0.5, 0,  0
+k3[] fillarray 1,   -1,     1,   -1, 1, -1
+;                kRateMode?
+kRate,kMode,kKBT,kModLev,kWave,kON,kOutType,kRange, kRateIn,kOut xin
+
+kRate_ zkr kRateIn
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 0	; freq in Hz
+KBT:	
+
+kPitch init 0
+if kRateIn == 0 goto Run
+kPitch zkr kRateIn
+Run:
+kM_ = kPitch + kModLev*kRate_ + kNote
+printk2 kM_
+
+kout oscilikt 1, kM_ + kRate, kWave+1 ; problems with kwave?
+kout = (kout*k1[kOutType]+k2[kOutType])*k3[kOutType]
+
+zkw kout*kON*64, kOut 
+endop
