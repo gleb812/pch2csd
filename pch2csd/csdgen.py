@@ -168,12 +168,17 @@ class Udo:
         if len(self.tpl.args) < 2:
             return '\n'.join(self.tpl.lines[self.tpl.args_lines[0]:])
         offset = self.tpl.args_lines[self.udo_variant]
+
         udo_src = []
-        for l in self.tpl.lines[offset:]:
-            udo_src.append(l)
-            if l.strip().startswith('endop'):
-                break
-        udo_src[1] = udo_src[1].replace(self.mod.type_name, self.get_name())
+        for line in self.tpl.lines[offset:]:
+            l = line.strip()
+            if l.startswith('opcode'):
+                udo_src.append(line.replace(self.mod.type_name, self.get_name()))
+            else:
+                udo_src.append(line)
+                if l.startswith('endop'):
+                    break
+
         return '\n'.join(udo_src).strip()
 
     def _choose_udo_variant(self) -> int:
