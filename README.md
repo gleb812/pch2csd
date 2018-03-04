@@ -134,6 +134,12 @@ simulate legendary Clavia Nord Modular G2 synthesizer using Csound language. The
 Project was first presented at the The Third International Csound Conference
 (2-4 October, St. Petersburg, Russia).
 
+## How to contribute
+
+Please, read the
+[CONTRIBUTION.md](https://github.com/gleb812/pch2csd/blob/master/CONTRIBUTION.md)
+file.
+
 ## Why do you need it?
 
 If you are a Nord Modular fan, this software allows you to have your favourite
