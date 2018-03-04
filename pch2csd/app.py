@@ -61,13 +61,14 @@ def print_pch2(fn: str):
     path = os.path.abspath(fn)
     patch = parse_pch2(data, path)
 
-    mod_table = [['Name', 'ID', 'Type', 'Parameters', 'Area']]
+    mod_table = [['Name', 'ID', 'Type', 'Parameters', 'Modes', 'Area']]
     for m in patch.modules:
         p = patch.find_mod_params(m.location, m.id)
         mod_table.append([m.type_name,
                           m.id,
                           m.type,
                           str(p.values),
+                          str(m.modes),
                           m.location.short_str()])
     cab_table = [['From', '', 'To', 'Color', 'Type', 'Area']]
     for c in patch.cables:

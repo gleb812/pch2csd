@@ -203,20 +203,22 @@ class Udo:
         else:
             return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
 
-    def get_statement_parts(self) -> Tuple[str, str, str, str]:
-        name, params, inlets, outlets = self.get_name(), '', '', ''
-        p = self.get_params()
-        if len(p) > 0:
-            params = ','.join([str(f) for f in p])
-        if len(self.inlets) > 0:
-            inlets = ','.join([str(i) for i in self.inlets])
-        if len(self.outlets) > 0:
-            outlets = ','.join(str(i) for i in self.outlets)
-        if params != '' and (inlets != '' or outlets != ''):
+    def get_statement_parts(self) -> Tuple[str, str, str, str, str]:
+        name, params, modes, inlets, outlets = self.get_name(), '', '', '', ''
+        params = ','.join([str(f) for f in self.get_params()])
+        modes = ','.join([str(m) for m in self.mod.modes])
+        inlets = ','.join([str(i) for i in self.inlets])
+        outlets = ','.join(str(i) for i in self.outlets)
+
+        # TODO refactor this mess
+        if params != '' and (inlets != '' or outlets != '' or modes != ''):
             params += ','
+        if modes != '' and (inlets != '' or outlets != ''):
+            modes += ','
         if inlets != '' and outlets != '':
             inlets += ','
-        return name, params, inlets, outlets
+
+        return name, params, modes, inlets, outlets
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
@@ -358,7 +360,7 @@ class Csd:
         s.write('instr {}\n'.format(2 - loc.value))
         statements = [udo.get_statement_parts() for udo in self.udos
                       if udo.mod.location == loc]
-        table_head = ('; Module', 'Parameters', 'Inlets', 'Outlets')
+        table_head = ('; Module', 'Parameters', 'Modes', 'Inlets', 'Outlets')
         table_str = tabulate(statements, table_head, tablefmt='plain')
         s.write(table_str)
         s.write('\nendin\n')

@@ -91,8 +91,9 @@ class TestUdoGen(TestCase):
     def setUp(self):
         self.data = ProjectData()
         self.poly_mix2_fn = get_test_resource('test_poly_mix2.pch2')
+        self.modes_LfoC = get_test_resource('test_modes_LfoC.pch2')
 
-    def test_udo_statement_gen(self):
+    def test_udo_statement_gen__not_raises(self):
         p = parse_pch2(self.data, self.poly_mix2_fn)
         p.cables = [transform_in2in_cables(p, c) for c in p.cables]
         zak = ZakSpace()

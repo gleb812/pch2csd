@@ -31,11 +31,14 @@ class PatchDescription(ReprStrMixin):
 
 
 class Module(AttrEqMixin, ReprStrMixin):
-    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int):
+    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int, modes=None):
+        if modes is None:
+            modes = []
         self.type = mod_type
         self.type_name = data.mod_type_name[mod_type]
         self.id = id
         self.location = loc
+        self.modes = modes
 
     def __eq__(self, other):
         return self.attrs_equal(other)
@@ -136,7 +139,7 @@ class Cable(AttrEqMixin, ReprStrMixin):
 
 
 class ModuleParameters(AttrEqMixin, ReprStrMixin):
-    def __init__(self, loc: Location, module_id: int, num_params: int, values=None):
+    def __init__(self, loc: Location, module_id: int, num_params: int, values=None, modes=None):
         if values is None:
             values = []
         self.loc = loc

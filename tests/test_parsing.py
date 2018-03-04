@@ -14,7 +14,7 @@ class TestParsing(TestCase):
     def test_gleb2_pch(self):
         gleb_2_pch = get_test_resource('Gleb2.pch2')
         expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1),
-                            Module(self.data, Location.VOICE_AREA, 96, 2)]
+                            Module(self.data, Location.VOICE_AREA, 96, 2, [2])]
         expected_cables = [Cable(Location.VOICE_AREA, CableType.IN_TO_IN,
                                  CableColor.WHITE, 1, 1, 1, 0)]
         expected_mod_params = [ModuleParameters(Location.VOICE_AREA, 1, 3, [0, 1, 0]),
@@ -27,7 +27,7 @@ class TestParsing(TestCase):
     def test_gleb2_pch__unequal(self):
         gleb_2_pch = get_test_resource('Gleb2.pch2')
         expected_modules_correct = [Module(self.data, Location.VOICE_AREA, 4, 1),
-                                    Module(self.data, Location.VOICE_AREA, 96, 2)]
+                                    Module(self.data, Location.VOICE_AREA, 96, 2, [2])]
         expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1),
                             Module(self.data, Location.VOICE_AREA, 100, 2)]
         expected_cables = [
@@ -48,3 +48,14 @@ class TestCableTracing(TestCase):
         patch.cables = [transform_in2in_cables(patch, c) for c in patch.cables]
         for c in patch.cables:
             self.assertEqual(c.module_from, 1)
+
+
+class TestModes(TestCase):
+    def setUp(self):
+        self.data = ProjectData()
+
+    def test_modes__LfoC(self):
+        pch2 = get_test_resource('test_modes_LfoC.pch2')
+        patch = parse_pch2(self.data, pch2)
+        p_modes = [m.modes for m in patch.modules]
+        self.assertSequenceEqual(p_modes, [[0], [1], [2], [3], [4], [5], [6], [7]])
