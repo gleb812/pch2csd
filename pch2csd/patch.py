@@ -18,6 +18,16 @@ class Location(Enum):
         else:
             raise ValueError('Wrong location code: {}'.format(i))
 
+    @staticmethod
+    def from_str(s: str):
+        s = s.lower()
+        if s == 'voice':
+            return Location.VOICE_AREA
+        elif s == 'fx':
+            return Location.FX_AREA
+        else:
+            raise ValueError('Wrong location string: {}'.format(s))
+
     def short_str(self):
         if self.value == 0:
             return 'FX'
