@@ -171,8 +171,9 @@ def main():
     group.add_argument('-p', '--print', action='store_const', const=True,
                        help='parse the patch file and print its content')
     group.add_argument('-m', '--mod-print', nargs=2, metavar=('module_id', '{voice,fx}'),
-                       help='print the extensive information about the module in'
-                            'the file {arg}. The two arguments are the module id and area.')
+                       help='print extensive information about the module in'
+                            'the file {arg}. You should provide two values:'
+                            'an integer module id and an area.')
     group.add_argument('-c', '--check-udo', action='store_const', const=True,
                        help="validate the UDO template file (overrides '-p')")
     group.add_argument('-v', '--version', action='version',
