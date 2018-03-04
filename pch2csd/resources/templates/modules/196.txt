@@ -9,7 +9,7 @@
 ;@ map d BUT002
 
 ;@ args kkkkkkkkk,kka,a
-; TODO Seems to work. Need to implement Click parameter
+; TODO Seems to work. Check Decay time
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
@@ -26,6 +26,11 @@ kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,
 	aGate zar kTrig
 	kGate = k(aGate) ; maybe...
 	kMod zkr kModIn
+
+	; We assume that Click changes initial phase 0..0.3
+	; only if Click > 0.5 of the range...
+	kClick limit kClick,0.5,1
+	kClick = (kClick - .5)*.6
 
 if kKBT != 1 goto NoKBT
 kNote = gkNote
@@ -97,6 +102,11 @@ kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,
 	kGate = k(aGate) ; maybe...
 	aMod zar kModIn
 	kMod = k(aMod) ; maybe...
+
+	; We assume that Click changes initial phase 0..0.3
+	; only if Click > 0.5 of the range...
+	kClick limit kClick,0.5,1
+	kClick = (kClick - .5)*.6
 
 if kKBT != 1 goto NoKBT
 kNote = gkNote
