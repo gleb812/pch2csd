@@ -1,10 +1,29 @@
-opcode CtrlSend, 0, kkkk
-  kSend, kCtrl, kVal, kChnl xin
-  
-  if (kSend!=0) then
-  	midiout 176, kChnl, kCtrl, kVal ; GENERIC 127 CTRL
-  	; zkw what???
-  endif
+;@ map d MID000
+;@ map d MID000
+;@ map d MID000
 
+;@ args kkk,kk,k
+opcode CtrlSend, 0, kkkkkk
+  kCtrl, kVal, kCh, kSend, kValue, kOut xin
+; TODO Done. Except This,SlotA-D
+  ksend zkr kSend
+  kvalue zkr kValue
 
+  kvalloc init 0
+  kout init 0
+
+  if kValue == 1 goto NoValInp
+    kvalloc = kvalue
+    goto ValInp
+  NoValInp:
+    kvalloc = kVal
+  ValInp:
+
+  kTrig trigger ksend, 0, 0
+  if kTrig==0 goto Halt
+  	midiout 176, kCh, kCtrl, kvalloc ; GENERIC 7bit CTRL
+    kout = 1
+  Halt:
+  zkw kout, kOut
+  kout = 0 ; reset after send
 endop
