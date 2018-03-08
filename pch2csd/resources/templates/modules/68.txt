@@ -3,50 +3,37 @@
 ;@ map d MID000
 ;@ map d MID000
 ;@ map d CLKswi
-;TODO Something wrong with SWING
+;TODO Works!
 ;@ args kkkkk,k,kkkk
 opcode ClkGen,0, kkkkkkkkkk
 kBPM,kOn,kSource,kSync,kSwing, kRsti,k96o,k16o,kClkAo,kSynco xin
 
 krst zkr kRsti
-if kSource == 0 goto InterS ;internal
-	kBPM = gkBPM
-InterS:
-kClkFr = kBPM * 4 * 6 / 60
 
-kRst trigger krst,0.00001,0 
+if kSource == 0 goto InterS ; Internal Tempo
+	kBPM = gkBPM ; Master Tempo
+InterS:
+kTempo = kBPM / 60
+
+kSw = (150 - kSwing) * 0.02 ; Map 50-75% to 2-1.5
+
+kRst trigger krst,0.00001,0
 kOnT trigger kOn,0.5,0
 kST trigger kSource,0.5,0
 
-if (kRst == 1) || (kOnT == 1) || (kST == 1) then 
-	reinit Run
-endif
-Run:
-kClk metro kClkFr,0
+arst = a(kRst+kOnT+kST)
 
-kCount1 init 0
-if kClk != 1 goto nextOut
-	kCount1 += 1
-if kCount1 != 12 goto next2   ; 1/8 = 12 * 1/96
-	kCount1 = 0
-next2:
-k8 trigger kCount1, 0.5, 0
+a1,aS1 syncphasor kBPM/kSync, arst
+a2,aS2 syncphasor kBPM*24/kSync, arst
+a3,aS3 syncphasor kBPM*4/kSync/2, arst ; div by 2 because of warping
+a16 table a3*kSw, 23, 1, 0, 1
+a96 table a2, 22, 1
+aSy table a1, 21, 1
 
-kCount2 init 0
-kCount2 += 1
-if kCount2 != (12 * 4 * kSync) goto next3
-	kCount2 = 0
-next3:
-kSy trigger kCount2, 0.5, 0
-nextOut:
-k8s vdel_k k8, 60/kBPM/2*kSwing*0.01, 0.95, 0
-k16 = k8 + k8s 
-;outs a(kSy)*kOn*0.9,a(k16)*kOn*0.9
+
 	zkw kOn, kClkAo
-	zkw kClk * kOn, k96o
-	zkw k16 * kOn, k16o
-	zkw kSy * kOn, kSynco
-k16 = 0 ; kill if need 1 on the whole period 'twin ticks
-k8 = 0
-kSy = 0
+	zkw k(a96) * kOn, k96o
+	zkw k(a16) * kOn, k16o
+	zkw k(aSy) * kOn, kSynco
+
 endop
