@@ -6,7 +6,8 @@ from io import StringIO
 from tabulate import tabulate
 
 from pch2csd import __version__, __homepage__
-from pch2csd.csdgen import ZakSpace, Csd, UdoTemplate, UdoTemplateValidation, Udo
+from pch2csd.csdgen import ZakSpace, Csd, Udo
+from pch2csd.udo import UdoTemplate, UdoTemplateValidation
 from pch2csd.parse import parse_pch2
 from pch2csd.patch import Patch, Location
 from pch2csd.resources import get_template_module_path, ProjectData
@@ -151,11 +152,11 @@ def gen_udo_status_doc():
             for m in p.modules:
                 status = StringIO()
                 validate_udo(m.type, status, print_action=False)
-                md.write('| [{}]({}) | {} | {} |\n'.format(
+                md.write('| [`{}`]({}) | `{}` | ```{}``` |\n'.format(
                     '{}.txt'.format(m.type),
                     tpl_url.format(m.type),
                     m.type_name,
-                    '<br>'.join(status.getvalue().splitlines())))
+                    '```<br>```'.join(status.getvalue().splitlines())))
 
 
 def main():

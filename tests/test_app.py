@@ -19,3 +19,7 @@ class TestApp(TestCase):
             convert_pch2(get_test_resource('test_in2in.pch2'))
         except SystemExit:
             pass  # allow program to exit while we haven't created all modules
+
+    def test_gen_udo_status_doc__not_fails(self):
+        from pch2csd.app import gen_udo_status_doc
+        gen_udo_status_doc()

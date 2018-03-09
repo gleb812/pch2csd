@@ -77,8 +77,6 @@ class TemplateExists(UdoValidation):
         super().__init__(data, tpl)
 
     def _validate(self, data, tpl):
-        if tpl.mod_type == 199:
-            print('lal')
         if not os.path.isfile(tpl.path):
             self.messages.append(
                 'error: no template file for the module with id {}'.format(tpl.mod_type))
@@ -169,7 +167,7 @@ class UdoTemplateValidation:
 
     def print_errors(self, io: TextIO = sys.stdout):
         if len(self.errors) == 0 and len(self.todos) == 0:
-            print('This template appears to be OK', file=io)
+            print('OK', file=io)
         if len(self.errors) > 0:
             for e in self.errors:
                 print('{}'.format(e), file=io)
