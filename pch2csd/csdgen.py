@@ -1,140 +1,16 @@
 import os
-import sys
 from copy import deepcopy
 from glob import glob
 from io import StringIO
-from typing import List, Dict, Tuple, TextIO
+from typing import List, Dict, Tuple
 
 from tabulate import tabulate
 
-from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType, \
-    Location
-from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir, \
-    ProjectData
+from pch2csd.patch import Patch, Cable, ModuleK2A, ModuleA2K, CableType, \
+    Location, Module, CableColor
+from pch2csd.resources import get_template_path, get_template_dir
+from pch2csd.udo import UdoTemplate
 from pch2csd.util import preprocess_csd_code
-from tests.util import clean_up_string
-
-
-class UdoTemplate:
-    def __init__(self, mod: Module):
-        self.mod_type = mod.type
-        self.mod_type_name = mod.type_name
-        try:
-            with open(get_template_module_path(mod.type), 'r') as f:
-                self.lines = [l.strip() for l in f]
-        except IOError:
-            self.lines = []
-        self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
-
-    def __repr__(self):
-        return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
-
-    def __str__(self):
-        return self.__repr__()
-
-    def _parse_headers(self):
-        args_lines = []
-        maps_lines = []
-        args = []  # List[List[str]]
-        maps = []  # List[List[str]]
-
-        for i, line in enumerate(self.lines):
-            l = clean_up_string(line)
-            if l.startswith(';@ args'):
-                args_lines.append(i)
-                a = [s.strip() for s in l.replace(';@ args', '').split(',')]
-                # for those who are used to put 0 to declare noargs
-                a = [x if x != '0' else '' for x in a]
-                args.append(a)
-            elif l.startswith(';@ map'):
-                maps_lines.append(i)
-                m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
-                maps.append(m)
-        return args_lines, maps_lines, args, maps
-
-    def validate(self, data: ProjectData):
-        v = UdoTemplateValidation(data, self)
-        return v.is_valid()
-
-
-class UdoTemplateValidation:
-    def __init__(self, data: ProjectData, tpl: UdoTemplate):
-        self.data = data
-        self.tpl = tpl
-
-        self.no_tpl_file = False
-        self.no_args = False
-        self.not_3_args = False
-        self.num_params_ne_num_maps = False
-        self.unknown_map_types = set()
-        self.unknown_map_tables = set()
-        self.todos = []
-
-        self._validate_headers()
-
-    def is_valid(self, with_todos=False):
-        if self.no_args \
-                or self.no_tpl_file \
-                or self.not_3_args \
-                or self.num_params_ne_num_maps \
-                or len(self.unknown_map_types) > 0 \
-                or len(self.unknown_map_tables) > 0:
-            return False
-        else:
-            if with_todos and len(self.todos) > 0:
-                return False
-            return True
-
-    def print_errors(self, io: TextIO = sys.stdout):
-        txt = '{}.txt'.format(self.tpl.mod_type)
-        errors = []
-        if self.no_tpl_file:
-            errors.append('no template file for this module')
-        if self.no_args:
-            errors.append("no opcode 'args' annotations were found in the template")
-        if self.not_3_args:
-            errors.append("the 'args' annotation should have exactly three arguments")
-        if self.num_params_ne_num_maps:
-            errors.append("the number of 'map' annotations should be equal "
-                          "to the number of module parameters")
-        if len(self.unknown_map_types) > 0:
-            errors.append('unknown mapping types: {}'.format(', '.join(self.unknown_map_types)))
-        if len(self.unknown_map_tables) > 0:
-            errors.append('unknown mapping tables: {}'.format(', '.join(self.unknown_map_tables)))
-        if len(errors) == 0 and len(self.todos) == 0:
-            print('{} appears to be OK'.format(txt), file=io)
-        if len(errors) > 0:
-            print('errors:', file=io)
-            for e in errors:
-                print('  - {}'.format(e), file=io)
-        if len(self.todos) > 0:
-            print('TODOs:', file=io)
-            for t in self.todos:
-                print('  - {}'.format(t), file=io)
-
-    def _validate_headers(self):
-        tpl_path = get_template_module_path(self.tpl.mod_type)
-        if not os.path.isfile(tpl_path):
-            self.no_tpl_file = True
-            return
-        if len(self.tpl.args) == 0:
-            self.no_args = True
-        else:
-            for i, a in enumerate(self.tpl.args):
-                if len(a) != 3:
-                    self.not_3_args = True
-            if len(self.tpl.args[0][0]) != len(self.tpl.maps):
-                self.num_params_ne_num_maps = True
-        for m in self.tpl.maps:
-            if m[0] not in 'ds':
-                self.unknown_map_types.add(m[0])
-            offset = 2 if m[0] == 's' else 1
-            for t in m[offset:]:
-                if t not in self.data.value_maps:
-                    self.unknown_map_tables.add(t)
-        todos = [l[l.find(';'):].replace(';', '').replace(':', '').replace('TODO', '').strip()
-                 for l in self.tpl.lines if 'TODO' in l]
-        self.todos = [t for t in todos if t != '']
 
 
 class Udo:
