@@ -143,7 +143,7 @@ file.
 ## Why do you need it?
 
 If you are a Nord Modular fan, this software allows you to have your favourite
-device ressurected for internal life in the halls of Csound language. You also
+device ressurected for eternal life in the halls of Csound language. You also
 can improve the precision of models and use the whole world of Csound
 possibilities together with Clavia.
 
