@@ -6,11 +6,11 @@ from typing import List, Dict, Tuple
 
 from tabulate import tabulate
 
-from pch2csd.patch import Patch, Cable, ModuleK2A, ModuleA2K, CableType, \
+from .patch import Patch, Cable, ModuleK2A, ModuleA2K, CableType, \
     Location, Module, CableColor
-from pch2csd.resources import get_template_path, get_template_dir
-from pch2csd.udo import UdoTemplate
-from pch2csd.util import preprocess_csd_code
+from .resources import get_template_path, get_template_dir
+from .udo import UdoTemplate
+from .util import preprocess_csd_code
 
 
 class Udo:
@@ -41,21 +41,11 @@ class Udo:
             return '{}_v{}'.format(self.mod.type_name, self.udo_variant)
 
     def get_src(self) -> str:
-        if len(self.tpl.args) < 2:
-            return '\n'.join(self.tpl.lines[self.tpl.args_lines[0]:])
-        offset = self.tpl.args_lines[self.udo_variant]
-
-        udo_src = []
-        for line in self.tpl.lines[offset:]:
-            l = line.strip()
-            if l.startswith('opcode'):
-                udo_src.append(line.replace(self.mod.type_name, self.get_name()))
-            else:
-                udo_src.append(line)
-                if l.startswith('endop'):
-                    break
-
-        return '\n'.join(udo_src).strip()
+        src = list(self.tpl.opcodes[self.udo_variant].src)
+        assert src[0].startswith('opcode')
+        src[0] = src[0].replace(self.mod.type_name,
+                                self.get_name())
+        return '\n'.join(src)
 
     def _choose_udo_variant(self) -> int:
         v = 0

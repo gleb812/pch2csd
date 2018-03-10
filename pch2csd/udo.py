@@ -1,23 +1,129 @@
 import abc
 import os
 import sys
-from typing import TextIO
+from typing import TextIO, Tuple, List
 
 from .patch import Module
 from .resources import get_template_module_path, ProjectData
-from tests.util import clean_up_string
+from .util import read_udo_template_lines
+
+
+# UDO representation
+
+class UdoAnnotation:
+    prefix = ';@'
+
+    def __init__(self, txt: str, line: int):
+        toks = txt.split()
+        if len(toks) > 0 and toks[0] == self.prefix:
+            self.tokens = toks
+        else:
+            self.tokens = []
+        self.line = line
+
+    def parsed(self) -> bool:
+        return len(self.tokens) > 0
+
+    @staticmethod
+    def try_to_parse(txt: str, line: int):
+        a = UdoAnnotation(txt, line)
+        if not a.parsed():
+            return a
+        if a.tokens[1] == MapAnnotation.atype:
+            return MapAnnotation(txt, line)
+        elif a.tokens[1] == ArgsAnnotation.atype:
+            return ArgsAnnotation(txt, line)
+        else:
+            return a
+
+
+class MapAnnotation(UdoAnnotation):
+    atype = 'map'
+
+    def __init__(self, txt: str, line: int):
+        super().__init__(txt, line)
+        toks = self.tokens
+
+        if super().parsed() \
+                and len(toks) >= 4 \
+                and toks[1] == self.atype \
+                and toks[2] in 'ds':
+            self.map_type = toks[2]
+            self.switch_ref = [] if self.map_type == 'd' else [toks[3]]
+            self.tables = toks[3:] if self.map_type == 'd' else toks[4:]
+        else:
+            self.map_type = None
+            self.tables = None
+
+    def parsed(self):
+        return super().parsed() \
+               and self.map_type is not None \
+               and self.tables is not None
+
+
+class ArgsAnnotation(UdoAnnotation):
+    atype = 'args'
+
+    def __init__(self, txt: str, line: int):
+        super().__init__(txt, line)
+        toks = self.tokens
+
+        if super().parsed() \
+                and len(toks) > 2 \
+                and toks[1] == self.atype:
+            args = ''.join(toks[2:]).split(',')
+            if all([a in 'ika' for arg in args for a in arg]):
+                self.args = args
+            else:
+                self.args = None
+        else:
+            self.args = None
+
+    def parsed(self):
+        return super().parsed() \
+               and self.args is not None \
+               and len(self.args) == 3
+
+
+class Opcode:
+    def __init__(self, src: List[str], lines: Tuple[int, int]):
+        assert len(src) == (lines[1] - lines[0] + 1)
+        assert src[0].strip().startswith('opcode')
+        assert src[-1].strip().startswith('endop')
+
+        self.src = [s.strip() for s in src]
+        self.lines = lines
 
 
 class UdoTemplate:
     def __init__(self, mod: Module):
         self.mod_type = mod.type
         self.mod_type_name = mod.type_name
-        try:
-            with open(get_template_module_path(mod.type), 'r') as f:
-                self.lines = [l.strip() for l in f]
-        except IOError:
-            self.lines = []
-        self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
+        self.lines = read_udo_template_lines(mod.type)
+        # self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
+        self.annots, self.opcodes = self._parse_template()
+
+    @property
+    def args(self):
+        return [a.args for a in self.annots
+                if isinstance(a, ArgsAnnotation)]
+
+    @property
+    def args_lines(self):
+        return [a.line for a in self.annots
+                if isinstance(a, ArgsAnnotation)]
+
+    @property
+    def maps(self):
+        t = [[m.map_type] + m.switch_ref + m.tables
+             for m in self.annots
+             if isinstance(m, MapAnnotation)]
+        return t
+
+    @property
+    def maps_lines(self):
+        return [m.line for m in self.annots
+                if isinstance(m, MapAnnotation)]
 
     def __repr__(self):
         return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
@@ -33,30 +139,29 @@ class UdoTemplate:
     def path(self):
         return get_template_module_path(self.mod_type)
 
-    def _parse_headers(self):
-        args_lines = []
-        maps_lines = []
-        args = []  # List[List[str]]
-        maps = []  # List[List[str]]
+    def _parse_template(self):
+        annots = [(i, l) for i, l
+                  in enumerate(self.lines)
+                  if l.strip().startswith(';@')]
+        annots = [UdoAnnotation.try_to_parse(txt, line)
+                  for line, txt in annots]
 
-        for i, line in enumerate(self.lines):
-            l = clean_up_string(line)
-            if l.startswith(';@ args'):
-                args_lines.append(i)
-                a = [s.strip() for s in l.replace(';@ args', '').split(',')]
-                # for those who are used to put 0 to declare noargs
-                a = [x if x != '0' else '' for x in a]
-                args.append(a)
-            elif l.startswith(';@ map'):
-                maps_lines.append(i)
-                m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
-                maps.append(m)
-        return args_lines, maps_lines, args, maps
+        opcodes_lines = [i for i, l
+                         in enumerate(self.lines)
+                         if l.strip().startswith('opcode')
+                         or l.strip().startswith('endop')]
+        opcodes = [Opcode(self.lines[i1:i2 + 1], (i1, i2))
+                   for i1, i2
+                   in zip(*[iter(opcodes_lines)] * 2)]
+
+        return annots, opcodes
 
     def validate(self, data: ProjectData):
         v = UdoTemplateValidation(data, self)
         return v.is_valid()
 
+
+# Validation
 
 class UdoValidation(metaclass=abc.ABCMeta):
     def __init__(self, data: ProjectData, tpl: UdoTemplate):
