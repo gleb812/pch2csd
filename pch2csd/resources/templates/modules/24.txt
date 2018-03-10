@@ -5,7 +5,8 @@
 ;@ map d BUT002
 
 
-;@ args kkkkk,k,k
+;@ ins k
+;@ outs k
 opcode LfoC, 0, kkkkkkk
 ; kOutType not impl
 ; kKBT not impl

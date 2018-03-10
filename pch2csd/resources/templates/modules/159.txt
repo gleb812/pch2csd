@@ -1,4 +1,5 @@
-;@ args ,kk,k
+;@ ins k k
+;@ outs k
 opcode CompSig, 0, 0   ; MULTIMODE support a/k?
   k1 zkr 1 ; CHANGE 
   k2 zkr 1 ; CHANGE 

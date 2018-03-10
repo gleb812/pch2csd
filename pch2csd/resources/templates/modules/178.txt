@@ -1,6 +1,7 @@
 ;@ map d DLYsmp
 
-;@ args i,kk,k
+;@ ins k k
+;@ outs k
 opcode DlyClock, 0, k
   kDel xin
   kin zkr 2 ; CHANGE 

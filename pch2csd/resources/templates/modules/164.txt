@@ -13,7 +13,8 @@
 ;@ map d CLA000
 ;@ map d BUT002
 
-;@ args kkkkkkkkkkkkkk,kkaaa,a
+;@ ins k k a a a
+;@ outs a
 opcode OscDual, 0, kkkkkkkkkkkkkkkkkkkk
 ; TODO: No PhM for SAW, PWM signals aren't -64..+64, No Soft function
 ; kModLev - 0...1

@@ -2,7 +2,7 @@
 ;@ map d BUT002
 ;@ map d BUT002
 
-;@ args iii,,k
+;@ outs k
 opcode ConstSwT, 0, kk   ; MULTIMODE support a/k?
 ; Need to check..
   kSw, kVal xin ;kSw = 0 / 1

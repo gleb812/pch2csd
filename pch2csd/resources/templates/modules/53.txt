@@ -1,4 +1,5 @@
-;@ args ,kk,k
+;@ ins k k
+;@ outs k
 opcode sH, 0, 0
   kCtrl zkr 1; CHANGE
   kIn zkr 2; CHANGE

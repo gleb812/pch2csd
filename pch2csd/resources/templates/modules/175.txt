@@ -9,7 +9,8 @@
 ;@ map d BUT002
 ;@ map d BUT007
 
-;@ args iiiiiiiii,aaaaa,aaaaa
+;@ ins a a a a a
+;@ outs a a a a a
 opcode DelayQuad, 0, kkkkiKKKK
   kTime1, kTime2,kTime3, kTime4, imaxdel,kMod1,kMod2,kMod3,kMod4 xin
   ; TIME vs CLOCK button

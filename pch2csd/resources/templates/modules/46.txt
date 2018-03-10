@@ -1,4 +1,5 @@
-;@ args iiiiiii,kkk,kk
+;@ ins k k k
+;@ outs k k
 opcode EnvAHD, 0, kkkk
   kAtt, kDec, kSW, kH xin
 ; NOT FORGET ABOUT KEYBOARD KB

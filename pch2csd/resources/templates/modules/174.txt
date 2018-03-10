@@ -4,7 +4,8 @@
 ;@ map d CLA000
 ;@ map h BUT007
 
-;@ args iiii,aaa,aa
+;@ ins a a a
+;@ outs a a
 opcode DelayDual, 0, iiikk
   iTime1, iTime2, imaxdel, kMod1, kMod2 xin
   ain1 zar 2 ; CHANGE 

@@ -1,4 +1,5 @@
-;@ args ,kk,kk
+;@ ins k k
+;@ outs k k
 opcode Invert, 0, 0
   ky1 zkr 1 ; CHANGE 
   ky2 zkr 2 ; CHANGE 

@@ -1,4 +1,5 @@
-;@ args iiiii,a,a
+;@ ins a
+;@ outs a
 opcode FltStatic, 0, iKK ; GC !!!
   iType, kFreq, kRes xin
   ain zar 2; CHANGE

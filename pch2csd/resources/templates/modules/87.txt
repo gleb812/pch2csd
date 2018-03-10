@@ -3,7 +3,8 @@
 ;@ map d MID000
 ;@ map d MID000
 
-;@ args kkkk,ak,a
+;@ ins a k
+;@ outs
 opcode FltLP, 0, kkkkkkk
 ; KBT !!!!!
 	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin
@@ -14,7 +15,8 @@ opcode FltLP, 0, kkkkkkk
 endop
 
 
-;@ args kkkk,aa,a
+;@ ins a a
+;@ outs a
 opcode FltLP, 0, kkkkkkk
 ; KBT !!!!!
 	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin

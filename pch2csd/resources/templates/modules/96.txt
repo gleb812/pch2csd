@@ -5,7 +5,8 @@
 ;@ map d BUT002
 ;@ map d BUT006
 
-;@ args kkkkkk,k,a
+;@ ins k
+;@ outs a
 opcode OscD, 0, kkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64

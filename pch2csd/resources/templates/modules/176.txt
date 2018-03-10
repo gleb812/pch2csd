@@ -5,8 +5,8 @@
 ;@ map d BUT002
 ;@ map d BUT002
 
-
-;@ args kkkkkk, a, a
+;@ ins a
+;@ outs a
 opcode DelayA, 0, kkkkkkkk
 	kTime, kFB, kFilter, kDW, kOn, kClk, kIn, kOut xin
 	

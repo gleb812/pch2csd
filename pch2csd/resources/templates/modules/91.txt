@@ -1,6 +1,7 @@
 ;@ map d BUT002
 
-;@ args ,kkk,kk
+;@ ins k k k
+;@ outs k k
 opcode FlipFlop, 0, k
   kType xin
   kClk zkr 1 ; CHANGE 

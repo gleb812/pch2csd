@@ -4,7 +4,9 @@
 ;@ map d MID000
 ;@ map d CLKswi
 ;TODO Something wrong with SWING
-;@ args kkkkk,k,kkkk
+
+;@ ins k
+;@ outs k k k k
 opcode ClkGen,0, kkkkkkkkkk
 kBPM,kOn,kSource,kSync,kSwing, kRsti,k96o,k16o,kClkAo,kSynco xin
 

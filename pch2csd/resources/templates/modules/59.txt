@@ -1,6 +1,7 @@
 ;@ map d LVLlev
 
-;@ args i,k,k
+;@ ins k
+;@ outs k
 opcode CompLev, 0, k   ; MULTIMODE support a/k?
   kVal xin
   k1 zkr 1 ; CHANGE 

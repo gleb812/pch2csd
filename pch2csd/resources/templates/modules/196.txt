@@ -8,8 +8,10 @@
 ;@ map d BUT002
 ;@ map d BUT002
 
-;@ args kkkkkkkkk,kka,a
 ; TODO Seems to work. Check Decay time
+
+;@ ins k k a
+;@ args a
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
@@ -84,7 +86,8 @@ aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, kClick
 
 endop
 
-;@ args kkkkkkkkk,aaa,a
+;@ ins a a a
+;@ outs a
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
