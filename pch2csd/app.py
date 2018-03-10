@@ -63,9 +63,13 @@ def print_module(fn_pch2: str, mod_id: int, loc: Location):
         print('error: cannot find module with id {} in the {} location'.format(mod_id, loc.short_str()))
         exit(-1)
 
-    udo = Udo(p, m)
     params_midi = p.find_mod_params(loc, mod_id)
-    params_mapped = udo.get_params()
+    try:
+        udo = Udo(p, m)
+        params_mapped = udo.get_params()
+    except Exception:
+        print("warning ({}.txt): couldn't process UDO".format(m.type))
+        params_mapped = ['n/a'] * params_midi.num_params
     assert params_midi.num_params == len(params_mapped)
 
     tbl = [['Type', 'Raw', 'Mapped']]

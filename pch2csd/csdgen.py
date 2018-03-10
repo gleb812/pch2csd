@@ -26,7 +26,8 @@ class Udo:
 
         ins = self.tpl.ins
         outs = self.tpl.outs
-        self.udo_variant = self._choose_udo_variant() if len(ins) > 0 else 0
+
+        self.udo_variant = self._choose_udo_variant(len(ins))
         self.in_types = ins[self.udo_variant].types if ins != [] else []
         self.out_types = outs[self.udo_variant].types if outs != [] else []
 
@@ -48,7 +49,9 @@ class Udo:
                                 self.get_name())
         return '\n'.join(src)
 
-    def _choose_udo_variant(self) -> int:
+    def _choose_udo_variant(self, len_ins) -> int:
+        if len_ins == 0:
+            return 0
         v = 0
         cables = self.patch.find_all_incoming_cables(self.mod.location, self.mod.id)
         if len(self.tpl.opcodes) < 2 or cables is None:
@@ -97,17 +100,23 @@ class Udo:
 
     def _map_value(self, i, v, all_vals):
         m = self.tpl.maps[i]
-        if m[0] == 'd':
-            table = self.patch.data.value_maps[m[1]]
-        elif m[0] == 's':
-            dependent_val = all_vals[int(m[1]) - 1]
+        if m.map_type == 'd':
+            table = self.patch.data.value_maps[m.tables[0]]
+        elif m.map_type == 's':
+            ref = m.switch_ref
             try:
-                table_name = m[dependent_val + 2]
-            except IndexError:
-                raise ValueError("error ({}, line {}): couldn't retrieve map {}".format(
+                if ref.isdigit():
+                    table_name = m.tables[all_vals[int(ref) - 1]]
+                else:
+                    ms = [a for a in self.tpl.maps if a.name == ref]
+                    if len(ms) == 1:
+                        table_name = m.tables[ms[0].idx]
+                    else:
+                        raise Exception
+            except Exception:
+                raise ValueError("error ({}, line {}): couldn't retrieve map".format(
                     self.tpl.filename,
-                    self.tpl.maps[i].line + 1,
-                    dependent_val))
+                    self.tpl.maps[i].line + 1))
             table = self.patch.data.value_maps[table_name]
         else:
             raise ValueError('Mapping type {} is not supported'.format(m[0]))
@@ -135,10 +144,16 @@ class ZakSpace:
         udos = deepcopy({m.id: Udo(p, m) for m in p.modules})
         for c in p.cables:
             mf, jf, mt, jt = c.module_from, c.jack_from, c.module_to, c.jack_to
-            if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
-                self._zak_connect_direct(c, udos)
-            else:
-                self._zak_connect_convert_rates(c, udos, p)
+            try:
+                if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
+                    self._zak_connect_direct(c, udos)
+                else:
+                    self._zak_connect_convert_rates(c, udos, p)
+            except IndexError:
+                raise ValueError("error: couldn't connect "
+                                 "module with id {} (outlet {}) to "
+                                 "module with id {} (outlet {})"
+                                 .format(mf, jf, mt, jt))
         return list(udos.values())
 
     def _aloc_new(self) -> int:

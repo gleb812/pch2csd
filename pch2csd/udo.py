@@ -44,6 +44,7 @@ class UdoAnnotation:
 
 class MapAnnotation(UdoAnnotation):
     atype = 'map'
+    map_count = 0
 
     def __init__(self, txt: str, line: int):
         super().__init__(txt, line)
@@ -52,6 +53,7 @@ class MapAnnotation(UdoAnnotation):
         self.map_type = None
         self.switch_ref = None
         self.tables = None
+        self.idx = None
 
         toks = self.tokens
 
@@ -61,8 +63,10 @@ class MapAnnotation(UdoAnnotation):
                 and (toks[2] in 'ds' or toks[3] in 'ds'):
             self.name, inc = (toks[2], 1) if toks[3] in 'ds' else ('l' + str(line), 0)
             self.map_type = toks[2 + inc]
-            self.switch_ref = None if self.map_type == 'd' else [toks[3 + inc]]
+            self.switch_ref = None if self.map_type == 'd' else toks[3 + inc]
             self.tables = toks[3 + inc:] if self.map_type == 'd' else toks[4 + inc:]
+            self.idx = self.map_count
+            self.map_count += 1
 
     def parsed(self):
         return super().parsed() \
@@ -91,12 +95,13 @@ class ModeAnnotation(UdoAnnotation):
 class InsAnnotation(UdoAnnotation):
     atype = 'ins'
 
-    def __init__(self, txt: str, line: int):
+    def __init__(self, txt: str, line: int, artificial=False):
         super().__init__(txt, line)
         toks = self.tokens
 
-        self.types = None
-        self.names = None
+        self.types = []
+        self.names = []
+        self.artificial = artificial
 
         if super().parsed() \
                 and len(toks) > 2 \
@@ -106,16 +111,19 @@ class InsAnnotation(UdoAnnotation):
             self.types, self.names = list(zip(*args))
 
     def parsed(self):
-        return super().parsed() \
-               and self.types is not None \
-               and self.names is not None
+        if self.artificial:
+            return True
+        else:
+            return super().parsed() \
+                   and self.types != [] \
+                   and self.names != []
 
 
 class OutsAnnotation(InsAnnotation):
     atype = 'outs'
 
-    def __init__(self, txt: str, line: int):
-        super().__init__(txt, line)
+    def __init__(self, txt: str, line: int, artificial=False):
+        super().__init__(txt, line, artificial)
 
 
 class Opcode:
@@ -130,10 +138,18 @@ class Opcode:
 
 class UdoTemplate:
     def __init__(self, mod: Module):
+        if mod.type == 43:
+            print('lol')
         self.mod_type = mod.type
         self.mod_type_name = mod.type_name
         self.lines = read_udo_template_lines(mod.type)
         self.annots, self.opcodes = self._parse_template()
+        if len(self.ins) == 0:
+            self.annots += [InsAnnotation('', -1, artificial=True)
+                            for o in self.opcodes]
+        if len(self.outs) == 0:
+            self.annots += [OutsAnnotation('', -1, artificial=True)
+                            for o in self.opcodes]
 
     def __repr__(self):
         return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
@@ -150,7 +166,7 @@ class UdoTemplate:
         return get_template_module_path(self.mod_type)
 
     def _get_annotation(self, annotType):
-        return [a for a in self.annots if isinstance(a, annotType)]
+        return [a for a in self.annots if type(a) == annotType]
 
     @property
     def maps(self):
@@ -286,9 +302,11 @@ class MapSwitchReferenceValid(UdoValidation):
               "the map-switch annotation points to"
         for m in maps_s:
             r = m.switch_ref
-            if (isinstance(r, int) and r > len(maps)) \
-                    or (isinstance(r, str) and r not in map_names):
-                self.messages += [msg.format(tpl.filename, m.line)]
+            if r.isdigit() and int(r) <= len(maps):
+                continue
+            elif not r.isdigit() and r in map_names:
+                continue
+            self.messages += [msg.format(tpl.filename, m.line)]
 
 
 class UdoIntypesConsistent(UdoValidation):
@@ -311,8 +329,9 @@ class UdoIntypesConsistent(UdoValidation):
             intypes_expected = len(tpl.maps) + len(tpl.modes) \
                                + len(tpl.ins[0].types) + len(tpl.outs[0].types)
             if intypes_expected != in_len[0]:
-                self.messages += ["error ({}): the number of intypes in UDO is not "
-                                  "consistent with the declared annotations"]
+                self.messages += ["error ({}): the number of 'intypes' in UDO "
+                                  "is not consistent with "
+                                  "the declared annotations".format(tpl.filename)]
 
 
 class ParamsModesConsistent(UdoValidation):

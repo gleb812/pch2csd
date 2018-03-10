@@ -3,7 +3,8 @@
 
 ;TODO Completed. Needs check for optimization
 
-;@ args kk,kkk,kk
+;@ ins k k k
+;@ outs k k
 opcode EnvH, 0, kkkkkkk
 	kH,kType,  kTrigi,kAMi,kIn,kEnvO,kout xin
 	
@@ -52,7 +53,8 @@ kTrigT trigger kTrig, 0.000001, 0
 	;out a(kEnv1)
 endop
 
-;@ args kk,kka,ka
+;@ ins k k a
+;@ outs k a
 opcode EnvH, 0, kkkkkkk
 	kH,kType,  kTrigi,kAMi,kIn,kEnvO,kout xin
 	

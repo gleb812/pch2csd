@@ -4,7 +4,8 @@
 ;@ map d BUT002
 ;@ map d BUT003
 
-;@ args iiiii, kkk, k
+;@ ins k k k
+;@ outs k
 opcode Mix21A, 0, iiiiiiiii
     ; TODO: lin/log scale, chain input
     iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
@@ -15,7 +16,8 @@ opcode Mix21A, 0, iiiiiiiii
   zkw kout, izOut
 endop
 
-;@ args iiiii, aaa, a
+;@ ins a a a
+;@ outs a
 opcode Mix21A, 0, iiiiiiiii
     ; TODO: lin/log scale, chain input
     iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
