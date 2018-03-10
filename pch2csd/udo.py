@@ -138,8 +138,6 @@ class Opcode:
 
 class UdoTemplate:
     def __init__(self, mod: Module):
-        if mod.type == 43:
-            print('lol')
         self.mod_type = mod.type
         self.mod_type_name = mod.type_name
         self.lines = read_udo_template_lines(mod.type)
