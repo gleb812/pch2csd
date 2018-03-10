@@ -1,6 +1,6 @@
 ; nothing to map
 
-;@ args ,,kkkkkk
+;@ outs k k k k k k
 opcode Keyboard, 0, kkkkkk
 	kpitch, kgate, klin, krel, knote, kexp xin	
 	kstatus, kchan, kdata1, kdata2 midiin

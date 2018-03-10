@@ -1,7 +1,7 @@
 ;@ map s 2 LVLlev LVLpos
 ;@ map d BUT002
 
-;@ args ii,,k
+;@ outs k
 opcode Constant, 0, kii
     ; TODO: unipolar/bipolar switch
     kVal, iPolSw, izOut xin

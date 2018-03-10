@@ -36,7 +36,8 @@
 ;@ map d MID000
 ;@ map d MID000
 
-;@ args kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk,kkkkkkkk,kkk
+;@ ins k k k k k k k k
+;@ outs k k k
 opcode seqNote,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 ;16 steps
 ;16 events

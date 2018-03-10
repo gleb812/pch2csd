@@ -11,7 +11,8 @@
 ;@ map d CLA000
 ;@ map d BUT003
 
-;@ args iiiiiiiiiii,a,aa
+;@ ins a
+;@ outs a a
 opcode DlyStereo, 0, KKKKKKKKKK
   kTimeL,kTimeR,kFBL,kFBR,kXFBL,kXFBR,kLP,kHP,kDW xin
   

@@ -2,7 +2,7 @@
 ;@ map d BUT007
 ;@ map d BUT007
 
-;@ args kkk,aaaa,
+;@ ins a a a a
 opcode Out4, 0, kkkkkkk
 ksource, kMute, kPad, k1, k2, k3, k4 xin
 kpad = kPad + 1 

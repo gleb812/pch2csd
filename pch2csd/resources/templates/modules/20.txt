@@ -7,7 +7,9 @@
 ;@ map d BUT002
 ;@ map d BUT002
 ;TODO Completed. Check for optimization (if u can)
-;@ args kkkkkkkk,kkk,kk
+
+;@ ins k k k
+;@ outs k k
 opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
 	

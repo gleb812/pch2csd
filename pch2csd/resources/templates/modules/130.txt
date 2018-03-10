@@ -1,4 +1,5 @@
-;@ args ,kk,kkkkkkkk
+;@ ins k k
+;@ outs k k k k k k k k
 opcode BinCounter, 0, kk
   kClk, kRst xin
   kCount init 0

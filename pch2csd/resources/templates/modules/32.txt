@@ -5,7 +5,8 @@
 ;@ map d BUT003
 ;@ map d BUT003
 
-;@ args kkkkkk,a,a
+;@ ins a
+;@ outs a
 opcode Eq2Band, 0, kkkkkkkk
   kLsel[] fillarray 60,110,160
   kHsel[] fillarray 6000,3000,4000

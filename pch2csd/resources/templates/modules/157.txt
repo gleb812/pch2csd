@@ -1,7 +1,8 @@
 ;@ map d BUT006
 ;@ map d BUT003
 
-;@ args ii,k,k
+;@ ins k
+;@ outs k
 opcode LevConv, 0, ii
   iIn, iOut xin
   ; O4en' Tupo!

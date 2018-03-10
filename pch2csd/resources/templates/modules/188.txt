@@ -2,7 +2,7 @@
 ;@ map d BUT002
 ;@ map d BUT002
 
-;@ args iii,,k
+;@ outs k
 opcode ConstSwM, 0, kk   ; MULTIMODE support a/k?
 ; THIS opcode is for RT only.. Need to check..
 ; BIPOLAR UNIPOLAR ????

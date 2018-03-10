@@ -1,4 +1,5 @@
-;@ args iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii,kkkkkk,kkk
+;@ ins k k k k k k
+;@ ins k k k
 opcode SeqEvent, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ;...
   kTr1[] init 16
   kTr2[] init 16

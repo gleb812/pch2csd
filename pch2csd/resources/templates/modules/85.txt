@@ -1,4 +1,5 @@
-;@ args ii,kk,kk
+;@ ins k k
+;@ outs k k
 opcode WindSw, 0, KK
   kFrom, kTo xin
   kCtrl zkr 1; CHANGE

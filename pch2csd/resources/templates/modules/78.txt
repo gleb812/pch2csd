@@ -1,4 +1,5 @@
-;@ args i,k,kkkkkkkkk
+;@ ins k
+;@ outs k k k k k k k k k
 opcode sw18, 0, k   ; MULTIMODE support a/k? == sw14 !!!
 ; Need to check..
   kSw xin ;kSw = nomera shin

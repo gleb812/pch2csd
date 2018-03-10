@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import List, Optional
 
-from pch2csd.resources import ProjectData
-from pch2csd.util import AttrEqMixin, ReprStrMixin
+from .resources import ProjectData
+from .util import AttrEqMixin, ReprStrMixin
 
 
 class Location(Enum):

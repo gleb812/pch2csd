@@ -1,4 +1,5 @@
-;@ args ,kk,k
+;@ ins k k
+;@ outs k
 opcode LevMult, 0, 0   ; MULTIMODE support a/k?
 ; Need to check..
   k1 zkr 1 ; CHANGE 

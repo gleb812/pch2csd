@@ -1,7 +1,8 @@
 ;@ map d LVLatt
 ;@ map d LVLrel
 
-;@ args ii,k,k
+;@ ins k
+;@ outs k
 opcode EnvFollow, 0, kk   ; MULTIMODE support a/k?
 ; Need to check..
   kAtt, kRel xin

@@ -2,7 +2,8 @@
 ;@ map d MID000
 ;@ map d MID000
 
-;@ args kkk,kk,k
+;@ ins k k
+;@ outs k
 opcode CtrlSend, 0, kkkkkk
   kCtrl, kVal, kCh, kSend, kValue, kOut xin
 ; TODO Done. Except This,SlotA-D

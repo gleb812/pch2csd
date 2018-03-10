@@ -4,7 +4,8 @@
 ;@ map d CLA000
 ;@ map d BUT003
 
-;@ args kkkkk,kkkkk,k
+;@ ins k k k k k
+;@ outs k
 opcode Mix41B, 0, kkkkkkkkkkk   ; MULTIMODE support a/k?
 kLev1,kLev2,kLev3,kLev4,kMode,kI1,kI2,kI3,kI4,kCh,kOut  xin 
 	k1 zkr kI1 

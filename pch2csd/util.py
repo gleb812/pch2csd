@@ -1,7 +1,10 @@
+import os
 from struct import unpack
 from typing import List
 
 from bitarray import bitarray
+
+from .resources import get_template_module_path
 
 
 class AttrEqMixin:
@@ -57,3 +60,16 @@ def preprocess_csd_code(code: str) -> str:
     if lines[-1] != '':
         lines += ''
     return '\n'.join(lines)
+
+
+def read_udo_template_lines(mod_type: int):
+    try:
+        with open(get_template_module_path(mod_type), 'r') as f:
+            return [l.strip() for l in f]
+    except IOError:
+        return []
+
+
+def get_test_resource(path: str) -> str:
+    return os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..', 'tests', 'resources', path))

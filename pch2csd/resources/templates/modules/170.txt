@@ -2,7 +2,7 @@
 ;@ map d BUT004
 ;@ map d BUT002
 
-;@ args iii,,aa
+;@ outs a:Left a:Right
 opcode In2, 0, iiiii
     ; TODO: switch inputs
   iInSw, iOnOffSw, iPad, izL, izR xin

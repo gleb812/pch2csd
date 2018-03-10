@@ -2,7 +2,8 @@
 ;@ map d CLA000
 ;@ map d BUT007
 
-;@ args ii,aa,a
+;@ ins a a
+;@ outs a
 opcode DlySingleB, 0, iik
   iTime, imaxdel, kMod xin
   ain zar 2 ; CHANGE 

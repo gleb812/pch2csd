@@ -1,140 +1,16 @@
 import os
-import sys
 from copy import deepcopy
 from glob import glob
 from io import StringIO
-from typing import List, Dict, Tuple, TextIO
+from typing import List, Dict, Tuple
 
 from tabulate import tabulate
 
-from pch2csd.patch import Module, Patch, CableColor, Cable, ModuleK2A, ModuleA2K, CableType, \
-    Location
-from pch2csd.resources import get_template_module_path, get_template_path, get_template_dir, \
-    ProjectData
-from pch2csd.util import preprocess_csd_code
-from tests.util import clean_up_string
-
-
-class UdoTemplate:
-    def __init__(self, mod: Module):
-        self.mod_type = mod.type
-        self.mod_type_name = mod.type_name
-        try:
-            with open(get_template_module_path(mod.type), 'r') as f:
-                self.lines = [l.strip() for l in f]
-        except IOError:
-            self.lines = []
-        self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
-
-    def __repr__(self):
-        return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
-
-    def __str__(self):
-        return self.__repr__()
-
-    def _parse_headers(self):
-        args_lines = []
-        maps_lines = []
-        args = []  # List[List[str]]
-        maps = []  # List[List[str]]
-
-        for i, line in enumerate(self.lines):
-            l = clean_up_string(line)
-            if l.startswith(';@ args'):
-                args_lines.append(i)
-                a = [s.strip() for s in l.replace(';@ args', '').split(',')]
-                # for those who are used to put 0 to declare noargs
-                a = [x if x != '0' else '' for x in a]
-                args.append(a)
-            elif l.startswith(';@ map'):
-                maps_lines.append(i)
-                m = [s.strip() for s in l.replace(';@ map', '').strip().split(' ')]
-                maps.append(m)
-        return args_lines, maps_lines, args, maps
-
-    def validate(self, data: ProjectData):
-        v = UdoTemplateValidation(data, self)
-        return v.is_valid()
-
-
-class UdoTemplateValidation:
-    def __init__(self, data: ProjectData, tpl: UdoTemplate):
-        self.data = data
-        self.tpl = tpl
-
-        self.no_tpl_file = False
-        self.no_args = False
-        self.not_3_args = False
-        self.num_params_ne_num_maps = False
-        self.unknown_map_types = set()
-        self.unknown_map_tables = set()
-        self.todos = []
-
-        self._validate_headers()
-
-    def is_valid(self, with_todos=False):
-        if self.no_args \
-                or self.no_tpl_file \
-                or self.not_3_args \
-                or self.num_params_ne_num_maps \
-                or len(self.unknown_map_types) > 0 \
-                or len(self.unknown_map_tables) > 0:
-            return False
-        else:
-            if with_todos and len(self.todos) > 0:
-                return False
-            return True
-
-    def print_errors(self, io: TextIO = sys.stdout):
-        txt = '{}.txt'.format(self.tpl.mod_type)
-        errors = []
-        if self.no_tpl_file:
-            errors.append('no template file for this module')
-        if self.no_args:
-            errors.append("no opcode 'args' annotations were found in the template")
-        if self.not_3_args:
-            errors.append("the 'args' annotation should have exactly three arguments")
-        if self.num_params_ne_num_maps:
-            errors.append("the number of 'map' annotations should be equal "
-                          "to the number of module parameters")
-        if len(self.unknown_map_types) > 0:
-            errors.append('unknown mapping types: {}'.format(', '.join(self.unknown_map_types)))
-        if len(self.unknown_map_tables) > 0:
-            errors.append('unknown mapping tables: {}'.format(', '.join(self.unknown_map_tables)))
-        if len(errors) == 0 and len(self.todos) == 0:
-            print('{} appears to be OK'.format(txt), file=io)
-        if len(errors) > 0:
-            print('errors:', file=io)
-            for e in errors:
-                print('  - {}'.format(e), file=io)
-        if len(self.todos) > 0:
-            print('TODOs:', file=io)
-            for t in self.todos:
-                print('  - {}'.format(t), file=io)
-
-    def _validate_headers(self):
-        tpl_path = get_template_module_path(self.tpl.mod_type)
-        if not os.path.isfile(tpl_path):
-            self.no_tpl_file = True
-            return
-        if len(self.tpl.args) == 0:
-            self.no_args = True
-        else:
-            for i, a in enumerate(self.tpl.args):
-                if len(a) != 3:
-                    self.not_3_args = True
-            if len(self.tpl.args[0][0]) != len(self.tpl.maps):
-                self.num_params_ne_num_maps = True
-        for m in self.tpl.maps:
-            if m[0] not in 'ds':
-                self.unknown_map_types.add(m[0])
-            offset = 2 if m[0] == 's' else 1
-            for t in m[offset:]:
-                if t not in self.data.value_maps:
-                    self.unknown_map_tables.add(t)
-        todos = [l[l.find(';'):].replace(';', '').replace(':', '').replace('TODO', '').strip()
-                 for l in self.tpl.lines if 'TODO' in l]
-        self.todos = [t for t in todos if t != '']
+from .patch import Patch, Cable, ModuleK2A, ModuleA2K, CableType, \
+    Location, Module, CableColor
+from .resources import get_template_path, get_template_dir
+from .udo import UdoTemplate
+from .util import preprocess_csd_code
 
 
 class Udo:
@@ -144,51 +20,45 @@ class Udo:
         self.tpl = UdoTemplate(mod)
         if not self.tpl.validate(patch.data):
             raise ValueError(
-                "can't validate UDO {0} of type {1}.\n"
-                "Please run 'pch2csd -c {1}' to check the implementation.".format(
-                    self.mod.type_name, self.mod.type))
-        self.udo_variant = self._choose_udo_variant()
-        _, self.in_types, self.out_types = self.header
+                "error ({0}.txt): the UDO '{1}' is invalid\n"
+                "please, run 'pch2csd -c {0}' for details".format(
+                    self.mod.type, self.mod.type_name))
+
+        ins = self.tpl.ins
+        outs = self.tpl.outs
+
+        self.udo_variant = self._choose_udo_variant(len(ins))
+        self.in_types = ins[self.udo_variant].types if ins != [] else []
+        self.out_types = outs[self.udo_variant].types if outs != [] else []
+
         self.inlets, self.outlets = self._init_zak_connections()
 
     def __repr__(self):
         return '{}(type={}, id={})'.format(self.get_name(), self.mod.type, self.mod.id)
 
-    @property
-    def header(self):
-        return self.tpl.args[self.udo_variant]
-
     def get_name(self) -> str:
-        if len(self.tpl.args) < 2:
+        if len(self.tpl.opcodes) < 2:
             return self.mod.type_name
         else:
             return '{}_v{}'.format(self.mod.type_name, self.udo_variant)
 
     def get_src(self) -> str:
-        if len(self.tpl.args) < 2:
-            return '\n'.join(self.tpl.lines[self.tpl.args_lines[0]:])
-        offset = self.tpl.args_lines[self.udo_variant]
+        src = list(self.tpl.opcodes[self.udo_variant].src)
+        assert src[0].startswith('opcode')
+        src[0] = src[0].replace(self.mod.type_name,
+                                self.get_name())
+        return '\n'.join(src)
 
-        udo_src = []
-        for line in self.tpl.lines[offset:]:
-            l = line.strip()
-            if l.startswith('opcode'):
-                udo_src.append(line.replace(self.mod.type_name, self.get_name()))
-            else:
-                udo_src.append(line)
-                if l.startswith('endop'):
-                    break
-
-        return '\n'.join(udo_src).strip()
-
-    def _choose_udo_variant(self) -> int:
+    def _choose_udo_variant(self, len_ins) -> int:
+        if len_ins == 0:
+            return 0
         v = 0
         cables = self.patch.find_all_incoming_cables(self.mod.location, self.mod.id)
-        if len(self.tpl.args) < 2 or cables is None:
+        if len(self.tpl.opcodes) < 2 or cables is None:
             return v
         cs_rates = {c.jack_to: CableColor.to_cs_rate_char(c.color) for i, c in enumerate(cables)}
-        tpl_v0_ins = self.tpl.args[0][1]
-        tpl_v1_ins = self.tpl.args[1][1]
+        tpl_v0_ins = self.tpl.ins[0].types
+        tpl_v1_ins = self.tpl.ins[1].types
         for i, r in cs_rates.items():
             if tpl_v0_ins[i] != r and tpl_v1_ins[i] == r:
                 v = 1
@@ -196,11 +66,10 @@ class Udo:
         return v
 
     def get_params(self) -> List[float]:
-        tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
-        if params is not None and len(tpl_param_def) != len(params.values):
-            print("warning: template '{}' has different number of parameters "
-                  "than it was found in the parsed module '{}'. "
+        if params is not None and len(self.tpl.maps) != len(params.values):
+            print("warning: template '{}' has different number of map annotation "
+                  "than it is parameters found in the parsed module '{}'. "
                   "Returning -1s for now.".format(self.tpl, self.mod))
             return [-1] * params.num_params
         if params is None:
@@ -231,16 +100,23 @@ class Udo:
 
     def _map_value(self, i, v, all_vals):
         m = self.tpl.maps[i]
-        if m[0] == 'd':
-            table = self.patch.data.value_maps[m[1]]
-        elif m[0] == 's':
-            dependent_val = all_vals[int(m[1]) - 1]
+        if m.map_type == 'd':
+            table = self.patch.data.value_maps[m.tables[0]]
+        elif m.map_type == 's':
+            ref = m.switch_ref
             try:
-                table_name = m[dependent_val + 2]
-            except IndexError:
-                raise ValueError("{}.txt line {}: couldn't retrieve map {}".format(self.tpl.mod_type,
-                                                                                   self.tpl.maps_lines[i] + 1,
-                                                                                   dependent_val))
+                if ref.isdigit():
+                    table_name = m.tables[all_vals[int(ref) - 1]]
+                else:
+                    ms = [a for a in self.tpl.maps if a.name == ref]
+                    if len(ms) == 1:
+                        table_name = m.tables[ms[0].idx]
+                    else:
+                        raise Exception
+            except Exception:
+                raise ValueError("error ({}, line {}): couldn't retrieve map".format(
+                    self.tpl.filename,
+                    self.tpl.maps[i].line + 1))
             table = self.patch.data.value_maps[table_name]
         else:
             raise ValueError('Mapping type {} is not supported'.format(m[0]))
@@ -268,10 +144,16 @@ class ZakSpace:
         udos = deepcopy({m.id: Udo(p, m) for m in p.modules})
         for c in p.cables:
             mf, jf, mt, jt = c.module_from, c.jack_from, c.module_to, c.jack_to
-            if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
-                self._zak_connect_direct(c, udos)
-            else:
-                self._zak_connect_convert_rates(c, udos, p)
+            try:
+                if udos[mf].out_types[jf] == udos[mt].in_types[jt]:
+                    self._zak_connect_direct(c, udos)
+                else:
+                    self._zak_connect_convert_rates(c, udos, p)
+            except IndexError:
+                raise ValueError("error: couldn't connect "
+                                 "module with id {} (outlet {}) to "
+                                 "module with id {} (outlet {})"
+                                 .format(mf, jf, mt, jt))
         return list(udos.values())
 
     def _aloc_new(self) -> int:

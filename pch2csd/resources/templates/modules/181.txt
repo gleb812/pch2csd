@@ -1,7 +1,8 @@
 ;@ map s 2 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
 ;@ map d BUT007
 
-;@ args i,a,aaaaaaaa
+;@ ins a
+;@ outs a a a a a a a a
 opcode DlyEight, 0, i
   iTime xin
   ain zar 2 ; CHANGE 

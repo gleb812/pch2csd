@@ -4,7 +4,8 @@
 ;@ map d BUT002
 ;@ map d FLTeqq
 
-;@ args kkkkk,a,a
+;@ ins a
+;@ outs a
 opcode EqPeak, 0, kkkkkkk
   kFreq, kGain, kBW, kON, kLev, kIn, kOut xin
   ain zar kIn

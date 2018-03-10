@@ -1,6 +1,7 @@
 ; nothing to map
 
-;@ args ,kkkk,k
+;@ ins k k k k
+;@ outs k k
 opcode Mix41A, 0, kkkkk
 	k1,k2,k3,k4,k5 xin
 	ks1 zkr k1
@@ -12,7 +13,8 @@ kOut = (ks1+ks2+ks3+ks4)/4
 	zkw kOut,k5
 endop
 
-;@ args ,aaaa,a
+;@ ins a a a a
+;@ outs a
 opcode Mix41A, 0, kkkkk
 	k1,k2,k3,k4,k5 xin
 	as1 zar k1

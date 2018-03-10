@@ -1,7 +1,8 @@
 ;@ map s 2 LVLlev LVLpos
 ;@ map d BUT002
 
-;@ args ii,k,k
+;@ ins k
+;@ outs k
 opcode LevAdd, 0, k   ; MULTIMODE support a/k?
 ; Need to check..
   kVal xin
