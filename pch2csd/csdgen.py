@@ -110,7 +110,7 @@ class Udo:
                 else:
                     ms = [a for a in self.tpl.maps if a.name == ref]
                     if len(ms) == 1:
-                        table_name = m.tables[ms[0].idx]
+                        table_name = m.tables[all_vals[ms[0].idx]]
                     else:
                         raise Exception
             except Exception:

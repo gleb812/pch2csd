@@ -90,6 +90,7 @@ class TestUdoGen(TestCase):
         self.data = ProjectData()
         self.poly_mix2_fn = get_test_resource('test_poly_mix2.pch2')
         self.modes_LfoC = get_test_resource('test_modes_LfoC.pch2')
+        self.LevAmp = get_test_resource('test_LevAmp.pch2')
 
     def test_udo_statement_gen__not_raises(self):
         p = parse_pch2(self.data, self.poly_mix2_fn)
@@ -98,3 +99,14 @@ class TestUdoGen(TestCase):
         udos = zak.connect_patch(p)
         csd = Csd(p, zak, udos)
         csd.get_code()
+
+    def test_patch_LevAmp(self):
+        p = parse_pch2(self.data, self.LevAmp)
+        zak = ZakSpace()
+        udos = [udo for udo in zak.connect_patch(p)
+                if udo.mod.type == 81]
+        amp_params = [u.get_params()[0] for u in udos]
+
+        self.assertEqual(len(amp_params), 2)
+        self.assertEqual(amp_params[0], 1.51)
+        self.assertNotEqual(amp_params[0], amp_params[1])

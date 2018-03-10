@@ -44,7 +44,6 @@ class UdoAnnotation:
 
 class MapAnnotation(UdoAnnotation):
     atype = 'map'
-    map_count = 0
 
     def __init__(self, txt: str, line: int):
         super().__init__(txt, line)
@@ -65,8 +64,6 @@ class MapAnnotation(UdoAnnotation):
             self.map_type = toks[2 + inc]
             self.switch_ref = None if self.map_type == 'd' else toks[3 + inc]
             self.tables = toks[3 + inc:] if self.map_type == 'd' else toks[4 + inc:]
-            self.idx = self.map_count
-            self.map_count += 1
 
     def parsed(self):
         return super().parsed() \
@@ -188,6 +185,9 @@ class UdoTemplate:
                   if l.strip().startswith(';@')]
         annots = [UdoAnnotation.try_to_parse(txt, line)
                   for line, txt in annots]
+        for i, a in enumerate(annots):
+            if type(a) == MapAnnotation:
+                a.idx = i
 
         opcodes_lines = [i for i, l
                          in enumerate(self.lines)
