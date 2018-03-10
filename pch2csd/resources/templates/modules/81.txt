@@ -1,19 +1,20 @@
-;@ map s 2 LVLamp LVLamp
-;@ map d BUT002
+;@ map Amp          s LinLogSwitch LVLamp CLAEXP
+;@ map LinLogSwitch d              BUT002
 
-;@ ins k
-;@ outs k
-opcode LevAmp, 0,kkkk
-  kLev, kScale, kzIn, kzOut xin
-  ;@ todo dB scale
-  aIn zkr kzIn
-  zkw aIn * kLev, kzOut
+;@ ins k:In
+;@ outs k:Out
+opcode LevAmp,0,iiii
+  iKnob, iScale, izIn, izOut xin
+  iMult = iKnob  ; TODO properly implement logarithmic mapping
+  kIn zkr izIn
+  zkw kIn*iMult
 endop
 
-;@ args kk,a,a
-opcode LevAmp, 0,kkkk
-  kLev, kScale, kzIn, kzOut xin
-  ;@ todo dB scale
-  aIn zar kzIn
-  zaw aIn * kLev, kzOut
+;@ ins a:In
+;@ outs a:Out
+opcode LevAmp,0,iiii
+  iKnob, iScale, izIn, izOut xin
+  iMult = iKnob
+  aIn zar izIn
+  zaw aIn*iMult
 endop
