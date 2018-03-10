@@ -3,9 +3,10 @@ import os
 import sys
 from typing import TextIO, Tuple, List
 
-from .patch import Module
+from .patch import Module, Patch, ModuleParameters
 from .resources import get_template_module_path, ProjectData
 from .util import read_udo_template_lines
+from tests import get_all_module_pch2
 
 
 # UDO representation
@@ -31,8 +32,12 @@ class UdoAnnotation:
             return a
         if a.tokens[1] == MapAnnotation.atype:
             return MapAnnotation(txt, line)
-        elif a.tokens[1] == ArgsAnnotation.atype:
-            return ArgsAnnotation(txt, line)
+        elif a.tokens[1] == ModeAnnotation.atype:
+            return ModeAnnotation(txt, line)
+        elif a.tokens[1] == InsAnnotation.atype:
+            return InsAnnotation(txt, line)
+        elif a.tokens[1] == OutsAnnotation.atype:
+            return OutsAnnotation(txt, line)
         else:
             return a
 
@@ -42,18 +47,22 @@ class MapAnnotation(UdoAnnotation):
 
     def __init__(self, txt: str, line: int):
         super().__init__(txt, line)
+
+        self.name = None
+        self.map_type = None
+        self.switch_ref = None
+        self.tables = None
+
         toks = self.tokens
 
         if super().parsed() \
                 and len(toks) >= 4 \
                 and toks[1] == self.atype \
-                and toks[2] in 'ds':
-            self.map_type = toks[2]
-            self.switch_ref = [] if self.map_type == 'd' else [toks[3]]
-            self.tables = toks[3:] if self.map_type == 'd' else toks[4:]
-        else:
-            self.map_type = None
-            self.tables = None
+                and (toks[2] in 'ds' or toks[3] in 'ds'):
+            self.name, inc = (toks[2], 1) if toks[3] in 'ds' else ('l' + str(line), 0)
+            self.map_type = toks[2 + inc]
+            self.switch_ref = None if self.map_type == 'd' else [toks[3 + inc]]
+            self.tables = toks[3 + inc:] if self.map_type == 'd' else toks[4 + inc:]
 
     def parsed(self):
         return super().parsed() \
@@ -61,28 +70,52 @@ class MapAnnotation(UdoAnnotation):
                and self.tables is not None
 
 
-class ArgsAnnotation(UdoAnnotation):
-    atype = 'args'
+class ModeAnnotation(UdoAnnotation):
+    atype = 'mode'
+
+    def __init__(self, txt: str, line: int):
+        super().__init__(txt, line)
+
+        self.name = None
+        self.labels = None
+
+        toks = self.tokens
+
+        if super().parsed() \
+                and len(toks) >= 3 \
+                and toks[1] == self.atype:
+            self.name = toks[2]
+            self.labels = toks[2:]
+
+
+class InsAnnotation(UdoAnnotation):
+    atype = 'ins'
 
     def __init__(self, txt: str, line: int):
         super().__init__(txt, line)
         toks = self.tokens
 
+        self.types = None
+        self.names = None
+
         if super().parsed() \
                 and len(toks) > 2 \
                 and toks[1] == self.atype:
-            args = ''.join(toks[2:]).split(',')
-            if all([a in 'ika' for arg in args for a in arg]):
-                self.args = args
-            else:
-                self.args = None
-        else:
-            self.args = None
+            args = [(b[0], b[1]) if len(b) > 1 else (b[0], None)
+                    for b in [a.split(':') for a in toks[2:]]]
+            self.types, self.names = list(zip(*args))
 
     def parsed(self):
         return super().parsed() \
-               and self.args is not None \
-               and len(self.args) == 3
+               and self.types is not None \
+               and self.names is not None
+
+
+class OutsAnnotation(InsAnnotation):
+    atype = 'outs'
+
+    def __init__(self, txt: str, line: int):
+        super().__init__(txt, line)
 
 
 class Opcode:
@@ -100,30 +133,7 @@ class UdoTemplate:
         self.mod_type = mod.type
         self.mod_type_name = mod.type_name
         self.lines = read_udo_template_lines(mod.type)
-        # self.args_lines, self.maps_lines, self.args, self.maps = self._parse_headers()
         self.annots, self.opcodes = self._parse_template()
-
-    @property
-    def args(self):
-        return [a.args for a in self.annots
-                if isinstance(a, ArgsAnnotation)]
-
-    @property
-    def args_lines(self):
-        return [a.line for a in self.annots
-                if isinstance(a, ArgsAnnotation)]
-
-    @property
-    def maps(self):
-        t = [[m.map_type] + m.switch_ref + m.tables
-             for m in self.annots
-             if isinstance(m, MapAnnotation)]
-        return t
-
-    @property
-    def maps_lines(self):
-        return [m.line for m in self.annots
-                if isinstance(m, MapAnnotation)]
 
     def __repr__(self):
         return 'UdoTemplate({}, {}.txt)'.format(self.mod_type_name, self.mod_type)
@@ -138,6 +148,25 @@ class UdoTemplate:
     @property
     def path(self):
         return get_template_module_path(self.mod_type)
+
+    def _get_annotation(self, annotType):
+        return [a for a in self.annots if isinstance(a, annotType)]
+
+    @property
+    def maps(self):
+        return self._get_annotation(MapAnnotation)
+
+    @property
+    def modes(self):
+        return self._get_annotation(ModeAnnotation)
+
+    @property
+    def ins(self):
+        return self._get_annotation(InsAnnotation)
+
+    @property
+    def outs(self):
+        return self._get_annotation(OutsAnnotation)
 
     def _parse_template(self):
         annots = [(i, l) for i, l
@@ -166,15 +195,31 @@ class UdoTemplate:
 class UdoValidation(metaclass=abc.ABCMeta):
     def __init__(self, data: ProjectData, tpl: UdoTemplate):
         self.messages = []
+        self.could_not_validate = False
         self._validate(data, tpl)
 
     @property
     def is_valid(self) -> bool:
-        return self.messages is not None and len(self.messages) > 0
+        return self.messages is not None \
+               and not self.could_not_validate \
+               and len(self.messages) == 0
 
     @abc.abstractmethod
     def _validate(self, data: ProjectData, tpl: UdoTemplate):
         raise NotImplementedError
+
+
+class ValidationChain:
+    def __init__(self, validator_classes: list):
+        self.validators = validator_classes
+        self.errors = []
+
+    def do(self, data: ProjectData, tpl: UdoTemplate):
+        for validator in self.validators:
+            v = validator(data, tpl)
+            if not v.is_valid:
+                self.errors += v.messages
+                break
 
 
 class TemplateExists(UdoValidation):
@@ -187,53 +232,127 @@ class TemplateExists(UdoValidation):
                 'error: no template file for the module with id {}'.format(tpl.mod_type))
 
 
-class ArgsAnnotationsValid(UdoValidation):
+class AnnotationParsed(UdoValidation):
     def __init__(self, data, tpl):
         super().__init__(data, tpl)
 
-    def _validate(self, data, tpl):
-        if len(tpl.args) == 0:
-            self.messages.append(
-                "error ({}): no 'args' annotations were found "
-                "in the template".format(tpl.filename))
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        not_parsed = [a for a in tpl.annots if not a.parsed()]
+        msg = "error ({}, line {}): can't parse the annotation"
+        self.messages = [msg.format(tpl.filename, a.line + 1)
+                         for a in not_parsed]
+
+
+class MapTypesValid(UdoValidation):
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        invalid_maps = [a for a in tpl.annots
+                        if isinstance(a, MapAnnotation)
+                        and a.parsed()
+                        and a.map_type not in 'ds']
+        msg = "error ({}, line {}): invalid map type '{}'"
+        self.messages = [msg.format(tpl.filename, a.line + 1, a.map_type)
+                         for a in invalid_maps]
+
+
+class MapTablesExist(UdoValidation):
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        invalid_tables = [t for a in tpl.annots
+                          if isinstance(a, MapAnnotation)
+                          if a.parsed()
+                          for t in a.tables
+                          if t not in data.value_maps.keys()]
+
+        msg = 'error ({}): non-existent tables are used in the ' \
+              'map annotation(s): {}'
+        if len(invalid_tables) > 0:
+            self.messages = [msg.format(tpl.filename, ', '.join(invalid_tables))]
+
+
+class MapSwitchReferenceValid(UdoValidation):
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        maps = [m for m in tpl.maps]
+        maps_s = [m for m in tpl.maps if m.map_type == 's']
+        map_names = [m.name for m in maps]
+        msg = "error ({}, line {}): can't find a reference where " \
+              "the map-switch annotation points to"
+        for m in maps_s:
+            r = m.switch_ref
+            if (isinstance(r, int) and r > len(maps)) \
+                    or (isinstance(r, str) and r not in map_names):
+                self.messages += [msg.format(tpl.filename, m.line)]
+
+
+class UdoIntypesConsistent(UdoValidation):
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        try:
+            in_udo = [o.src[0].split(',')[2].strip() for o in tpl.opcodes]
+        except IndexError:
+            self.messages += ["error ({}): can't read one or more " \
+                              "UDO signatures".format(tpl.filename)]
             return
-        for i, a in enumerate(tpl.args):
-            if len(a) != 3:
-                self.messages.append(
-                    "error ({}): the 'args' annotation should have "
-                    "exactly three arguments".format(tpl.filename))
-        if len(tpl.args[0][0]) != len(tpl.maps):
-            self.messages.append(
-                "error ({}): the number of 'map' annotations "
-                "should be equal "
-                "to the number of module parameters".format(tpl.filename))
+
+        in_len = [len(i) for i in in_udo]
+        if len(set(in_len)) != 1:
+            self.messages += ["error ({}): UDO variants have different "
+                              "number of intypes".format(tpl.filename)]
+        else:
+            intypes_expected = len(tpl.maps) + len(tpl.modes) \
+                               + len(tpl.ins[0].types) + len(tpl.outs[0].types)
+            if intypes_expected != in_len[0]:
+                self.messages += ["error ({}): the number of intypes in UDO is not "
+                                  "consistent with the declared annotations"]
 
 
-class MapTablesValid(UdoValidation):
+class ParamsModesConsistent(UdoValidation):
     def __init__(self, data, tpl):
         super().__init__(data, tpl)
 
-    def _validate(self, data, tpl):
-        unknown_map_types = set()
-        unknown_map_tables = set()
-        for m in tpl.maps:
-            if m[0] not in 'ds':
-                unknown_map_types.add(m[0])
-            offset = 2 if m[0] == 's' else 1
-            for t in m[offset:]:
-                if t not in data.value_maps:
-                    unknown_map_tables.add(t)
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        if not all([a.parsed() for a in tpl.maps + tpl.modes]):
+            self.could_not_validate = True
+            return
 
-        if len(unknown_map_types) > 0:
-            self.messages.append(
-                'error ({}): unknown mapping types: {}'.format(
-                    tpl.filename,
-                    ', '.join(unknown_map_types)))
-        if len(unknown_map_tables) > 0:
-            self.messages.append(
-                'error ({}): unknown mapping tables: {}'.format(
-                    tpl.filename,
-                    ', '.join(unknown_map_tables)))
+        msg = "error ({}): the number of {} defined in the template " \
+              "does not equal to the number of {} found in a test patch"
+        mod_params = {m: p.find_mod_params(m.location, m.id)
+                      for p in get_all_module_pch2()
+                      for m in p.modules
+                      if m.type == tpl.mod_type}
+        assert len(mod_params) == 1
+        mod, params = list(mod_params.items())[0]
+        if params.num_params != len(tpl.maps):
+            self.messages += [msg.format(tpl.filename,
+                                         "map annotations",
+                                         "corresponding module's parameters")]
+        if len(mod.modes) != len(tpl.modes):
+            self.messages += [msg.format(tpl.filename,
+                                         "mode annotations",
+                                         "corresponding module's modes")]
+
+
+class InsOutsValid(UdoValidation):
+    excluded_modules = []
+
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        if len(tpl.ins) == len(tpl.outs) == 0 \
+                and tpl.mod_type not in self.excluded_modules:
+            self.messages += ["error ({}): the UDO must have at least one "
+                              "of 'ins' or 'outs' annotations".format(tpl.filename)]
 
 
 class ToDoCollect(UdoValidation):
@@ -252,16 +371,22 @@ class ToDoCollect(UdoValidation):
 
 class UdoTemplateValidation:
     def __init__(self, data: ProjectData, tpl: UdoTemplate):
-        tpl_exists = TemplateExists(data, tpl)
-        if tpl_exists.is_valid:
-            validators = [ArgsAnnotationsValid,
-                          MapTablesValid]
-            self.errors = [msg
-                           for v in validators
-                           for msg in v(data, tpl).messages]
-        else:
-            self.errors = tpl_exists.messages
+        self.errors = self._perform_standard_validations(data, tpl)
         self.todos = ToDoCollect(data, tpl).messages
+
+    @staticmethod
+    def _perform_standard_validations(data: ProjectData, tpl: UdoTemplate) -> List[str]:
+        exists = TemplateExists(data, tpl)
+        if not exists.is_valid:
+            return exists.messages
+        validators = ValidationChain([AnnotationParsed,
+                                      MapTypesValid,
+                                      MapTablesExist,
+                                      MapSwitchReferenceValid,
+                                      InsOutsValid,
+                                      UdoIntypesConsistent])
+        validators.do(data, tpl)
+        return validators.errors
 
     def is_valid(self, with_todos=False):
         if len(self.errors) > 0:

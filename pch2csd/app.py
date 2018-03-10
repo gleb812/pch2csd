@@ -5,17 +5,13 @@ from io import StringIO
 
 from tabulate import tabulate
 
-from pch2csd import __version__, __homepage__
-from pch2csd.csdgen import ZakSpace, Csd, Udo
-from pch2csd.udo import UdoTemplate, UdoTemplateValidation
-from pch2csd.parse import parse_pch2
-from pch2csd.patch import Patch, Location
-from pch2csd.resources import get_template_module_path, ProjectData
-
-
-def get_test_resource(path: str) -> str:
-    return os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', 'tests', 'resources', path))
+from . import __version__, __homepage__
+from .csdgen import ZakSpace, Csd, Udo
+from .parse import parse_pch2
+from .patch import Patch, Location
+from .resources import get_template_module_path, ProjectData
+from .udo import UdoTemplate, UdoTemplateValidation
+from .util import get_test_resource
 
 
 def _all_modules_implemented(patch: Patch):

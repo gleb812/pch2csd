@@ -20,22 +20,23 @@ class Udo:
         self.tpl = UdoTemplate(mod)
         if not self.tpl.validate(patch.data):
             raise ValueError(
-                "can't validate UDO {0} of type {1}.\n"
-                "Please run 'pch2csd -c {1}' to check the implementation.".format(
-                    self.mod.type_name, self.mod.type))
-        self.udo_variant = self._choose_udo_variant()
-        _, self.in_types, self.out_types = self.header
+                "error ({0}.txt): the UDO '{1}' is invalid\n"
+                "please, run 'pch2csd -c {0}' for details".format(
+                    self.mod.type, self.mod.type_name))
+
+        ins = self.tpl.ins
+        outs = self.tpl.outs
+        self.udo_variant = self._choose_udo_variant() if len(ins) > 0 else 0
+        self.in_types = ins[self.udo_variant].types if ins != [] else []
+        self.out_types = outs[self.udo_variant].types if outs != [] else []
+
         self.inlets, self.outlets = self._init_zak_connections()
 
     def __repr__(self):
         return '{}(type={}, id={})'.format(self.get_name(), self.mod.type, self.mod.id)
 
-    @property
-    def header(self):
-        return self.tpl.args[self.udo_variant]
-
     def get_name(self) -> str:
-        if len(self.tpl.args) < 2:
+        if len(self.tpl.opcodes) < 2:
             return self.mod.type_name
         else:
             return '{}_v{}'.format(self.mod.type_name, self.udo_variant)
@@ -50,11 +51,11 @@ class Udo:
     def _choose_udo_variant(self) -> int:
         v = 0
         cables = self.patch.find_all_incoming_cables(self.mod.location, self.mod.id)
-        if len(self.tpl.args) < 2 or cables is None:
+        if len(self.tpl.opcodes) < 2 or cables is None:
             return v
         cs_rates = {c.jack_to: CableColor.to_cs_rate_char(c.color) for i, c in enumerate(cables)}
-        tpl_v0_ins = self.tpl.args[0][1]
-        tpl_v1_ins = self.tpl.args[1][1]
+        tpl_v0_ins = self.tpl.ins[0].types
+        tpl_v1_ins = self.tpl.ins[1].types
         for i, r in cs_rates.items():
             if tpl_v0_ins[i] != r and tpl_v1_ins[i] == r:
                 v = 1
@@ -62,11 +63,10 @@ class Udo:
         return v
 
     def get_params(self) -> List[float]:
-        tpl_param_def = self.tpl.args[self.udo_variant][0]
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
-        if params is not None and len(tpl_param_def) != len(params.values):
-            print("warning: template '{}' has different number of parameters "
-                  "than it was found in the parsed module '{}'. "
+        if params is not None and len(self.tpl.maps) != len(params.values):
+            print("warning: template '{}' has different number of map annotation "
+                  "than it is parameters found in the parsed module '{}'. "
                   "Returning -1s for now.".format(self.tpl, self.mod))
             return [-1] * params.num_params
         if params is None:
@@ -104,9 +104,10 @@ class Udo:
             try:
                 table_name = m[dependent_val + 2]
             except IndexError:
-                raise ValueError("{}.txt line {}: couldn't retrieve map {}".format(self.tpl.mod_type,
-                                                                                   self.tpl.maps_lines[i] + 1,
-                                                                                   dependent_val))
+                raise ValueError("error ({}, line {}): couldn't retrieve map {}".format(
+                    self.tpl.filename,
+                    self.tpl.maps[i].line + 1,
+                    dependent_val))
             table = self.patch.data.value_maps[table_name]
         else:
             raise ValueError('Mapping type {} is not supported'.format(m[0]))

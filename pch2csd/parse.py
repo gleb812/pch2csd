@@ -3,10 +3,10 @@ from struct import unpack
 
 from bitarray import bitarray
 
-from pch2csd.patch import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters, \
+from .patch import Patch, Module, Location, CableColor, CableType, Cable, ModuleParameters, \
     transform_in2in_cables
-from pch2csd.resources import ProjectData
-from pch2csd.util import BitArrayStream
+from .resources import ProjectData
+from .util import BitArrayStream
 
 
 def parse_header(pch2: FileIO, patch: Patch):

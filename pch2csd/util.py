@@ -1,3 +1,4 @@
+import os
 from struct import unpack
 from typing import List
 
@@ -67,3 +68,8 @@ def read_udo_template_lines(mod_type: int):
             return [l.strip() for l in f]
     except IOError:
         return []
+
+
+def get_test_resource(path: str) -> str:
+    return os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..', 'tests', 'resources', path))
