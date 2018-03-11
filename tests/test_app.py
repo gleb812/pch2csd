@@ -1,7 +1,8 @@
 from glob import glob
 from unittest import TestCase
 
-from pch2csd.app import print_pch2, convert_pch2, validate_udo
+from pch2csd.app import print_pch2, convert_pch2, validate_udo, print_module
+from pch2csd.patch import Location
 from tests.util import get_test_resource
 
 
@@ -23,3 +24,7 @@ class TestApp(TestCase):
     def test_gen_udo_status_doc__not_fails(self):
         from pch2csd.app import gen_udo_status_doc
         gen_udo_status_doc()
+
+    def test_mod_status__LevAmp__not_fails(self):
+        print_module(get_test_resource('test_LevAmp.pch2'), 4,
+                     Location.VOICE_AREA)

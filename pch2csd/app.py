@@ -63,23 +63,43 @@ def print_module(fn_pch2: str, mod_id: int, loc: Location):
         print('error: cannot find module with id {} in the {} location'.format(mod_id, loc.short_str()))
         exit(-1)
 
-    params_midi = p.find_mod_params(loc, mod_id)
+    p_midi = p.find_mod_params(loc, mod_id)
     try:
         udo = Udo(p, m)
-        params_mapped = udo.get_params()
-    except Exception:
+        p_mapped = udo.get_params()
+        p_names = [str(m.name)
+                   if not m.name.startswith('line:') else ''
+                   for m in udo.tpl.maps]
+        p_names = [str(p) for p in p_names]
+        modes = [str(m.name) + '(mode)'
+                 for m in udo.tpl.modes]
+        ins = [i for i in udo.tpl.ins]
+        outs = [i for i in udo.tpl.outs]
+    except Exception as e:
         print("warning ({}.txt): couldn't process UDO".format(m.type))
-        params_mapped = ['n/a'] * params_midi.num_params
-    assert params_midi.num_params == len(params_mapped)
+        print(e)
+        p_mapped = ['n/a'] * p_midi.num_params
+        p_names = [''] * p_midi.num_params
+        modes = [''] * len(m.modes)
+        ins, outs = [], []
+    assert p_midi.num_params == len(p_mapped)
 
-    tbl = [['Type', 'Raw', 'Mapped']]
-    for raw, mapped in zip(params_midi.values, params_mapped):
-        tbl.append(['Parameter', str(raw), str(mapped)])
-    for mode in m.modes:
-        tbl.append(['Mode', str(mode), ''])
+    tbl = [['Name', 'Type', 'Raw', 'Mapped']]
+    for p, raw, mapped in zip(p_names, p_midi.values, p_mapped):
+        tbl.append([p, 'param', str(raw), str(mapped)])
+    for m in modes:
+        tbl.append([m, 'mode', '', ''])
+    for i in ins:
+        for n in i.names:
+            tbl.append([n, 'inlet', '', ''])
+        break
+    for o in outs:
+        for n in o.names:
+            tbl.append([n, 'outlet' '', ''])
+        break
 
     print('Patch: {}'.format(fn_pch2))
-    print('Details of the module:\n{}'.format(m))
+    print('Module {}, type={}, id={}'.format(m.type_name, m.type, m.id))
     print()
     print(tabulate(tbl, headers='firstrow', tablefmt='simple'))
 

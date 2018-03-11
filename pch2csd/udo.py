@@ -60,7 +60,7 @@ class MapAnnotation(UdoAnnotation):
                 and len(toks) >= 4 \
                 and toks[1] == self.atype \
                 and (toks[2] in 'ds' or toks[3] in 'ds'):
-            self.name, inc = (toks[2], 1) if toks[3] in 'ds' else ('l' + str(line), 0)
+            self.name, inc = (toks[2], 1) if toks[3] in 'ds' else ('line:' + str(line), 0)
             self.map_type = toks[2 + inc]
             self.switch_ref = None if self.map_type == 'd' else toks[3 + inc]
             self.tables = toks[3 + inc:] if self.map_type == 'd' else toks[4 + inc:]
