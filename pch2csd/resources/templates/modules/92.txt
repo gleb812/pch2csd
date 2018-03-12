@@ -1,10 +1,27 @@
-opcode FltClassic, 0, iKKK
-  iRoll, kFreq, kRes, kMod xin
-  ain zar 2; CHANGE
-  kmod zkr 1; CHANGE
-  kPitch zkr 2; CHANGE
-  aout lowresx ain, kFreq+kmod*kMod+kPitch, kRes, iRoll ;Roll = 2,3,4 x6
-  ; balance ???
-  ; Freq is not in Hz for lowresx
-  zaw aout, 2 ;CHANGE
+;@ map d FLTfrq
+;@ map d CLA000
+;@ map d BUT002
+;@ map d FLTres
+;@ map d BUT003
+;@ map d BUT002
+
+;TODO: KBT, Pitch modulation..
+
+;@ ins a:In k:kModIn
+;@ outs a:Out
+;;@ args kkkkik,ak,a
+opcode FltClassic, 0, kkkkikkkk
+  asig[] init 4
+  kFreq,kModLev,kKBT,kRes,iRoll,kOn, kIn,kModIn, kOut xin
+  ain zar kIn
+  kmod zkr kModIn
+  ;kPitch zkr 
+  if kOn==1 then
+    asig[0],asig[1],asig[2],asig[3] mvclpf4 ain,kFreq + kModLev*kModIn ,kRes
+    afout = asig[iRoll+1]
+    aout balance afout, ain
+  else
+    aout = ain
+  endif
+  zaw aout, kOut
 endop
