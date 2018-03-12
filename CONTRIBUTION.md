@@ -10,4 +10,5 @@ After making a contribution, please add yourself to the list in this file.
 - Gleb Rogozinsky
 - Michael Chesnokov
 - Eugene Cherny
--
+- Richard van Bemmelen (aka zappfinger)
+- 
