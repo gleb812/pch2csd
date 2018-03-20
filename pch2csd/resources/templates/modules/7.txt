@@ -1,0 +1,83 @@
+;@ map s 5 OSCsem OSCsem OSCsem OSCprt
+;@ map d OSCcnt
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT006
+;@ map d CLA000
+;@ map d OSCshp
+;@ map d CLA000
+;@ map d BUT006
+;@ map d BUT002
+;@ map d BUT002
+
+;@ ins k k k k k
+;@ outs a
+opcode OscB, 0, kkkkkkkkkkkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kWave,kON,kFMPTrk,kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
+
+kMod zkr kModIn
+aFM zar kFMIn
+async zar kSyncIn
+kPWIn zar kShapeIn
+
+; FM Ind Calc
+kIndx = 0.000039*kFM*kFM*kFM - 0.00049*kFM*kFM + 0.016*kFM - 0.033
+kIndx limit kIndx, 0, 80
+; Out FM Calc
+
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+; FMLin vs FMTrk
+if kFMPTrk != 1 goto FMLin
+  kFMNote = kNote
+  goto FMTrk
+FMLin:
+  kFMNote = 64
+FMTrk:
+
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+
+if kWave >= 4 goto WaveMod
+; All simple waves - Sine,Tri, Saw
+  aout oscilikts 0.5, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
+goto WOut
+
+WaveMod:
+  aphase, asyncout syncphasor kFreq + aFM*kIndx*cpsmidinn(kFMNote), async
+  aphaseM limit aphase+kPMod,0,1  ; check signal levels for PW
+
+if kWave != 5 goto PWM
+  a1 table aphase, 3, 1
+  a2 table aphaseM, 3, 1
+  aout = a1 + a2
+goto WOut
+
+PWM:
+; Sq with PWM
+  aout table aphaseM, 4, 1
+
+WOut:
+zaw aout*kON, kOut
+endop
