@@ -5,11 +5,21 @@
 ;@ ins a a a a
 opcode Out4, 0, kkkkkkk
 ksource, kMute, kPad, k1, k2, k3, k4 xin
-kpad = kPad + 1 
+kpad = kPad + 1
 a1 zar k1
 a2 zar k2
 a3 zar k3
 a4 zar k4
+
+a1 limit a1, -4, 4  ; +12 dB overhead limitation
+a2 limit a2, -4, 4
+a3 limit a3, -4, 4
+a4 limit a4, -4, 4
+a1 *= .25 ; back to 0dbfs = 1
+a2 *= .25
+a3 *= .25
+a4 *= .25
+
 outq a1*kMute*kpad,a2*kMute*kpad,a3*kMute*kpad,a4*kMute*kpad
 endop
 
