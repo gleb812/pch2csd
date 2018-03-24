@@ -22,13 +22,13 @@ kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kWave,kON,kFMPTrk,kPitch
 kMod zkr kModIn
 aFM zar kFMIn
 async zar kSyncIn
-kPWIn zar kShapeIn
+aPWIn zar kShapeIn
 
 ; FM Ind Calc
+kFM *= 100 ; NEEDS CHANGING CLA000 to CLA-REAL..
 kIndx = 0.000039*kFM*kFM*kFM - 0.00049*kFM*kFM + 0.016*kFM - 0.033
 kIndx limit kIndx, 0, 80
 ; Out FM Calc
-
 
 if kKBT != 1 goto NoKBT
   kNote = gkNote
@@ -45,7 +45,6 @@ FMLin:
   kFMNote = 64
 FMTrk:
 
-
 kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
@@ -59,20 +58,21 @@ Part:
 kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 
-if kWave >= 4 goto WaveMod
+kShape = (kShape-50)*.01
+if kWave >= 3 kgoto WaveMod
 ; All simple waves - Sine,Tri, Saw
   aout oscilikts 0.5, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
-goto WOut
+kgoto WOut
 
 WaveMod:
   aphase, asyncout syncphasor kFreq + aFM*kIndx*cpsmidinn(kFMNote), async
-  aphaseM limit aphase+kPMod,0,1  ; check signal levels for PW
+  aphaseM limit aphase+kShape,0,1  ; check signal levels for PW
 
-if kWave != 5 goto PWM
+if kWave != 4 kgoto PWM
   a1 table aphase, 3, 1
-  a2 table aphaseM, 3, 1
+  a2 table aphase + kShape, 3, 1, 0, 1
   aout = a1 + a2
-goto WOut
+kgoto WOut
 
 PWM:
 ; Sq with PWM
