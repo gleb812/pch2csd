@@ -35,6 +35,6 @@ goto Out
 Part:
 kFreq = cpsmidinn(kM_)*kCoarse
 Out:
-aout oscilikt 0.5, kFreq, kWave+1
+aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut
 endop
