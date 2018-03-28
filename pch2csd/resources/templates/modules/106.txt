@@ -1,0 +1,104 @@
+;@ map s 7 OSCsem OSCsem OSCsem OSCprt
+;@ map d OSCcnt
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT006
+;@ map d CLA000
+;@ map d CLA000
+;@ map d BUT002
+
+;@ ins k k k
+;@ outs a
+opcode OscNoise, 0, kkkkkkkkkkkk
+; TODO No Width Modulation
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kModLev,kTuneMode,kWid,kWMod,kON,kPitchIn,kModIn,kWidIn,kOut xin
+
+kMod zkr kModIn
+kWM zkr kWidIn
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+
+a1 rand 1
+kwid = -0.000000002*kWid*kWid*kWid*kWid + 0.00000066*kWid*kWid*kWid - 0.000013*kWid*kWid + 0.00011*kWid + 0.014
+kT = 1/(kFreq*2)
+kW = kFreq * kwid
+abuf delayr .25
+a2   deltapi kT
+
+a3 butterbp a2, kFr, kW
+a4 butterbp a3, kFr, kW
+a5 butterbp a4, kFr, kW
+
+     delayw a1-a5*kFeed
+
+zaw a5*kON, kOut
+endop
+
+;@ ins a a a
+;@ outs a
+opcode OscNoise, 0, kkkkkkkkkkkk
+; TODO No Width Modulation
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kModLev,kTuneMode,kWid,kWMod,kON,kPitchIn,kModIn,kWidIn,kOut xin
+
+aMod zar kModIn
+aWM zar kWidIn
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+aPitch zar kPitchIn
+Run:
+kM_ = k(aPitch)+kModLev*k(aMod)+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+
+a1 rand 1
+kwid = -0.000000002*kWid*kWid*kWid*kWid + 0.00000066*kWid*kWid*kWid - 0.000013*kWid*kWid + 0.00011*kWid + 0.014
+kT = 1/(kFreq*2)
+kW = kFreq * kwid
+abuf delayr .25
+a2   deltapi kT
+
+a3 butterbp a2, kFr, kW
+a4 butterbp a3, kFr, kW
+a5 butterbp a4, kFr, kW
+
+     delayw a1-a5*kFeed
+
+zaw a5*kON, kOut
+endop
