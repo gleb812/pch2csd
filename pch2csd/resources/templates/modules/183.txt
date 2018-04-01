@@ -1,0 +1,52 @@
+;@ map s 4 OSCsem OSCsem OSCsem OSCprt
+;@ map d OSCcnt
+;@ map d BUT002
+;@ map d BUT006
+;@ map d CLA000
+;@ map d BUT002
+;@ map d CLA000
+;@ map d BUT006
+
+;@ ins k k k k k
+;@ outs a
+opcode OscPM, 0, kkkkkkkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+kCoarse,kFine,kKBT,kTuneMode,kPM,kON,kPitchM,kWave, kModIn,kSyncIn,kPMIn,kPitchIn,kOut xin
+
+kMod zkr kModIn
+aPM zar kPMIn
+async zar kSyncIn
+
+; PM Ind Calc - SAME as OscC or OscB
+kPM *= 100 ; NEEDS CHANGING CLA000 to CLA-REAL..
+kIndx = 0.000039*kPM*kPM*kPM - 0.00049*kPM*kPM + 0.016*kPM - 0.033 ; SHOULD BE BETTER APPR
+kIndx limit kIndx, 0, 80
+; Out PM Calc
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+
+aout oscilikts 1, kFreq + aPM*kIndx*cpsmidinn(kNote), kWave+1, async, 0
+
+zaw aout*kON, kOut
+endop
