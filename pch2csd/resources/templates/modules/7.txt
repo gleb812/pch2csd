@@ -61,7 +61,7 @@ Out:
 kShape = (kShape-50)*.01
 if kWave >= 3 kgoto WaveMod
 ; All simple waves - Sine,Tri, Saw
-  aout oscilikts 0.5, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
+  aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
 kgoto WOut
 
 WaveMod:

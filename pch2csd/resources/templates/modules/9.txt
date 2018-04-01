@@ -55,7 +55,7 @@ Part:
 kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 
-aout oscilikts 0.5, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
+aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
 
 zaw aout*kON, kOut
 endop
