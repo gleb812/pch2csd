@@ -1,8 +1,31 @@
-opcode Mix11A, 0, ki   ; MULTIMODE support a/k?
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  kLev, iSW xin
-  aout = a1 + a2*kLev*iSW
-  zaw aout, 2 ; CHANGE 
-  ; LIN vs DB?
+@ map s 3 AMPEXP CLA001 AMPEXP
+@ map d BUT002
+@ map d BUT003
+
+@ ins k k
+@ outs k
+opcode Mix11A, 0, kkkkkk
+  kLev, kOn, kExpLin, kin, kchain, kout  xin
+  kIn zkr kin
+  kChain zkr kchain
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+  kOut = kChain + kIn * kLev * kOn
+  zkw kOut, kout
+endop
+
+@ ins a a
+@ outs a
+opcode Mix11A, 0, kkkkkkk
+  kLev, kOn, kExpLin, kin, kchain, kout  xin
+  aIn zar kin
+  aChain zar kchain
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+  aOut = aChain + aIn * kLev * kOn
+  zaw aOut, kout
 endop
