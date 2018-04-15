@@ -19,3 +19,21 @@ opcode Mix11S, 0, kkkkkkkkk
   zkw kOutL, koutL
   zkw kOutR, koutR
 endop
+
+;@ ins a a a a
+;@ outs a a
+opcode Mix11S, 0, kkkkkkkkk
+  kLev, kOn, kExpLin, kinL,kinR, kchainL,kchainR, koutL,koutR  xin
+  aInL zar kinL
+  aInR zar kinR
+  aChainL zar kchainL
+  aChainR zar kchainR
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+  aOutL = aChainL + aInL * kLev * kOn
+  aOutR = aChainR + aInR * kLev * kOn
+  zaw aOutL, koutL
+  zaw aOutR, koutR
+endop
