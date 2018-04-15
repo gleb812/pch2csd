@@ -1,13 +1,41 @@
-opcode Mix81A, 0, i   ; MULTIMODE support a/k?
-  iPad xin
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  a3 zar 1 ; CHANGE 
-  a4 zar 1 ; CHANGE
-  a5 zar 1 ; CHANGE 
-  a6 zar 1 ; CHANGE 
-  a7 zar 1 ; CHANGE 
-  a8 zar 1 ; CHANGE
-  aout = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8)*iPad
-  zaw aout, 2 ; CHANGE 
+;@ map d BUT003
+
+;@ ins k k k k k k k k
+;@ outs k
+opcode Mix81A, 0, kkkkkkkkkk
+	kPad,k1,k2,k3,k4,k5,k6,k7,k8,kout xin
+	ks1 zkr k1
+	ks2 zkr k2
+	ks3 zkr k3
+	ks4 zkr k4
+  ks5 zkr k5
+	ks6 zkr k6
+	ks7 zkr k7
+	ks8 zkr k8
+
+; Pad =         0, -6, -12 dB
+ kP[] fillarray 1,0.5,0.25
+
+	kOut =ks1+ks2+ks3+ks4+ks5+ks6+ks7+ks8
+	zkw kOut*kP[kPad],kout
+endop
+
+;@ ins a a a a a a a a
+;@ outs a
+opcode Mix81A, 0, kkkkkkkkkk
+	kPad,k1,k2,k3,k4,k5,k6,k7,k8,kout xin
+	as1 zar k1
+	as2 zar k2
+	as3 zar k3
+	as4 zar k4
+  as5 zar k5
+	as6 zar k6
+	as7 zar k7
+	as8 zar k8
+
+; Pad =         0, -6, -12 dB
+ kP[] fillarray 1,0.5,0.25
+
+	aOut =as1+as2+as3+as4+as5+as6+as7+as8
+	zaw aOut*kP[kPad],kout
 endop

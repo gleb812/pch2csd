@@ -1,29 +1,44 @@
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT004
-;@ map d BUT004
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map d BUT003
+;@ map d BUT003
 
 ;@ ins k k k k k k k k k
 ;@ outs k
 opcode Mix81B, 0, kkkkkkkkkkkkkkkkkkkk
-	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kmod,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
+	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kEL,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
 	k1 zkr ki1
 	k2 zkr ki2
-	k3 zkr ki3 
+	k3 zkr ki3
 	k4 zkr ki4
 	k5 zkr ki5
-	k6 zkr ki6 
-	k7 zkr ki7 
+	k6 zkr ki6
+	k7 zkr ki7
 	k8 zkr ki8
 	k9 zkr kic
-	kout = k9 + (k1*kLev1+k2*kLev2+k3*kLev3+k4*kLev4+k5*kLev5+k6*kLev6+k7*kLev7+k8*kLev8)
-	zkw kout, ko 
+
+	; Pad =				0, -6, -12 dB
+	kP[] fillarray 1,0.5,0.25
+
+	if kExpLin == 1 goto Out
+		kLev1 table kLev1, 100, 1
+		kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+		kLev5 table kLev5, 100, 1
+		kLev6 table kLev6, 100, 1
+		kLev7 table kLev7, 100, 1
+		kLev8 table kLev8, 100, 1
+	Out:
+
+	kout = k9 + (k1*kLev1+k2*kLev2+k3*kLev3+k4*kLev4+k5*kLev5+k6*kLev6+k7*kLev7+k8*kLev8)*kP[kpad]
+	zkw kout, ko
 endop
 
 ;@ ins a a a a a a a a a
@@ -32,13 +47,28 @@ opcode Mix81B, 0, kkkkkkkkkkkkkkkkkkkk
 	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kmod,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
 	a1 zar ki1
 	a2 zar ki2
-	a3 zar ki3 
+	a3 zar ki3
 	a4 zar ki4
 	a5 zar ki5
-	a6 zar ki6 
-	a7 zar ki7 
+	a6 zar ki6
+	a7 zar ki7
 	a8 zar ki8
 	a9 zar kic
-	aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)
-	zaw aout, ko 
+
+	; Pad =				0, -6, -12 dB
+	kP[] fillarray 1,0.5,0.25
+
+	if kExpLin == 1 goto Out
+		kLev1 table kLev1, 100, 1
+		kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+		kLev5 table kLev5, 100, 1
+		kLev6 table kLev6, 100, 1
+		kLev7 table kLev7, 100, 1
+		kLev8 table kLev8, 100, 1
+	Out:
+
+	aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)*kP[kpad]
+	zaw aout, ko
 endop
