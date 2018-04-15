@@ -1,14 +1,82 @@
-opcode MixFader, 0, kkkkkkkki   ; == Mix81B
-  kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8, iPad xin
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  a3 zar 1 ; CHANGE 
-  a4 zar 1 ; CHANGE
-  a5 zar 1 ; CHANGE 
-  a6 zar 1 ; CHANGE 
-  a7 zar 1 ; CHANGE 
-  a8 zar 1 ; CHANGE
-  a9 zar 1 ; CHANGE
-  aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)*iPad
-  zaw aout, 2 ; CHANGE 
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map s 17 AMPEXP CLA001 AMPEXP
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT003
+;@ map d BUT003
+
+;@ ins k k k k k k k k k
+;@ outs k
+opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkk
+	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kO1,kO2,kO3,kO4,kO5,kO6,kO7,kO8,kEL,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
+	k1 zkr ki1
+	k2 zkr ki2
+	k3 zkr ki3
+	k4 zkr ki4
+	k5 zkr ki5
+	k6 zkr ki6
+	k7 zkr ki7
+	k8 zkr ki8
+	k9 zkr kic
+
+	; Pad =				0, -6, -12 dB
+	kP[] fillarray 1,0.5,0.25
+
+	if kExpLin == 1 goto Out
+		kLev1 table kLev1, 100, 1
+		kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+		kLev5 table kLev5, 100, 1
+		kLev6 table kLev6, 100, 1
+		kLev7 table kLev7, 100, 1
+		kLev8 table kLev8, 100, 1
+	Out:
+
+	kout = k9 + (k1*kLev1*kO1+k2*kLev2*kO2+k3*kLev3*kO3+k4*kLev4*kO4+k5*kLev5*kO5+k6*kLev6*kO6+k7*kLev7+k8*kLev8)*kP[kpad]
+	zkw kout, ko
+endop
+
+;@ ins a a a a a a a a a
+;@ outs a
+opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkk
+	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kO1,kO2,kO3,kO4,kO5,kO6,kO7,kO8,kEL,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
+	a1 zar ki1
+	a2 zar ki2
+	a3 zar ki3
+	a4 zar ki4
+	a5 zar ki5
+	a6 zar ki6
+	a7 zar ki7
+	a8 zar ki8
+	a9 zar kic
+
+	; Pad =				0, -6, -12 dB
+	kP[] fillarray 1,0.5,0.25
+
+	if kExpLin == 1 goto Out
+		kLev1 table kLev1, 100, 1
+		kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+		kLev5 table kLev5, 100, 1
+		kLev6 table kLev6, 100, 1
+		kLev7 table kLev7, 100, 1
+		kLev8 table kLev8, 100, 1
+	Out:
+
+	aout = a9 + (a1*kLev1*kO1+a2*kLev2*kO2+a3*kLev3*kO3+a4*kLev4*kO4+a5*kLev5*kO5+a6*kLev6*kO6+a7*kLev7*kO7+a8*kLev8*kO8)*kP[kpad]
+	zaw aout, ko
 endop
