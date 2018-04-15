@@ -1,10 +1,58 @@
-opcode Mix41C, 0, kkkkiiiii   ; MULTIMODE support a/k?
-kLev1, kLev2, kLev3, kLev4, iSW1, iSW2, iSW3, iSW4, iPad  xin 
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  a3 zar 1 ; CHANGE 
-  a4 zar 1 ; CHANGE 
-  a5 zar 1 ; CHANGE 
-  aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2 + a4*kLev3*iSW3 + a5*kLev4*iSW4
-  zaw aout*iPad, 2 ; CHANGE 
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map s 10 AMPEXP CLA001 AMPEXP
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT002
+;@ map d BUT003
+
+;@ ins k k k k k
+;@ outs k
+opcode Mix41C, 0, kkkkkkkkkkkkkkkk
+kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
+	k1 zkr kI1
+	k2 zkr kI2
+	k3 zkr kI3
+	k4 zkr kI4
+	k5 zkr kCh
+
+  ; Pad =       0, -6db   Pad doesn't affect Chain!
+  kP[] fillarray 1,0.5
+
+	if kExpLin == 1 goto Out
+    kL1 table kL1, 100, 1
+    kL2 table kL2, 100, 1
+		kL3 table kL3, 100, 1
+		kL4 table kL4, 100, 1
+  Out:
+
+	kout = kP[kPad]*(k1*kL1*kO1 + k2*kL2*kO2 + k3*kL3*kO3 + k4*kL4*kO4) + k5
+	zkw kout, kOut
+endop
+
+;@ ins a a a a a
+;@ outs a
+opcode Mix41C, 0, kkkkkkkkkkkkkkkk
+kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
+	a1 zar kI1
+	a2 zar kI2
+	a3 zar kI3
+	a4 zar kI4
+	a5 zar kCh
+
+  ; Pad =       0, -6db   Pad doesn't affect Chain!
+  kP[] fillarray 1,0.5
+
+	if kExpLin == 1 goto Out
+    kL1 table kL1, 100, 1
+    kL2 table kL2, 100, 1
+		kL3 table kL3, 100, 1
+		kL4 table kL4, 100, 1
+  Out:
+
+	aout = kP[kPad]*(a1*kL1*kO1 + a2*kL2*kO2 + a3*kL3*kO3 + a4*kL4*kO4) + a5
+	zaw aout, kOut
 endop
