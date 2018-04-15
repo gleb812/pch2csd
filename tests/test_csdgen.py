@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from pch2csd.csdgen import Udo, Csd, ZakSpace
 from pch2csd.parse import parse_pch2
@@ -32,6 +32,7 @@ zaw aout, izOut
 endop
 """
 
+    @skip
     def test_mix2__choose_right_templates(self):
         p = self.poly_mix2
         udo_s = [Udo(p, m) for m in p.modules][:2]
