@@ -1,9 +1,9 @@
-@ map s 3 AMPEXP CLA001 AMPEXP
-@ map d BUT002
-@ map d BUT003
+;@ map s 3 AMPEXP CLA001 AMPEXP
+;@ map d BUT002
+;@ map d BUT003
 
-@ ins k k
-@ outs k
+;@ ins k k
+;@ outs k
 opcode Mix11A, 0, kkkkkk
   kLev, kOn, kExpLin, kin, kchain, kout  xin
   kIn zkr kin
@@ -16,8 +16,8 @@ opcode Mix11A, 0, kkkkkk
   zkw kOut, kout
 endop
 
-@ ins a a
-@ outs a
+;@ ins a a
+;@ outs a
 opcode Mix11A, 0, kkkkkk
   kLev, kOn, kExpLin, kin, kchain, kout  xin
   aIn zar kin
