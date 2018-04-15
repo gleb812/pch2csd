@@ -18,7 +18,7 @@ endop
 
 @ ins a a
 @ outs a
-opcode Mix11A, 0, kkkkkkk
+opcode Mix11A, 0, kkkkkk
   kLev, kOn, kExpLin, kin, kchain, kout  xin
   aIn zar kin
   aChain zar kchain
