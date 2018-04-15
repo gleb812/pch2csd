@@ -1,7 +1,7 @@
 ; nothing to map
 
 ;@ ins k k k k
-;@ outs k k
+;@ outs k
 opcode Mix41A, 0, kkkkk
 	k1,k2,k3,k4,k5 xin
 	ks1 zkr k1
@@ -9,7 +9,7 @@ opcode Mix41A, 0, kkkkk
 	ks3 zkr k3
 	ks4 zkr k4
 
-kOut = (ks1+ks2+ks3+ks4)/4
+	kOut = ks1 + ks2 + ks3 + ks4
 	zkw kOut,k5
 endop
 
@@ -22,6 +22,6 @@ opcode Mix41A, 0, kkkkk
 	as3 zar k3
 	as4 zar k4
 
-aOut = (as1+as2+as3+as4)/4
+	aOut = as1 + as2 + as3 + as4
 	zaw aOut,k5
 endop
