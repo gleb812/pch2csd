@@ -16,7 +16,8 @@ opcode Mix21B, 0, kkkkkkkkk
   kInv[] fillarray 1, -1
 
   if kExpLin == 1 goto Out
-    kLev table kLev, 100, 1
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
   Out:
 
   kOut = kChain + kIn1 * kLev1 * kInv[kInv1] + kIn2 * kLev2 * kInv[kInv2]
@@ -35,7 +36,8 @@ opcode Mix21B, 0, kkkkkkkkk
   kInv[] fillarray 1, -1
 
   if kExpLin == 1 goto Out
-    kLev table kLev, 100, 1
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
   Out:
 
   aOut = aChain + aIn1 * kLev1 * kInv[kInv1] + aIn2 * kLev2 * kInv[kInv2]
