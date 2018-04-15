@@ -1,29 +1,35 @@
-;@ map s 5 CLA000 CLAEXP MIXdbl
+;@ map s 5 AMPEXP CLA001 AMPEXP
 ;@ map d BUT002
-;@ map s 5 CLA000 CLAEXP MIXdbl
+;@ map s 5 AMPEXP CLA001 AMPEXP
 ;@ map d BUT002
 ;@ map d BUT003
 
 ;@ ins k k k
 ;@ outs k
-opcode Mix21A, 0, iiiiiiiii
-    ; TODO: lin/log scale, chain input
-    iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
-  k1 zkr izIn1
-  k2 zkr izIn2
-  k3 zkr izInChain
-  kout = k1 + k2*iLev1*iSW1 + k3*iLev2*iSW2
-  zkw kout, izOut
+opcode Mix21A, 0, kkkkkkkkk
+  kLev1,kOn1, kLev2,kOn2, kExpLin, kin1,kin2, kchain, kout  xin
+  kIn1 zkr kin1
+  kIn2 zkr kin2
+  kChain zkr kchain
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+  kOut = kChain + kIn1 * kLev1 * kOn1 + kIn2 * kLev2 * kOn2
+  zkw kOut, kout
 endop
 
 ;@ ins a a a
 ;@ outs a
-opcode Mix21A, 0, iiiiiiiii
-    ; TODO: lin/log scale, chain input
-    iLev1, iSw1, iLev2, iSw2, iScale, izIn1, izIn2, izInChain, izOut xin
-  a1 zar izIn1
-  a2 zar izIn2
-  a3 zar izInChain
-  aout = a1 + a2*iLev1*iSW1 + a3*iLev2*iSW2
-  zaw aout, izOut
+opcode Mix21A, 0, kkkkkkkkk
+  kLev1,kOn1, kLev2,kOn2, kExpLin, kin1,kin2, kchain, kout  xin
+  aIn1 zar kin1
+  aIn2 zar kin2
+  aChain zar kchain
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+  aOut = aChain + aIn1 * kLev1 * kOn1 + aIn2 * kLev2 * kOn2
+  zaw aOut, kout
 endop
