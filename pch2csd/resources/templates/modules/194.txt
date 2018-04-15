@@ -13,7 +13,8 @@ opcode Mix21A, 0, kkkkkkkkk
   kChain zkr kchain
 
   if kExpLin == 1 goto Out
-    kLev table kLev, 100, 1
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
   Out:
   kOut = kChain + kIn1 * kLev1 * kOn1 + kIn2 * kLev2 * kOn2
   zkw kOut, kout
@@ -28,7 +29,8 @@ opcode Mix21A, 0, kkkkkkkkk
   aChain zar kchain
 
   if kExpLin == 1 goto Out
-    kLev table kLev, 100, 1
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
   Out:
   aOut = aChain + aIn1 * kLev1 * kOn1 + aIn2 * kLev2 * kOn2
   zaw aOut, kout
