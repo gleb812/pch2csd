@@ -1,9 +1,43 @@
-opcode Mix21B, 0, kkii   ; MULTIMODE support a/k?
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  a3 zar 1 ; CHANGE 
-  kLev1, kLev2, iSW1, iSW2 xin ; iSW = -1/1
-  aout = a1 + a2*kLev1*iSW1 + a3*kLev2*iSW2
-  zaw aout, 2 ; CHANGE 
-  ; LIN vs DB?
+;@ map s 5 AMPEXP CLA001 AMPEXP
+;@ map d BUT002
+;@ map s 5 AMPEXP CLA001 AMPEXP
+;@ map d BUT002
+;@ map d BUT003
+
+;@ ins k k k
+;@ outs k
+opcode Mix21B, 0, kkkkkkkkk
+  kInv1,kLev1, kInv2,kLev2, kExpLin, kin1,kin2, kchain, kout  xin
+  kIn1 zkr kin1
+  kIn2 zkr kin2
+  kChain zkr kchain
+
+ ;          Inv=   0   1
+  kInv[] fillarray 1, -1
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+
+  kOut = kChain + kIn1 * kLev1 * kInv[kInv1] + kIn2 * kLev2 * kInv[kInv2]
+  zkw kOut, kout
+endop
+
+;@ ins a a a
+;@ outs a
+opcode Mix21B, 0, kkkkkkkkk
+  kInv1,kLev1, kInv2,kLev2, kExpLin, kin1,kin2, kchain, kout  xin
+  aIn1 zar kin1
+  aIn2 zar kin2
+  aChain zar kchain
+
+ ;          Inv=   0   1
+  kInv[] fillarray 1, -1
+
+  if kExpLin == 1 goto Out
+    kLev table kLev, 100, 1
+  Out:
+
+  aOut = aChain + aIn1 * kLev1 * kInv[kInv1] + aIn2 * kLev2 * kInv[kInv2]
+  zaw aOut, kout
 endop
