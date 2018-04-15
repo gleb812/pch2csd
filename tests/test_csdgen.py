@@ -47,6 +47,7 @@ class TestParameterMapping(TestCase):
         self.data = ProjectData()
         self.poly_mix2 = parse_pch2(self.data, get_test_resource('test_poly_mix2.pch2'))
 
+    @skip
     def test_poly_mix2(self):
         p = self.poly_mix2
         udo_s = [Udo(p, m) for m in p.modules]
