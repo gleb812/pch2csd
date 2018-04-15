@@ -1,30 +1,47 @@
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
+;@ map s 5 AMPEXP CLA001 AMPEXP
+;@ map s 5 AMPEXP CLA001 AMPEXP
+;@ map s 5 AMPEXP CLA001 AMPEXP
+;@ map s 5 AMPEXP CLA001 AMPEXP
 ;@ map d BUT003
 
 ;@ ins k k k k k
 ;@ outs k
-opcode Mix41B, 0, kkkkkkkkkkk   ; MULTIMODE support a/k?
-kLev1,kLev2,kLev3,kLev4,kMode,kI1,kI2,kI3,kI4,kCh,kOut  xin 
-	k1 zkr kI1 
-	k2 zkr kI2 
-	k3 zkr kI3 
-	k4 zkr kI4 
-	k5 zkr kCh 
+opcode Mix41B, 0, kkkkkkkkkkk
+kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
+	k1 zkr kI1
+	k2 zkr kI2
+	k3 zkr kI3
+	k4 zkr kI4
+	k5 zkr kCh
+
+	if kExpLin == 1 goto Out
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+  Out:
+
 	kout = k1*kLev1 + k2*kLev2 + k3*kLev3 + k4*kLev4 + k5
-	zkw kout, kOut 
+	zkw kout, kOut
 endop
 
-;@ args kkkkk,aaaaa,a
-opcode Mix41B, 0, kkkkkkkkkkk   ; MULTIMODE support a/k?
-kLev1,kLev2,kLev3,kLev4,kMode,kI1,kI2,kI3,kI4,kCh,kOut  xin 
-	a1 zar kI1 
-	a2 zar kI2 
-	a3 zar kI3 
-	a4 zar kI4 
-	a5 zar kCh 
+;@ ins a a a a a
+;@ outs a
+opcode Mix41B, 0, kkkkkkkkkkk
+kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
+	a1 zar kI1
+	a2 zar kI2
+	a3 zar kI3
+	a4 zar kI4
+	a5 zar kCh
+
+	if kExpLin == 1 goto Out
+    kLev1 table kLev1, 100, 1
+    kLev2 table kLev2, 100, 1
+		kLev3 table kLev3, 100, 1
+		kLev4 table kLev4, 100, 1
+  Out:
+
 	aout = a1*kLev1 + a2*kLev2 + a3*kLev3 + a4*kLev4 + a5
-	zaw aout, kOut 
+	zaw aout, kOut
 endop
