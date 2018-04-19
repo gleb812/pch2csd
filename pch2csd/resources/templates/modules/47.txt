@@ -27,3 +27,29 @@ opcode Pan, 0, kkkkkkk
   zkw kL, koutL
   zkw kR, koutR
 endop
+
+;@ ins a a
+;@ outs a a
+opcode Pan, 0, kkkkkkk
+  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+  aIn zar kin
+  aMod zar kmodin
+
+  aM = amod * aMod * 1/64
+
+; DON'T FORGET TO MAKE 103 and 104 TABLES>>
+  if kLogLin != 0 goto Next
+    aPL table a(kPan)+aM, 103, 1
+    aPR table (1-a(kPan)-aM), 103, 1
+    goto Over
+  Next:
+    aPL table a(kPan)+aM, 104, 1
+    aPR table (1-a(kPan)-aM), 104, 1
+  Over:
+
+  aL = aPL * aIn
+  aR = aPR * aIn
+
+  zaw aL, koutL
+  zaw aR, koutR
+endop
