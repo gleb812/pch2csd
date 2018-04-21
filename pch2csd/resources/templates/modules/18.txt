@@ -1,16 +1,53 @@
-opcode XFade, 0, kk
-  kMod, kMix xin
-  k1 zkr 1 ;CHANGE
-  k2 zkr 2; CHANGE
-  kmod zkr 3; CHANGE
-  
-  kMix += kMod ;+ limiter?
-  if (iSW != 0) then
-  	kout = k1*kMix + k2*(1-kMix)
-  	goto run 
-  endif
-  
-  kout = k1*log10(kMix) + k2*log10(1-kMix)
-run:
-  zkw kout, 2 ; CHANGE
+;@ map d CLA001
+;@ map s 3 PANLOG PANLIN
+;@ map d BUT002
+
+;@ ins k k k
+;@ outs k
+opcode XFade, 0, kkkkkkk
+  kmod,kMix,kLogLin, kin1,kin2,kmodin,kout xin
+  kIn1 zkr kin1
+  kIn2 zkr kin2
+  kMod zkr kmodin
+
+  kM = kmod * kMod * 1/64
+
+; DON'T FORGET TO MAKE 103 and 104 TABLES>>
+  if kLogLin != 0 goto Next
+    kPL table kMix+kM, 103, 1
+    kPR table (1-kMix-kM), 103, 1
+    goto Over
+  Next:
+    kPL table kMix+kM, 104, 1
+    kPR table (1-kMix-kM), 104, 1
+  Over:
+
+  kO = kPL * kIn1 + kPR * kIn2
+
+  zkw kO, kout
+endop
+
+;@ ins a a a
+;@ outs a
+opcode XFade, 0, kkkkkkk
+  kmod,kMix,kLogLin, kin1,kin2,kmodin,kout xin
+  aIn1 zar kin1
+  aIn2 zar kin2
+  aMod zar kmodin
+
+  aM = kmod * aMod * 1/64
+
+; DON'T FORGET TO MAKE 103 and 104 TABLES>>
+  if kLogLin != 0 goto Next
+    aPL table kMix+aM, 103, 1
+    aPR table (1-kMix-aM), 103, 1
+    goto Over
+  Next:
+    aPL table kMix+aM, 104, 1
+    aPR table (1-kMix-aM), 104, 1
+  Over:
+
+  aO = aPL * aIn1 + aPR * aIn2
+
+  zaw aO, kout
 endop

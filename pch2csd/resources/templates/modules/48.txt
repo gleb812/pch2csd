@@ -1,17 +1,95 @@
-opcode MixStereo, 0, kkkkkkkkkkkkkiiiiiiii   ; MULTIMODE support a/k?
-  a1 zar 1 ; CHANGE 
-  a2 zar 1 ; CHANGE 
-  a3 zar 1 ; CHANGE 
-  a4 zar 1 ; CHANGE 
-  a5 zar 1 ; CHANGE 
-  a6 zar 1 ; CHANGE 
+;@ map d AMPEXP
+;@ map d AMPEXP
+;@ map d AMPEXP
+;@ map d AMPEXP
+;@ map d AMPEXP
+;@ map d AMPEXP
+;@ map d CLA001
+;@ map d CLA001
+;@ map d CLA001
+;@ map d CLA001
+;@ map d CLA001
+;@ map d CLA001
+;@ map d AMPEXP
 
-  kLev1, kLev2, kLev3, kLev4, kLev5, kLev6, kPan1, kPan2, kPan3, kPan4, kPan5, kPan6, kMaster xin 
+;@ ins k k k k k k
+;@ outs k k
 
-  aoutL = a1*kLev1*kPan1 + a1*kLev2*kPan2 + a1*kLev3*kPan3 + a1*kLev4*kPan4 + a1*kLev5*kPan5 + a1*kLev6*kPan6
-   aoutR = a1*kLev1*(1-kPan1) + a1*kLev2(1-kPan2) + a1*kLev3*(1-kPan3) + a1*kLev4*(1-kPan4) + a1*kLev5*(1-kPan5) + a1*kLev6*(1-kPan6)
+opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
+  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki3,ki4,ki5,ki6,koL,koR xin
 
-  zaw aoutL*kMaster, 2 ; CHANGE 
-  zaw aoutR*kMaster, 2 ; CHANGE 
-  ; LIN vs DB?
+  k1 zkr ki1
+  k2 zkr ki2
+  k3 zkr ki3
+  k4 zkr ki4
+  k5 zkr ki5
+  k6 zkr ki6
+
+  kL1 table kL1, 100, 1
+  kL2 table kL2, 100, 1
+  kL3 table kL3, 100, 1
+  kL4 table kL4, 100, 1
+  kL5 table kL5, 100, 1
+  kL6 table kL6, 100, 1
+
+  kP1L table kP1, 101, 1
+  kP2L table kP2, 101, 1
+  kP3L table kP3, 101, 1
+  kP4L table kP4, 101, 1
+  kP5L table kP5, 101, 1
+  kP6L table kP6, 101, 1
+
+  kP1R table 1-kP1, 101, 1
+  kP2R table 1-kP2, 101, 1
+  kP3R table 1-kP3, 101, 1
+  kP4R table 1-kP4, 101, 1
+  kP5R table 1-kP5, 101, 1
+  kP6R table 1-kP6, 101, 1
+
+  koutL = k1*kL1*kP1L+k2*kL2*kP2L+k3*kL3*kP3L+k4*kL4*kP4L+k5*kL5*kP5L+k6*kL6*kP6L
+  koutR = k1*kL1*kP1R+k2*kL2*kP2R+k3*kL3*kP3R+k4*kL4*kP4R+k5*kL5*kP5R+k6*kL6*kP6R
+
+  zkw koutL*kMaster, koL
+  zkw koutR*kMaster, koR
+endop
+
+;@ ins a a a a a a
+;@ outs a a
+
+opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
+  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki3,ki4,ki5,ki6,koL,koR xin
+
+  a1 zar ki1
+  a2 zar ki2
+  a3 zar ki3
+  a4 zar ki4
+  a5 zar ki5
+  a6 zar ki6
+
+  kL1 table kL1, 100, 1
+  kL2 table kL2, 100, 1
+  kL3 table kL3, 100, 1
+  kL4 table kL4, 100, 1
+  kL5 table kL5, 100, 1
+  kL6 table kL6, 100, 1
+
+  kP1L table kP1, 101, 1
+  kP2L table kP2, 101, 1
+  kP3L table kP3, 101, 1
+  kP4L table kP4, 101, 1
+  kP5L table kP5, 101, 1
+  kP6L table kP6, 101, 1
+
+  kP1R table 1-kP1, 101, 1
+  kP2R table 1-kP2, 101, 1
+  kP3R table 1-kP3, 101, 1
+  kP4R table 1-kP4, 101, 1
+  kP5R table 1-kP5, 101, 1
+  kP6R table 1-kP6, 101, 1
+
+  aoutL = a1*kL1*kP1L+a2*kL2*kP2L+a3*kL3*kP3L+a4*kL4*kP4L+a5*kL5*kP5L+a6*kL6*kP6L
+  aoutR = a1*kL1*kP1R+a2*kL2*kP2R+a3*kL3*kP3R+a4*kL4*kP4R+a5*kL5*kP5R+a6*kL6*kP6R
+
+  zaw aoutL*kMaster, koL
+  zaw aoutR*kMaster, koR
 endop

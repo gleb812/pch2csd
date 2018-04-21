@@ -19,7 +19,7 @@
 
 ;@ ins k k k k k k k k k
 ;@ outs k
-opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkk
+opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kO1,kO2,kO3,kO4,kO5,kO6,kO7,kO8,kEL,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
 	k1 zkr ki1
 	k2 zkr ki2
@@ -51,7 +51,7 @@ endop
 
 ;@ ins a a a a a a a a a
 ;@ outs a
-opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkk
+opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 	kLev1,kLev2,kLev3,kLev4,kLev5,kLev6,kLev7,kLev8,kO1,kO2,kO3,kO4,kO5,kO6,kO7,kO8,kEL,kpad,ki1,ki2,ki3,ki4,ki5,ki6,ki7,ki8,kic,ko xin
 	a1 zar ki1
 	a2 zar ki2

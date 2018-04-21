@@ -1,18 +1,55 @@
-opcode Pan, 0, kk
-  kMod, kMix xin
-  k1 zkr 1 ;CHANGE
-  kmod zkr 3; CHANGE
-  
-  kMix += kMod ;+ limiter?
-  if (iSW != 0) then
-  	kL = k1*kMix
-  	kR = k2*(1-kMix)
-  	goto run 
-  endif
-  
-  kL = k1*log10(kMix)
-  kR = k2*log10(1-kMix)
-run:
-  zkw kL, 2 ; CHANGE
-  zkw kR, 1 ; CHANGE
+;@ map d CLA001
+;@ map s 3 PANLOG PANLIN
+;@ map d BUT002
+
+;@ ins k k
+;@ outs k k
+opcode Pan, 0, kkkkkkk
+  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+  kIn zkr kin
+  kMod zkr kmodin
+
+  kM = kmod * kMod * 1/64
+
+; DON'T FORGET TO MAKE 103 and 104 TABLES>>
+  if kLogLin != 0 goto Next
+    kPL table kPan+kM, 103, 1
+    kPR table (1-kPan-kM), 103, 1
+    goto Over
+  Next:
+    kPL table kPan+kM, 104, 1
+    kPR table (1-kPan-kM), 104, 1
+  Over:
+
+  kL = kPL * kIn
+  kR = kPR * kIn
+
+  zkw kL, koutL
+  zkw kR, koutR
+endop
+
+;@ ins a a
+;@ outs a a
+opcode Pan, 0, kkkkkkk
+  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+  aIn zar kin
+  aMod zar kmodin
+
+  aM = amod * aMod * 1/64
+
+; DON'T FORGET TO MAKE 103 and 104 TABLES>>
+  if kLogLin != 0 goto Next
+    aPL table a(kPan)+aM, 103, 1
+    aPR table (1-a(kPan)-aM), 103, 1
+    goto Over
+  Next:
+    aPL table a(kPan)+aM, 104, 1
+    aPR table (1-a(kPan)-aM), 104, 1
+  Over:
+
+  aL = aPL * aIn
+  aR = aPR * aIn
+
+  zaw aL, koutL
+  zaw aR, koutR
 endop
