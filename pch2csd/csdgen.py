@@ -200,6 +200,7 @@ class Csd:
         return '\n'.join([self.header,
                           self.zakinit,
                           self.ft_statements,
+                          self.ft_maps,
                           self.udo_defs,
                           self.instr_va,
                           self.instr_fx,
@@ -226,6 +227,29 @@ class Csd:
             with open(ft, 'r') as f:
                 s.write(preprocess_csd_code(f.read()))
                 s.write('\n')
+        return s.getvalue()
+
+    @property
+    def ft_maps(self) -> str:
+        s = StringIO()
+        s.write('\n')
+        s.write(';---------------------------------\n')
+        s.write('; Function tables for maps\n')
+
+        tables = {t
+                  for u in self.udos
+                  for m in u.tpl.maps
+                  for t in m.tables}
+
+        for i, t in enumerate(tables):
+            if t not in self.patch.data.value_maps:
+                raise ValueError("error: the map {} doesn't exist in "
+                                 "value_maps.json".format(t))
+            vals = [str(v) for v in self.patch.data.value_maps[t]]
+            s.write('gi{} ftgen {}, 0, 128, 2, '.format(t, 100 + i))
+            s.write(', '.join(vals))
+            s.write('\n')
+
         return s.getvalue()
 
     @property
