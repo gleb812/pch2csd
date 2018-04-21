@@ -197,26 +197,27 @@ class Csd:
         self.udos = udos
 
     def get_code(self) -> str:
-        return '\n'.join([self.header,
-                          self.zakinit,
-                          self.ft_statements,
-                          self.ft_maps,
-                          self.udo_defs,
-                          self.instr_va,
-                          self.instr_fx,
-                          self.footer])
+        return '\n\n'.join(s.strip()
+                           for s in [self.header,
+                                     self.zakinit,
+                                     self.ft_statements,
+                                     self.ft_maps,
+                                     self.udo_defs,
+                                     self.instr_va,
+                                     self.instr_fx,
+                                     self.footer])
 
     @property
     def header(self) -> str:
         path = get_template_path('csd_header')
         with open(path, 'r') as f:
-            return preprocess_csd_code(f.read()) + '\n'
+            return preprocess_csd_code(f.read())
 
     @property
     def footer(self) -> str:
         path = get_template_path('csd_footer')
         with open(path, 'r') as f:
-            return preprocess_csd_code(f.read()) + '\n'
+            return preprocess_csd_code(f.read())
 
     @property
     def ft_statements(self) -> str:
@@ -227,12 +228,12 @@ class Csd:
             with open(ft, 'r') as f:
                 s.write(preprocess_csd_code(f.read()))
                 s.write('\n')
+            s.write('\n')
         return s.getvalue()
 
     @property
     def ft_maps(self) -> str:
         s = StringIO()
-        s.write('\n')
         s.write(';---------------------------------\n')
         s.write('; Function tables for maps\n')
 
@@ -255,6 +256,9 @@ class Csd:
     @property
     def zakinit(self) -> str:
         s = StringIO()
+        s.write(';---------------------------------\n')
+        s.write('; Zak space initialization\n')
+
         s.write('gkNote init 64\n')
         s.write('gkGate init 0\n')
         s.write('zakinit {}, {}\n'.format(self.zak.aloc_i, self.zak.kloc_i))
@@ -262,19 +266,22 @@ class Csd:
         s.write('massign 2,0\n')
         s.write('massign 3,0\n')
         s.write('massign 4,0\n')
+
         return s.getvalue()
 
     def _gen_instr(self, loc: Location) -> str:
         s = StringIO()
         s.write('; --------------------\n')
         s.write('; {} AREA\n'.format(loc.short_str()))
+
         s.write('instr {}\n'.format(2 - loc.value))
         statements = [udo.get_statement_parts() for udo in self.udos
                       if udo.mod.location == loc]
         table_head = ('; Module', 'Parameters', 'Modes', 'Inlets', 'Outlets')
         table_str = tabulate(statements, table_head, tablefmt='plain')
         s.write(table_str)
-        s.write('\nendin\n')
+        s.write('\nendin')
+
         return s.getvalue()
 
     @property
@@ -287,6 +294,13 @@ class Csd:
 
     @property
     def udo_defs(self):
+        s = StringIO()
+        s.write(';---------------------------------\n')
+        s.write('; UDO section\n\n')
+
         udo_src = {u.get_name(): u.get_src() for u in self.udos}
-        names = sorted(udo_src.keys())
-        return '\n\n'.join([preprocess_csd_code(udo_src[n]) for n in names]) + '\n'
+        for name in sorted(udo_src.keys()):
+            s.write(preprocess_csd_code(udo_src[name]))
+            s.write('\n\n')
+
+        return s.getvalue()

@@ -9,8 +9,3 @@ giSqr10 ftgen 6, 0, 16384, 7, 1, 1024, 1, 0, -0.0625, 15360, -0.0625
 giSq400 ftgen 21, 0, 16384, 7,1,41,1,0,0,16343,0 ; Sync_Wave Table CLKGEN
 giSq96 ftgen 22, 0, 16384, 7,1,1366,1,0,0,15018,0 ; 1/96_Wave Table CLKGEN
 giSq16 ftgen 23, 0, 16384, 7,1,910,1,0,0,15474,0 ; 1/16_Wave Table CLKGEN
-;---------------------------------
-; this is temporaly added part
-giExp ftgen 100,0,128,-23,"ampexp.txt"
-giPan ftgen 101,0,128,-23,"panexp.txt"
-; end
