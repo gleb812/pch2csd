@@ -1,11 +1,11 @@
-; Function table generation block
+;---------------------------------
+; Waveforms
 giSin ftgen 1, 0, 16384, 10, 1
 giTri ftgen 2, 0, 16384, 7, 0, 4096, 1, 8192, -1, 4096, 0
 giSaw ftgen 3, 0, 16384, 7, 1, 16384, -1
 giSqr50 ftgen 4, 0, 16384, 7, 1, 8192, 1, 0, -1, 8192, -1
 giSqr25 ftgen 5, 0, 16384, 7, 1, 4096, 1, 0, -0.25, 12288, -0.25
 giSqr10 ftgen 6, 0, 16384, 7, 1, 1024, 1, 0, -0.0625, 15360, -0.0625
-;---------------------------------
 giSq400 ftgen 21, 0, 16384, 7,1,41,1,0,0,16343,0 ; Sync_Wave Table CLKGEN
 giSq96 ftgen 22, 0, 16384, 7,1,1366,1,0,0,15018,0 ; 1/96_Wave Table CLKGEN
 giSq16 ftgen 23, 0, 16384, 7,1,910,1,0,0,15474,0 ; 1/16_Wave Table CLKGEN
