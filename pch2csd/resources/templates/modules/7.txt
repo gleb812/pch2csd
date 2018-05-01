@@ -18,7 +18,7 @@ opcode OscB, 0, kkkkkkkkkkkkkkkkk
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kWave,kON,kFMPTrk,kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
-
+; TODO needs fixing according to 01 May update
 kMod zkr kModIn
 aFM zar kFMIn
 async zar kSyncIn

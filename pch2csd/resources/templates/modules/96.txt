@@ -12,7 +12,11 @@ opcode OscD, 0, kkkkkkkk
 ; kMod - blue - -64..+64
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
+; TODO part mode needs fixing
 kCoarse,kFine,kKBT,kWave,kON,kTuneMode,kPitchIn,kOut xin
+
+kCoarse table kCoarse, giOSCsem
+kFine table kFine, giOSCcnt
 
 if kKBT != 1 goto NoKBT
 kNote = gkNote
