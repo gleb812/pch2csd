@@ -65,17 +65,12 @@ class Udo:
                 break
         return v
 
-    def get_params(self) -> List[float]:
+    def get_params(self) -> List[int]:
         params = self.patch.find_mod_params(self.mod.location, self.mod.id)
-        if params is not None and len(self.tpl.maps) != len(params.values):
-            print("warning: template '{}' has different number of map annotation "
-                  "than it is parameters found in the parsed module '{}'. "
-                  "Returning -1s for now.".format(self.tpl, self.mod))
-            return [-1] * params.num_params
         if params is None:
             return []
         else:
-            return [self._map_value(i, v, params.values) for i, v in enumerate(params.values)]
+            return params.values
 
     def get_statement_parts(self) -> Tuple[str, str, str, str, str]:
         name, params, modes, inlets, outlets = self.get_name(), '', '', '', ''
@@ -97,30 +92,6 @@ class Udo:
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
         return [ZakSpace.trash_bus] * len(ins), [ZakSpace.zero_bus] * len(outs)
-
-    def _map_value(self, i, v, all_vals):
-        m = self.tpl.maps[i]
-        if m.map_type == 'd':
-            table = self.patch.data.value_maps[m.tables[0]]
-        elif m.map_type == 's':
-            ref = m.switch_ref
-            try:
-                if ref.isdigit():
-                    table_name = m.tables[all_vals[int(ref) - 1]]
-                else:
-                    ms = [a for a in self.tpl.maps if a.name == ref]
-                    if len(ms) == 1:
-                        table_name = m.tables[all_vals[ms[0].idx]]
-                    else:
-                        raise Exception
-            except Exception:
-                raise ValueError("error ({}, line {}): couldn't retrieve map".format(
-                    self.tpl.filename,
-                    self.tpl.maps[i].line + 1))
-            table = self.patch.data.value_maps[table_name]
-        else:
-            raise ValueError('Mapping type {} is not supported'.format(m[0]))
-        return table[v]
 
 
 class ZakSpace:

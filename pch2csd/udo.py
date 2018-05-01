@@ -49,25 +49,18 @@ class MapAnnotation(UdoAnnotation):
         super().__init__(txt, line)
 
         self.name = None
-        self.map_type = None
-        self.switch_ref = None
         self.tables = None
-        self.idx = None
 
         toks = self.tokens
 
         if super().parsed() \
                 and len(toks) >= 4 \
-                and toks[1] == self.atype \
-                and (toks[2] in 'ds' or toks[3] in 'ds'):
-            self.name, inc = (toks[2], 1) if toks[3] in 'ds' else ('line:' + str(line), 0)
-            self.map_type = toks[2 + inc]
-            self.switch_ref = None if self.map_type == 'd' else toks[3 + inc]
-            self.tables = toks[3 + inc:] if self.map_type == 'd' else toks[4 + inc:]
+                and toks[1] == self.atype:
+            self.name = toks[2]
+            self.tables = [t for t in toks[3:] if t not in 'ds0123456789']
 
     def parsed(self):
         return super().parsed() \
-               and self.map_type is not None \
                and self.tables is not None
 
 
@@ -257,20 +250,6 @@ class AnnotationParsed(UdoValidation):
                          for a in not_parsed]
 
 
-class MapTypesValid(UdoValidation):
-    def __init__(self, data, tpl):
-        super().__init__(data, tpl)
-
-    def _validate(self, data: ProjectData, tpl: UdoTemplate):
-        invalid_maps = [a for a in tpl.annots
-                        if isinstance(a, MapAnnotation)
-                        and a.parsed()
-                        and a.map_type not in 'ds']
-        msg = "error ({}, line {}): invalid map type '{}'"
-        self.messages = [msg.format(tpl.filename, a.line + 1, a.map_type)
-                         for a in invalid_maps]
-
-
 class MapTablesExist(UdoValidation):
     def __init__(self, data, tpl):
         super().__init__(data, tpl)
@@ -286,25 +265,6 @@ class MapTablesExist(UdoValidation):
               'map annotation(s): {}'
         if len(invalid_tables) > 0:
             self.messages = [msg.format(tpl.filename, ', '.join(invalid_tables))]
-
-
-class MapSwitchReferenceValid(UdoValidation):
-    def __init__(self, data, tpl):
-        super().__init__(data, tpl)
-
-    def _validate(self, data: ProjectData, tpl: UdoTemplate):
-        maps = [m for m in tpl.maps]
-        maps_s = [m for m in tpl.maps if m.map_type == 's']
-        map_names = [m.name for m in maps]
-        msg = "error ({}, line {}): can't find a reference where " \
-              "the map-switch annotation points to"
-        for m in maps_s:
-            r = m.switch_ref
-            if r.isdigit() and int(r) <= len(maps):
-                continue
-            elif not r.isdigit() and r in map_names:
-                continue
-            self.messages += [msg.format(tpl.filename, m.line)]
 
 
 class UdoIntypesConsistent(UdoValidation):
@@ -397,9 +357,7 @@ class UdoTemplateValidation:
         if not exists.is_valid:
             return exists.messages
         validators = ValidationChain([AnnotationParsed,
-                                      MapTypesValid,
                                       MapTablesExist,
-                                      MapSwitchReferenceValid,
                                       InsOutsValid,
                                       UdoIntypesConsistent])
         validators.do(data, tpl)

@@ -110,5 +110,4 @@ class TestUdoGen(TestCase):
         amp_params = [u.get_params()[0] for u in udos]
 
         self.assertEqual(len(amp_params), 2)
-        self.assertEqual(amp_params[0], 1.51)
-        self.assertNotEqual(amp_params[0], amp_params[1])
+        self.assertEqual(amp_params[0], 83)
