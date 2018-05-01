@@ -1,4 +1,4 @@
-;@ map Amp          s LinLogSwitch LVLamp CLAEXP
+;@ map Amp          s LVLamp CLAEXP
 ;@ map LinLogSwitch d              BUT002
 
 ;@ ins k:In
