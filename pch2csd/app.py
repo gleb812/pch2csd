@@ -6,9 +6,9 @@ from io import StringIO
 from tabulate import tabulate
 
 from . import __version__, __homepage__
-from .csdgen import ZakSpace, Csd, Udo
+from .csdgen import ZakSpace, Csd
 from .parse import parse_pch2
-from .patch import Patch, Location
+from .patch import Patch
 from .resources import get_template_module_path, ProjectData
 from .udo import UdoTemplate, UdoTemplateValidation
 from .util import get_test_resource
