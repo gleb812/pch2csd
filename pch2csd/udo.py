@@ -54,10 +54,10 @@ class MapAnnotation(UdoAnnotation):
         toks = self.tokens
 
         if super().parsed() \
-                and len(toks) >= 4 \
+                and len(toks) >= 3 \
                 and toks[1] == self.atype:
             self.name = toks[2]
-            self.tables = [t for t in toks[3:] if t not in 'ds0123456789']
+            self.tables = [t for t in toks[2:] if t not in 'ds0123456789']
 
     def parsed(self):
         return super().parsed() \
@@ -284,12 +284,13 @@ class UdoIntypesConsistent(UdoValidation):
             self.messages += ["error ({}): UDO variants have different "
                               "number of intypes".format(tpl.filename)]
         else:
-            intypes_expected = len(tpl.maps) + len(tpl.modes) \
-                               + len(tpl.ins[0].types) + len(tpl.outs[0].types)
-            if intypes_expected != in_len[0]:
-                self.messages += ["error ({}): the number of 'intypes' in UDO "
-                                  "is not consistent with "
-                                  "the declared annotations".format(tpl.filename)]
+            intypes_atleast = len(tpl.modes) \
+                              + len(tpl.ins[0].types) \
+                              + len(tpl.outs[0].types)
+            if in_len[0] < intypes_atleast:
+                self.messages += ["error ({}): according to annotations "
+                                  "there should be at least {} 'intypes' "
+                                  "in the UDO".format(tpl.filename, intypes_atleast)]
 
 
 class ParamsModesConsistent(UdoValidation):
