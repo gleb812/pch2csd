@@ -1,5 +1,5 @@
-;@ map d AMPEXP
-;@ map d PANLOG
+;@ map AMPEXP
+;@ map PANLOG
 
 ;@ ins k k k k k k
 ;@ outs k k
