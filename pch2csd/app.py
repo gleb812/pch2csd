@@ -50,60 +50,6 @@ def validate_udo(type_id: int, io=sys.stdout, print_action=True):
         return False
 
 
-def print_module(fn_pch2: str, mod_id: int, loc: Location):
-    if not fn_pch2.lower().endswith('.pch2'):
-        print("error: patch file should have extension '.pch2'")
-        exit(-1)
-    data = ProjectData()
-    path = os.path.abspath(os.path.expanduser(fn_pch2))
-    p = parse_pch2(data, path)
-
-    m = p.find_module(mod_id, loc)
-    if m is None:
-        print('error: cannot find module with id {} in the {} location'.format(mod_id, loc.short_str()))
-        exit(-1)
-
-    p_midi = p.find_mod_params(loc, mod_id)
-    try:
-        udo = Udo(p, m)
-        p_mapped = udo.get_params()
-        p_names = [str(m.name)
-                   if not m.name.startswith('line:') else ''
-                   for m in udo.tpl.maps]
-        p_names = [str(p) for p in p_names]
-        modes = [str(m.name) + '(mode)'
-                 for m in udo.tpl.modes]
-        ins = [i for i in udo.tpl.ins]
-        outs = [i for i in udo.tpl.outs]
-    except Exception as e:
-        print("warning ({}.txt): couldn't process UDO".format(m.type))
-        print(e)
-        p_mapped = ['n/a'] * p_midi.num_params
-        p_names = [''] * p_midi.num_params
-        modes = [''] * len(m.modes)
-        ins, outs = [], []
-    assert p_midi.num_params == len(p_mapped)
-
-    tbl = [['Name', 'Type', 'Raw', 'Mapped']]
-    for p, raw, mapped in zip(p_names, p_midi.values, p_mapped):
-        tbl.append([p, 'param', str(raw), str(mapped)])
-    for m in modes:
-        tbl.append([m, 'mode', '', ''])
-    for i in ins:
-        for n in i.names:
-            tbl.append([n, 'inlet', '', ''])
-        break
-    for o in outs:
-        for n in o.names:
-            tbl.append([n, 'outlet' '', ''])
-        break
-
-    print('Patch: {}'.format(fn_pch2))
-    print('Module {}, type={}, id={}'.format(m.type_name, m.type, m.id))
-    print()
-    print(tabulate(tbl, headers='firstrow', tablefmt='simple'))
-
-
 def print_pch2(fn: str):
     if not fn.lower().endswith('.pch2'):
         print("error: patch file should have extension '.pch2'")
@@ -193,10 +139,6 @@ def main():
     group = arg_parser.add_mutually_exclusive_group()
     group.add_argument('-p', '--print', action='store_const', const=True,
                        help='parse the patch file and print its content')
-    group.add_argument('-m', '--mod-print', nargs=2, metavar=('module_id', '{voice,fx}'),
-                       help='print extensive information about the module in'
-                            'the file {arg}. You should provide two values:'
-                            'an integer module id and an area.')
     group.add_argument('-c', '--check-udo', action='store_const', const=True,
                        help="validate the UDO template file (overrides '-p')")
     group.add_argument('-v', '--version', action='version',
@@ -210,8 +152,6 @@ def main():
             validate_udo(type_id)
         except ValueError:
             print("you should pass the integer as the 'arg' parameter when using '--check-udo'")
-    elif args.mod_print:
-        print_module(args.arg, int(args.mod_print[0]), Location.from_str(args.mod_print[1]))
     elif args.print:
         print_pch2(args.arg)
     elif args.e:
