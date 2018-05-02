@@ -1,8 +1,5 @@
-;@ map s 5 AMPEXP CLA001 AMPEXP
-;@ map s 5 AMPEXP CLA001 AMPEXP
-;@ map s 5 AMPEXP CLA001 AMPEXP
-;@ map s 5 AMPEXP CLA001 AMPEXP
-;@ map d BUT003
+;@ map AMPEXP CLA001
+;@ map BUT003
 
 ;@ ins k k k k k
 ;@ outs k
@@ -15,12 +12,17 @@ kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 	k5 zkr kCh
 
 	if kExpLin == 1 goto Out
-    kLev1 table kLev1, 100, 1
-    kLev2 table kLev2, 100, 1
-		kLev3 table kLev3, 100, 1
-		kLev4 table kLev4, 100, 1
+    kLev1 table kLev1, giAMPEXP
+    kLev2 table kLev2, giAMPEXP
+		kLev3 table kLev3, giAMPEXP
+		kLev4 table kLev4, giAMPEXP
+		goto Next
   Out:
-
+	kLev1 table kLev1, giCLA001
+	kLev2 table kLev2, giCLA001
+	kLev3 table kLev3, giCLA001
+	kLev4 table kLev4, giCLA001
+	Next:
 	kout = k1*kLev1 + k2*kLev2 + k3*kLev3 + k4*kLev4 + k5
 	zkw kout, kOut
 endop
@@ -36,12 +38,17 @@ kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 	a5 zar kCh
 
 	if kExpLin == 1 goto Out
-    kLev1 table kLev1, 100, 1
-    kLev2 table kLev2, 100, 1
-		kLev3 table kLev3, 100, 1
-		kLev4 table kLev4, 100, 1
+		kLev1 table kLev1, giAMPEXP
+		kLev2 table kLev2, giAMPEXP
+		kLev3 table kLev3, giAMPEXP
+		kLev4 table kLev4, giAMPEXP
+		goto Next
   Out:
-
+	kLev1 table kLev1, giCLA001
+	kLev2 table kLev2, giCLA001
+	kLev3 table kLev3, giCLA001
+	kLev4 table kLev4, giCLA001
+	Next:
 	aout = a1*kLev1 + a2*kLev2 + a3*kLev3 + a4*kLev4 + a5
 	zaw aout, kOut
 endop

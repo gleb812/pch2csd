@@ -1,21 +1,7 @@
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map s 17 AMPEXP CLA001 AMPEXP
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT003
-;@ map d BUT003
+;@ map AMPEXP CLA001
+;@ map BUT002
+;@ map BUT003
+
 
 ;@ ins k k k k k k k k k
 ;@ outs k
@@ -35,16 +21,25 @@ opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 	kP[] fillarray 1,0.5,0.25
 
 	if kExpLin == 1 goto Out
-		kLev1 table kLev1, 100, 1
-		kLev2 table kLev2, 100, 1
-		kLev3 table kLev3, 100, 1
-		kLev4 table kLev4, 100, 1
-		kLev5 table kLev5, 100, 1
-		kLev6 table kLev6, 100, 1
-		kLev7 table kLev7, 100, 1
-		kLev8 table kLev8, 100, 1
+		kLev1 table kLev1, giAMPEXP
+		kLev2 table kLev2, giAMPEXP
+		kLev3 table kLev3, giAMPEXP
+		kLev4 table kLev4, giAMPEXP
+		kLev5 table kLev5, giAMPEXP
+		kLev6 table kLev6, giAMPEXP
+		kLev7 table kLev7, giAMPEXP
+		kLev8 table kLev8, giAMPEXP
+		goto Next
 	Out:
-
+		kLev1 table kLev1, giCLA001
+		kLev2 table kLev2, giCLA001
+		kLev3 table kLev3, giCLA001
+		kLev4 table kLev4, giCLA001
+		kLev5 table kLev5, giCLA001
+		kLev6 table kLev6, giCLA001
+		kLev7 table kLev7, giCLA001
+		kLev8 table kLev8, giCLA001
+	Next:
 	kout = k9 + (k1*kLev1*kO1+k2*kLev2*kO2+k3*kLev3*kO3+k4*kLev4*kO4+k5*kLev5*kO5+k6*kLev6*kO6+k7*kLev7+k8*kLev8)*kP[kpad]
 	zkw kout, ko
 endop
@@ -67,16 +62,25 @@ opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 	kP[] fillarray 1,0.5,0.25
 
 	if kExpLin == 1 goto Out
-		kLev1 table kLev1, 100, 1
-		kLev2 table kLev2, 100, 1
-		kLev3 table kLev3, 100, 1
-		kLev4 table kLev4, 100, 1
-		kLev5 table kLev5, 100, 1
-		kLev6 table kLev6, 100, 1
-		kLev7 table kLev7, 100, 1
-		kLev8 table kLev8, 100, 1
+		kLev1 table kLev1, giAMPEXP
+		kLev2 table kLev2, giAMPEXP
+		kLev3 table kLev3, giAMPEXP
+		kLev4 table kLev4, giAMPEXP
+		kLev5 table kLev5, giAMPEXP
+		kLev6 table kLev6, giAMPEXP
+		kLev7 table kLev7, giAMPEXP
+		kLev8 table kLev8, giAMPEXP
+		goto Next
 	Out:
-
+		kLev1 table kLev1, giCLA001
+		kLev2 table kLev2, giCLA001
+		kLev3 table kLev3, giCLA001
+		kLev4 table kLev4, giCLA001
+		kLev5 table kLev5, giCLA001
+		kLev6 table kLev6, giCLA001
+		kLev7 table kLev7, giCLA001
+		kLev8 table kLev8, giCLA001
+	Next:
 	aout = a9 + (a1*kLev1*kO1+a2*kLev2*kO2+a3*kLev3*kO3+a4*kLev4*kO4+a5*kLev5*kO5+a6*kLev6*kO6+a7*kLev7*kO7+a8*kLev8*kO8)*kP[kpad]
 	zaw aout, ko
 endop

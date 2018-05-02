@@ -1,13 +1,6 @@
-;@ map s 10 AMPEXP CLA001 AMPEXP
-;@ map s 10 AMPEXP CLA001 AMPEXP
-;@ map s 10 AMPEXP CLA001 AMPEXP
-;@ map s 10 AMPEXP CLA001 AMPEXP
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT003
+;@ map AMPEXP CLA001 AMPEXP
+;@ map BUT002
+;@ map BUT003
 
 ;@ ins k k k k k
 ;@ outs k
@@ -23,12 +16,16 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
   kP[] fillarray 1,0.5
 
 	if kExpLin == 1 goto Out
-    kL1 table kL1, 100, 1
-    kL2 table kL2, 100, 1
-		kL3 table kL3, 100, 1
-		kL4 table kL4, 100, 1
+    kL1 table kL1, giAMPEXP
+    kL2 table kL2, giAMPEXP
+		kL3 table kL3, giAMPEXP
+		kL4 table kL4, giAMPEXP
   Out:
-
+		kL1 table kL1, giCLA001
+		kL2 table kL2, giCLA001
+		kL3 table kL3, giCLA001
+		kL4 table kL4, giCLA001
+	Next:
 	kout = kP[kPad]*(k1*kL1*kO1 + k2*kL2*kO2 + k3*kL3*kO3 + k4*kL4*kO4) + k5
 	zkw kout, kOut
 endop
@@ -47,12 +44,17 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
   kP[] fillarray 1,0.5
 
 	if kExpLin == 1 goto Out
-    kL1 table kL1, 100, 1
-    kL2 table kL2, 100, 1
-		kL3 table kL3, 100, 1
-		kL4 table kL4, 100, 1
+		kL1 table kL1, giAMPEXP
+		kL2 table kL2, giAMPEXP
+		kL3 table kL3, giAMPEXP
+		kL4 table kL4, giAMPEXP
+		goto Next
   Out:
-
+		kL1 table kL1, giCLA001
+		kL2 table kL2, giCLA001
+		kL3 table kL3, giCLA001
+		kL4 table kL4, giCLA001
+	Next:
 	aout = kP[kPad]*(a1*kL1*kO1 + a2*kL2*kO2 + a3*kL3*kO3 + a4*kL4*kO4) + a5
 	zaw aout, kOut
 endop

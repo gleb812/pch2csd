@@ -1,12 +1,6 @@
-;@ map s 9 AMPEXP CLA001 AMPEXP
-;@ map s 9 AMPEXP CLA001 AMPEXP
-;@ map s 9 AMPEXP CLA001 AMPEXP
-;@ map s 9 AMPEXP CLA001 AMPEXP
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT002
-;@ map d BUT003
+;@ map AMPEXP CLA001
+;@ map BUT002
+;@ map BUT003
 
 ;@ ins k k k k k k k k k k
 ;@ outs k k
@@ -25,12 +19,17 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
   kcr zkr kCR
 
 	if kEL == 1 goto Out
-    kL1 table kL1, 100, 1
-    kL2 table kL2, 100, 1
-		kL3 table kL3, 100, 1
-		kL4 table kL4, 100, 1
+    kL1 table kL1, giAMPEXP
+    kL2 table kL2, giAMPEXP
+		kL3 table kL3, giAMPEXP
+		kL4 table kL4, giAMPEXP
+		goto Next
   Out:
-
+		kL1 table kL1, giCLA001
+		kL2 table kL2, giCLA001
+		kL3 table kL3, giCLA001
+		kL4 table kL4, giCLA001
+	Next:
 	koutL = k1l*kL1*kO1 + k2l*kL2*kO2 + k3l*kL3*kO3 + k4l*kL4*kO4 + kcl
   koutR = k1r*kL1*kO1 + k2r*kL2*kO2 + k3r*kL3*kO3 + k4r*kL4*kO4 + kcr
 	zkw koutl, kOuL
@@ -54,12 +53,16 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
   acr zar kCR
 
 	if kEL == 1 goto Out
-    kL1 table kL1, 100, 1
-    kL2 table kL2, 100, 1
-		kL3 table kL3, 100, 1
-		kL4 table kL4, 100, 1
+    kL1 table kL1, giAMPEXP
+    kL2 table kL2, giAMPEXP
+		kL3 table kL3, giAMPEXP
+		kL4 table kL4, giAMPEXP
   Out:
-
+		kL1 table kL1, giCLA001
+		kL2 table kL2, giCLA001
+		kL3 table kL3, giCLA001
+		kL4 table kL4, giCLA001
+	Next:
 	aoutL = a1l*kL1*kO1 + a2l*kL2*kO2 + a3l*kL3*kO3 + a4l*kL4*kO4 + acl
   aoutR = a1r*kL1*kO1 + a2r*kL2*kO2 + a3r*kL3*kO3 + a4r*kL4*kO4 + acr
 	zaw aoutl, kOuL

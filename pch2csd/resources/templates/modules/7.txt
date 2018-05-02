@@ -1,14 +1,10 @@
-;@ map s 5 OSCsem OSCsem OSCsem OSCprt
-;@ map d OSCcnt
-;@ map d BUT002
-;@ map d CLA000
-;@ map d BUT006
-;@ map d CLA000
-;@ map d OSCshp
-;@ map d CLA000
-;@ map d BUT006
-;@ map d BUT002
-;@ map d BUT002
+;@ map OSCsem OSCsem OSCsem OSCprt
+;@ map OSCcnt
+;@ map BUT002
+;@ map CLA000
+;@ map BUT006
+;@ map OSCshp
+;@ map BUT006
 
 ;@ ins k k k k k
 ;@ outs a
@@ -18,7 +14,7 @@ opcode OscB, 0, kkkkkkkkkkkkkkkkk
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kWave,kON,kFMPTrk,kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
-
+; TODO needs fixing according to 01 May update
 kMod zkr kModIn
 aFM zar kFMIn
 async zar kSyncIn

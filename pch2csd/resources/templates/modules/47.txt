@@ -1,6 +1,4 @@
-;@ map d CLA001
-;@ map s 3 PANLOG PANLIN
-;@ map d BUT002
+;@ map PANLOG PANLIN
 
 ;@ ins k k
 ;@ outs k k
@@ -9,16 +7,15 @@ opcode Pan, 0, kkkkkkk
   kIn zkr kin
   kMod zkr kmodin
 
-  kM = kmod * kMod * 1/64
+  kM = kmod * kMod ;* 1/64
 
-; DON'T FORGET TO MAKE 103 and 104 TABLES>>
   if kLogLin != 0 goto Next
-    kPL table kPan+kM, 103, 1
-    kPR table (1-kPan-kM), 103, 1
+    kPL table kPan+kM, giPANLOG
+    kPR table (127-kPan-kM), giPANLOG
     goto Over
   Next:
-    kPL table kPan+kM, 104, 1
-    kPR table (1-kPan-kM), 104, 1
+    kPL table kPan+kM, giPANLIN
+    kPR table (127-kPan-kM), giPANLIN
   Over:
 
   kL = kPL * kIn
@@ -35,16 +32,15 @@ opcode Pan, 0, kkkkkkk
   aIn zar kin
   aMod zar kmodin
 
-  aM = amod * aMod * 1/64
+  aM = amod * aMod ;* 1/64
 
-; DON'T FORGET TO MAKE 103 and 104 TABLES>>
   if kLogLin != 0 goto Next
-    aPL table a(kPan)+aM, 103, 1
-    aPR table (1-a(kPan)-aM), 103, 1
+    aPL table a(kPan)+aM, giPANLOG
+    aPR table (127-a(kPan)-aM), giPANLOG
     goto Over
   Next:
-    aPL table a(kPan)+aM, 104, 1
-    aPR table (1-a(kPan)-aM), 104, 1
+    aPL table a(kPan)+aM, giPANLIN
+    aPR table (127-a(kPan)-aM), giPANLIN
   Over:
 
   aL = aPL * aIn

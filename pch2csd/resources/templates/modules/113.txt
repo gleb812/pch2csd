@@ -1,12 +1,39 @@
-opcode Fade1, 0, kk
-  kMod, kMix xin
-  k1 zkr 1 ;CHANGE
-  kmod zkr 3; CHANGE
-  
-  kMix += kMod ;+ limiter?
-  kL = k1*kMix
-  kR = k2*(1-kMix)
-  
-  zkw kL, 2 ; CHANGE
-  zkw kR, 2 ; CHANGE
+;@ map PANLOG
+
+;@ ins k k
+;@ outs k k
+opcode Fade1, 0, kkkkkkk
+  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+  kIn zkr kin
+  kMod zkr kmodin
+
+  kM = kmod * kMod ;* 1/64
+
+    kPL table 2 * kPan + kM, giPANLOG
+    kPR table (127 - 2* kPan - kM), giPANLOG
+
+  kL = kPL * kIn
+  kR = kPR * kIn
+
+  zkw kL, koutL
+  zkw kR, koutR
+endop
+
+;@ ins a a
+;@ outs a a
+opcode Fade1, 0, kkkkkkk
+  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+  aIn zar kin
+  aMod zar kmodin
+
+  aM = amod * aMod ;* 1/64
+
+  kPL table 2 * kPan + kM, giPANLOG
+  kPR table (127 - 2* kPan - kM), giPANLOG
+
+  aL = aPL * aIn
+  aR = aPR * aIn
+
+  zaw aL, koutL
+  zaw aR, koutR
 endop
