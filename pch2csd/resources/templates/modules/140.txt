@@ -32,7 +32,7 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
 	Next:
 	koutL = k1l*kL1*kO1 + k2l*kL2*kO2 + k3l*kL3*kO3 + k4l*kL4*kO4 + kcl
   koutR = k1r*kL1*kO1 + k2r*kL2*kO2 + k3r*kL3*kO3 + k4r*kL4*kO4 + kcr
-	zkw koutl, kOuL
+	zkw koutL, kOuL
   zkw koutR, kOuR
 endop
 
@@ -66,6 +66,6 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
 	Next:
 	aoutL = a1l*kL1*kO1 + a2l*kL2*kO2 + a3l*kL3*kO3 + a4l*kL4*kO4 + acl
   aoutR = a1r*kL1*kO1 + a2r*kL2*kO2 + a3r*kL3*kO3 + a4r*kL4*kO4 + acr
-	zaw aoutl, kOuL
+	zaw aoutL, kOuL
   zaw aoutR, kOuR
 endop

@@ -28,8 +28,8 @@ opcode Fade1, 0, kkkkkk
 
   aM = kmod * aMod ;* 1/64
 
-  aPL table kPan + kM, giMIXPAN
-  aPR table 127 - kPan - kM, giMIXPAN
+  aPL table kPan + aM, giMIXPAN
+  aPR table 127 - kPan - aM, giMIXPAN
 
   aL = aPL * aIn
   aR = aPR * aIn
