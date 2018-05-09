@@ -1,4 +1,4 @@
-;@ map PANLOG
+;@ map MIXPAN
 
 ;@ ins k k
 ;@ outs k k
@@ -9,8 +9,8 @@ opcode Fade1, 0, kkkkkk
 
   kM = kmod * kMod ;* 1/64
 
-    kPL table 2 * kPan + kM, giPANLOG
-    kPR table (127 - 2* kPan - kM), giPANLOG
+  kPL table kPan + kM, giMIXPAN
+  kPR table 127 - kPan - kM, giMIXPAN
 
   kL = kPL * kIn
   kR = kPR * kIn
@@ -28,8 +28,8 @@ opcode Fade1, 0, kkkkkk
 
   aM = kmod * aMod ;* 1/64
 
-  aPL table 2 * kPan + kM, giPANLOG
-  aPR table (127 - 2* kPan - kM), giPANLOG
+  aPL table kPan + kM, giMIXPAN
+  aPR table 127 - kPan - kM, giMIXPAN
 
   aL = aPL * aIn
   aR = aPR * aIn
