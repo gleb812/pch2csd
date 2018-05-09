@@ -2,8 +2,8 @@
 ;@ outs k
 opcode K2Y, 0, kk
     kIn, kOut xin
-    kIn zkr kIn
-    kIn signum(kIn)
-    kOut limit kIn,0,1
-    zkw kOut, kOut
+    kin zkr kIn
+    kin signum(kin)
+    kout limit kin,0,1
+    zkw kout, kOut
 endop
