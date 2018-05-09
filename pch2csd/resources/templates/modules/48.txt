@@ -39,6 +39,8 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
 
   koutL = k1*kL1*kP1L+k2*kL2*kP2L+k3*kL3*kP3L+k4*kL4*kP4L+k5*kL5*kP5L+k6*kL6*kP6L
   koutR = k1*kL1*kP1R+k2*kL2*kP2R+k3*kL3*kP3R+k4*kL4*kP4R+k5*kL5*kP5R+k6*kL6*kP6R
+  koutL limit koutL, -4, 4
+  koutR limit koutR, -4, 4
 
   zkw koutL*kM, koL
   zkw koutR*kM, koR
@@ -82,6 +84,8 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
 
   aoutL = a1*kL1*kP1L+a2*kL2*kP2L+a3*kL3*kP3L+a4*kL4*kP4L+a5*kL5*kP5L+a6*kL6*kP6L
   aoutR = a1*kL1*kP1R+a2*kL2*kP2R+a3*kL3*kP3R+a4*kL4*kP4R+a5*kL5*kP5R+a6*kL6*kP6R
+  aoutL limit aoutL, -4, 4
+  aoutR limit aoutR, -4, 4
 
   zaw aoutL*kM, koL
   zaw aoutR*kM, koR

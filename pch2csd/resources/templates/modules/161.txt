@@ -41,6 +41,7 @@ opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 		kLev8 table kLev8, giCLA001
 	Next:
 	kout = k9 + (k1*kLev1*kO1+k2*kLev2*kO2+k3*kLev3*kO3+k4*kLev4*kO4+k5*kLev5*kO5+k6*kLev6*kO6+k7*kLev7+k8*kLev8)*kP[kpad]
+	kout limit kout, -4, 4
 	zkw kout, ko
 endop
 
@@ -82,5 +83,6 @@ opcode MixFader, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkk
 		kLev8 table kLev8, giCLA001
 	Next:
 	aout = a9 + (a1*kLev1*kO1+a2*kLev2*kO2+a3*kLev3*kO3+a4*kLev4*kO4+a5*kLev5*kO5+a6*kLev6*kO6+a7*kLev7*kO7+a8*kLev8*kO8)*kP[kpad]
+	aout limit aout, -4, 4
 	zaw aout, ko
 endop

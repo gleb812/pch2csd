@@ -19,6 +19,8 @@ opcode Mix11S, 0, kkkkkkkkk
   Next:
   kOutL = kChainL + kInL * kLev * kOn
   kOutR = kChainR + kInR * kLev * kOn
+  kOutL limit kOutL, -4, 4
+  kOutR limit kOutR, -4, 4
   zkw kOutL, koutL
   zkw kOutR, koutR
 endop
@@ -40,6 +42,8 @@ opcode Mix11S, 0, kkkkkkkkk
   Next:
   aOutL = aChainL + aInL * kLev * kOn
   aOutR = aChainR + aInR * kLev * kOn
+  aOutL limit aOutL, -4, 4
+  aOutR limit aOutR, -4, 4
   zaw aOutL, koutL
   zaw aOutR, koutR
 endop

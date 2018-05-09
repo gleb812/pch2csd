@@ -22,6 +22,7 @@ opcode Mix21B, 0, kkkkkkkkk
     kLev2 table kLev2, giCLA001
   Next:
   kOut = kChain + kIn1 * kLev1 * kInv[kInv1] + kIn2 * kLev2 * kInv[kInv2]
+  kOut limit kOut, -4, 4
   zkw kOut, kout
 endop
 
@@ -45,5 +46,6 @@ opcode Mix21B, 0, kkkkkkkkk
   kLev2 table kLev2, giCLA001
   Next:
   aOut = aChain + aIn1 * kLev1 * kInv[kInv1] + aIn2 * kLev2 * kInv[kInv2]
+  aOut limit aOut, -4, 4
   zaw aOut, kout
 endop

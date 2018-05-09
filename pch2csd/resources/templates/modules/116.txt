@@ -17,6 +17,7 @@ opcode Mix81A, 0, kkkkkkkkkk
  kP[] fillarray 1,0.5,0.25
 
 	kOut =ks1+ks2+ks3+ks4+ks5+ks6+ks7+ks8
+	kOut limit kOut, -4, 4
 	zkw kOut*kP[kPad],kout
 endop
 
@@ -37,5 +38,6 @@ opcode Mix81A, 0, kkkkkkkkkk
  kP[] fillarray 1,0.5,0.25
 
 	aOut =as1+as2+as3+as4+as5+as6+as7+as8
+	aOut limit aOut, -4, 4
 	zaw aOut*kP[kPad],kout
 endop

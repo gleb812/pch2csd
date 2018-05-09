@@ -27,6 +27,7 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 		kL4 table kL4, giCLA001
 	Next:
 	kout = kP[kPad]*(k1*kL1*kO1 + k2*kL2*kO2 + k3*kL3*kO3 + k4*kL4*kO4) + k5
+	kout limit kout, -4, 4
 	zkw kout, kOut
 endop
 
@@ -56,5 +57,6 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kPad,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 		kL4 table kL4, giCLA001
 	Next:
 	aout = kP[kPad]*(a1*kL1*kO1 + a2*kL2*kO2 + a3*kL3*kO3 + a4*kL4*kO4) + a5
+	aout limit aout, -4, 4
 	zaw aout, kOut
 endop

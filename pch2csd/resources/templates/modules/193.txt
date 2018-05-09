@@ -10,6 +10,7 @@ opcode Mix41A, 0, kkkkk
 	ks4 zkr k4
 
 	kOut = ks1 + ks2 + ks3 + ks4
+	kOut limit kOut, -4, 4
 	zkw kOut,k5
 endop
 
@@ -23,5 +24,6 @@ opcode Mix41A, 0, kkkkk
 	as4 zar k4
 
 	aOut = as1 + as2 + as3 + as4
+	aOut limit aOut, -4, 4
 	zaw aOut,k5
 endop

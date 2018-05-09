@@ -16,6 +16,7 @@ opcode Mix11A, 0, kkkkkk
   kLev table kLev, giCLA001
   Next:
   kOut = kChain + kIn * kLev * kOn
+  kOut limit kOut, -4, 4
   zkw kOut, kout
 endop
 
@@ -33,5 +34,6 @@ opcode Mix11A, 0, kkkkkk
   kLev table kLev, giCLA001
   Next:
   aOut = aChain + aIn * kLev * kOn
+  aOut limit aOut, -4, 4
   zaw aOut, kout
 endop

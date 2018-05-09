@@ -24,6 +24,7 @@ kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 	kLev4 table kLev4, giCLA001
 	Next:
 	kout = k1*kLev1 + k2*kLev2 + k3*kLev3 + k4*kLev4 + k5
+	kout limit kout, -4, 4
 	zkw kout, kOut
 endop
 
@@ -50,5 +51,6 @@ kLev1,kLev2,kLev3,kLev4,kExpLin,kI1,kI2,kI3,kI4,kCh,kOut  xin
 	kLev4 table kLev4, giCLA001
 	Next:
 	aout = a1*kLev1 + a2*kLev2 + a3*kLev3 + a4*kLev4 + a5
+	aout limit aout, -4, 4
 	zaw aout, kOut
 endop

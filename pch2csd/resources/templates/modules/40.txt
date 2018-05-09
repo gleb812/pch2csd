@@ -39,6 +39,7 @@ opcode Mix81B, 0, kkkkkkkkkkkkkkkkkkkk
 		kLev8 table kLev8, giCLA001
 	Next:
 	kout = k9 + (k1*kLev1+k2*kLev2+k3*kLev3+k4*kLev4+k5*kLev5+k6*kLev6+k7*kLev7+k8*kLev8)*kP[kpad]
+	kout limit kout, -4, 4
 	zkw kout, ko
 endop
 
@@ -80,5 +81,6 @@ opcode Mix81B, 0, kkkkkkkkkkkkkkkkkkkk
 		kLev8 table kLev8, giCLA001
 	Next:
 	aout = a9 + (a1*kLev1+a2*kLev2+a3*kLev3+a4*kLev4+a5*kLev5+a6*kLev6+a7*kLev7+a8*kLev8)*kP[kpad]
+	aout limit aout, -4, 4
 	zaw aout, ko
 endop
