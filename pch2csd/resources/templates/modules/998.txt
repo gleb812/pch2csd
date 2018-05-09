@@ -1,0 +1,9 @@
+;@ ins a
+;@ outs a
+opcode A2Y, 0, kk
+    kIn, kOut xin
+    aIn zar kIn
+    aIn signum(aIn)
+    aOut limit aIn,0,1
+    zaw aOut, kOut
+endop
