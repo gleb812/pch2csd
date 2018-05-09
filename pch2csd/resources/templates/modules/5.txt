@@ -1,10 +1,23 @@
 ;@ ins k k
 ;@ outs k k
-opcode Invert, 0, 0
-  ky1 zkr 1 ; CHANGE 
-  ky2 zkr 2 ; CHANGE 
-  kyInv1 = -ky1+1
-  kyInv2 = -ky2+1
-  zkw kyInv1, 1 ; CHANGE
-  zkw kyInv1, 2 ; CHANGE
+opcode Invert, 0, kkkk
+  kI1,kI2,kO1,kO2 xin
+  ki1 zkr kI1
+  ki2 zkr kI2
+  kni1 = -ki1+1
+  kni2 = -ki2+1
+  zkw kni1, kO1
+  zkw kni2, kO2
+endop
+
+;@ ins a a
+;@ outs a a
+opcode Invert, 0, kkkk
+  kI1,kI2,kO1,kO2 xin
+  ai1 zar kI1
+  ai2 zar kI2
+  ani1 = -ai1+1
+  ani2 = -ai2+1
+  zaw ani1, kO1 
+  zaw ani2, kO2
 endop
