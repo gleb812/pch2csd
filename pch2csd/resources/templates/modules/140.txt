@@ -4,7 +4,7 @@
 
 ;@ ins k k k k k k k k k k
 ;@ outs k k
-opcode Mix41C, 0, kkkkkkkkkkkkkkkkkkkkk
+opcode Mix41S, 0, kkkkkkkkkkkkkkkkkkkkk
 kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL,kOuR xin
 	k1l zkr k1L
 	k2l zkr k2L
@@ -38,7 +38,7 @@ endop
 
 ;@ ins a a a a a a a a a a
 ;@ outs a a
-opcode Mix41C, 0, kkkkkkkkkkkkkkkkkkkkk
+opcode Mix41S, 0, kkkkkkkkkkkkkkkkkkkkk
 kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL,kOuR xin
 	a1l zar k1L
 	a2l zar k2L
