@@ -11,9 +11,9 @@ opcode Mix11S, 0, kkkkkkkkk
   kChainL zkr kchainL
   kChainR zkr kchainR
 
-  if kExpLin == 1 goto Out
+  if kExpLin == 1 kgoto Out
     kLev table kLev, giAMPEXP
-    goto Next
+    kgoto Next
   Out:
   kLev table kLev, giCLA001
   Next:
@@ -32,9 +32,9 @@ opcode Mix11S, 0, kkkkkkkkk
   aChainL zar kchainL
   aChainR zar kchainR
 
-  if kExpLin == 1 goto Out
+  if kExpLin == 1 kgoto Out
     kLev table kLev, giAMPEXP
-    goto Next
+    kgoto Next
   Out:
   kLev table kLev, giCLA001
   Next:

@@ -18,12 +18,12 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
   k4r zkr k4R
   kcr zkr kCR
 
-	if kEL == 1 goto Out
+	if kEL == 1 kgoto Out
     kL1 table kL1, giAMPEXP
     kL2 table kL2, giAMPEXP
 		kL3 table kL3, giAMPEXP
 		kL4 table kL4, giAMPEXP
-		goto Next
+		kgoto Next
   Out:
 		kL1 table kL1, giCLA001
 		kL2 table kL2, giCLA001
@@ -52,11 +52,12 @@ kL1,kL2,kL3,kL4,kO1,kO2,kO3,kO4,kEL,k1L,k1R,k2L,k2R,k3L,k3R,k4L,k4R,kCL,kCR,kOuL
   a4r zar k4R
   acr zar kCR
 
-	if kEL == 1 goto Out
+	if kEL == 1 kgoto Out
     kL1 table kL1, giAMPEXP
     kL2 table kL2, giAMPEXP
 		kL3 table kL3, giAMPEXP
 		kL4 table kL4, giAMPEXP
+		kgoto Next
   Out:
 		kL1 table kL1, giCLA001
 		kL2 table kL2, giCLA001

@@ -5,7 +5,7 @@
 ;@ outs k k
 
 opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
-  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki3,ki4,ki5,ki6,koL,koR xin
+  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki2,ki3,ki4,ki5,ki6,koL,koR xin
 
   k1 zkr ki1
   k2 zkr ki2
@@ -13,6 +13,8 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
   k4 zkr ki4
   k5 zkr ki5
   k6 zkr ki6
+
+  kM table kM, giAMPEXP
 
   kL1 table kL1, giAMPEXP
   kL2 table kL2, giAMPEXP
@@ -38,15 +40,15 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
   koutL = k1*kL1*kP1L+k2*kL2*kP2L+k3*kL3*kP3L+k4*kL4*kP4L+k5*kL5*kP5L+k6*kL6*kP6L
   koutR = k1*kL1*kP1R+k2*kL2*kP2R+k3*kL3*kP3R+k4*kL4*kP4R+k5*kL5*kP5R+k6*kL6*kP6R
 
-  zkw koutL*kMaster, koL
-  zkw koutR*kMaster, koR
+  zkw koutL*kM, koL
+  zkw koutR*kM, koR
 endop
 
 ;@ ins a a a a a a
 ;@ outs a a
 
 opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
-  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki3,ki4,ki5,ki6,koL,koR xin
+  kL1,kL2,kL3,kL4,kL5,kL6,kP1,kP2,kP3,kP4,kP5,kP6,kM,ki1,ki2,ki3,ki4,ki5,ki6,koL,koR xin
 
   a1 zar ki1
   a2 zar ki2
@@ -54,6 +56,8 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
   a4 zar ki4
   a5 zar ki5
   a6 zar ki6
+
+  kM table kM, giAMPEXP
 
   kL1 table kL1, giAMPEXP
   kL2 table kL2, giAMPEXP
@@ -79,6 +83,6 @@ opcode MixStereo, 0, kkkkkkkkkkkkkkkkkkkkk
   aoutL = a1*kL1*kP1L+a2*kL2*kP2L+a3*kL3*kP3L+a4*kL4*kP4L+a5*kL5*kP5L+a6*kL6*kP6L
   aoutR = a1*kL1*kP1R+a2*kL2*kP2R+a3*kL3*kP3R+a4*kL4*kP4R+a5*kL5*kP5R+a6*kL6*kP6R
 
-  zaw aoutL*kMaster, koL
-  zaw aoutR*kMaster, koR
+  zaw aoutL*kM, koL
+  zaw aoutR*kM, koR
 endop

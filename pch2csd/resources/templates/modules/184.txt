@@ -27,7 +27,7 @@ opcode Mix11A, 0, kkkkkk
   aChain zar kchain
 
   if kExpLin == 1 goto Out
-    kLev table kLev, giAMEXP
+    kLev table kLev, giAMPEXP
     goto Next
   Out:
   kLev table kLev, giCLA001

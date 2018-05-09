@@ -13,10 +13,10 @@ opcode Mix21B, 0, kkkkkkkkk
  ;          Inv=   0   1
   kInv[] fillarray 1, -1
 
-  if kExpLin == 1 goto Out
+  if kExpLin == 1 kgoto Out
     kLev1 table kLev1, giAMPEXP
     kLev2 table kLev2, giAMPEXP
-    goto Next
+    kgoto Next
   Out:
     kLev1 table kLev1, giCLA001
     kLev2 table kLev2, giCLA001
@@ -36,10 +36,10 @@ opcode Mix21B, 0, kkkkkkkkk
  ;          Inv=   0   1
   kInv[] fillarray 1, -1
 
-  if kExpLin == 1 goto Out
+  if kExpLin == 1 kgoto Out
   kLev1 table kLev1, giAMPEXP
   kLev2 table kLev2, giAMPEXP
-  goto Next
+  kgoto Next
   Out:
   kLev1 table kLev1, giCLA001
   kLev2 table kLev2, giCLA001

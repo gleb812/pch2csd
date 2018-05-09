@@ -18,7 +18,7 @@ opcode Mix81B, 0, kkkkkkkkkkkkkkkkkkkk
 	; Pad =				0, -6, -12 dB
 	kP[] fillarray 1,0.5,0.25
 
-	if kExpLin == 1 goto Out
+	if kmod == 1 goto Out
 		kLev1 table kLev1, giAMPEXP
 		kLev2 table kLev2, giAMPEXP
 		kLev3 table kLev3, giAMPEXP

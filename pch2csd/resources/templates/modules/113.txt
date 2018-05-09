@@ -2,8 +2,8 @@
 
 ;@ ins k k
 ;@ outs k k
-opcode Fade1, 0, kkkkkkk
-  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+opcode Fade1, 0, kkkkkk
+  kPan,kmod,kin,kmodin,koutL,koutR xin
   kIn zkr kin
   kMod zkr kmodin
 
@@ -21,15 +21,15 @@ endop
 
 ;@ ins a a
 ;@ outs a a
-opcode Fade1, 0, kkkkkkk
-  kmod,kPan,kLogLin, kin,kmodin,koutL,koutR xin
+opcode Fade1, 0, kkkkkk
+  kPan,kmod,kin,kmodin,koutL,koutR xin
   aIn zar kin
   aMod zar kmodin
 
-  aM = amod * aMod ;* 1/64
+  aM = kmod * aMod ;* 1/64
 
-  kPL table 2 * kPan + kM, giPANLOG
-  kPR table (127 - 2* kPan - kM), giPANLOG
+  aPL table 2 * kPan + kM, giPANLOG
+  aPR table (127 - 2* kPan - kM), giPANLOG
 
   aL = aPL * aIn
   aR = aPR * aIn

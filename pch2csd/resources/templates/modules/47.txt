@@ -9,10 +9,10 @@ opcode Pan, 0, kkkkkkk
 
   kM = kmod * kMod ;* 1/64
 
-  if kLogLin != 0 goto Next
+  if kLogLin != 0 kgoto Next
     kPL table kPan+kM, giPANLOG
     kPR table (127-kPan-kM), giPANLOG
-    goto Over
+    kgoto Over
   Next:
     kPL table kPan+kM, giPANLIN
     kPR table (127-kPan-kM), giPANLIN
@@ -32,12 +32,12 @@ opcode Pan, 0, kkkkkkk
   aIn zar kin
   aMod zar kmodin
 
-  aM = amod * aMod ;* 1/64
+  aM = kmod * aMod ;* 1/64
 
-  if kLogLin != 0 goto Next
+  if kLogLin != 0 kgoto Next
     aPL table a(kPan)+aM, giPANLOG
     aPR table (127-a(kPan)-aM), giPANLOG
-    goto Over
+    kgoto Over
   Next:
     aPL table a(kPan)+aM, giPANLIN
     aPR table (127-a(kPan)-aM), giPANLIN
