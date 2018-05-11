@@ -1,9 +1,32 @@
 ;@ ins k
 ;@ outs k k
-opcode swOnOffM, 0, k   ; MULTIMODE support a/k?
-; THIS opcode is for RT only.. Need to check..
-  kSw xin ;kSw = 0 / 1
-  a1 zar 1 ; CHANGE 
-  zaw a1*kSw, 2 ; CHANGE
-  ; poka bez Ctrl 
+opcode swOnOffM, 0, kkkk
+  kSw, kin, kout, kctrl xin
+
+  if kin != 0 goto Next
+      kIn = 1
+      goto Over
+  Next:
+  kIn zkr kin
+  Over:
+
+  zkw kIn*kSw, kout
+  zkw kSw/16,  kctrl
+endop
+
+;@ ins a
+;@ outs a k
+opcode swOnOffM, 0, kkkk
+setksmps 1
+  kSw, kin, kout, kctrl xin
+
+  aIn zar kin
+  kIn = k(aIn)
+
+  if kin != 0 goto Next
+      kIn = 1
+  Next:
+
+  zaw a(kIn)*kSw, kout
+  zkw kSw/16,  kctrl
 endop
