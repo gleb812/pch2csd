@@ -1,27 +1,66 @@
-;@ map d BUT002
-
 ;@ ins k k k
 ;@ outs k k
-opcode FlipFlop, 0, k
-  kType xin
-  kClk zkr 1 ; CHANGE 
-  kIn zkr 2 ; CHANGE 
-  kRst zkr 1 ; CHANGE 
-  
-  kQ init 0 
+opcode FlipFlop, 0, kkkkkk
+  kType,kclk,krst,kin,knotq,kq xin
+  kClk zkr kclk
+  kIn zkr kin
+  kRst zkr krst
+
+  kQ init 0
+
+  if kRst != 0 kgoto Reset
 
   ktrig	trigger kClk, 0, 0
 
   if (ktrig == 0) kgoto Run
 
   if (kType!=0) kgoto RS
-  	kQ = kIn *(kRst>0 ? 0:1)	
+  	kQ = kIn
   	kgoto Run
   RS:
-  	kQ = 1		
+    if kIn != 0 kgoto Run
+  	   kQ = 1 - kQ
 
+Reset:
+  kQ = 0
 Run:
-  
-  zkw kQ, 1 ; CHANGE
-  zkw 1-kQ, 2 ; CHANGE
+  zkw kQ, kq
+  zkw 1-kQ, knotq
+endop
+
+; TODO Time of flip & flop needs checking!
+
+;@ ins a a a
+;@ outs a a
+opcode FlipFlop, 0, kkkkkk
+setksmps 1
+  kType,kclk,krst,kin,knotq,kq xin
+  aClk zar kclk
+  aIn zar kin
+  aRst zar krst
+
+  kClk = k(aClk)
+  kIn  = k(aIn)
+  kRst = k(aRst)
+
+  kQ init 0 
+
+  if kRst != 0 kgoto Reset
+
+  ktrig	trigger kClk, 0, 0
+
+  if (ktrig == 0) kgoto Run
+
+  if (kType!=0) kgoto RS
+  	kQ = kIn
+  	kgoto Run
+  RS:
+    if kIn != 0 kgoto Run
+  	   kQ = 1 - kQ
+
+Reset:
+  kQ = 0
+Run:
+  zaw a(kQ), kq
+  zaw a(1-kQ), knotq
 endop
