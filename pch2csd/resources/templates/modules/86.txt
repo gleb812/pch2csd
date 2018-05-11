@@ -1,7 +1,7 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
-opcode 8Counter, 0, kk
-  kClk, kRst xin
+opcode 8Counter, 0, kkkkkkkkkk
+  kclk,krst,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
   kCount init 0
 
   k1[] fillarray 1,0,0,0,0,0,0,0
@@ -13,29 +13,67 @@ opcode 8Counter, 0, kk
   k7[] fillarray 0,0,0,0,0,0,1,0
   k8[] fillarray 0,0,0,0,0,0,0,1
 
+  kRst zkr krst
+  kClk zkr kclk
 
-  if (kClk != 0) then
+  if kRst !=0 kgoto Reset
+
+  ktrig	trigger kClk, 0, 0
+  if (ktrig != 1) kgoto Run
   	kCount += 1
   	kCount = kCount%8
-  	zkw k1[kCount], 1 ; CHANGE 
-  	zkw k2[kCount], 2 ; CHANGE 
-  	zkw k3[kCount], 3 ; CHANGE 
-  	zkw k4[kCount], 4 ; CHANGE 
-  	zkw k5[kCount], 5 ; CHANGE 
-  	zkw k6[kCount], 6 ; CHANGE 
-  	zkw k7[kCount], 7 ; CHANGE 
-  	zkw k8[kCount], 8 ; CHANGE
-  endif
-  
-  if (kRst != 0) then
-  	kCount = 0 
-  	zkw 1, 1 ; CHANGE 
-  	zkw 0, 2 ; CHANGE 
-  	zkw 0, 3 ; CHANGE 
-  	zkw 0, 4 ; CHANGE 
-  	zkw 0, 5 ; CHANGE 
-  	zkw 0, 6 ; CHANGE 
-  	zkw 0, 7 ; CHANGE 
-  	zkw 0, 8 ; CHANGE
-  endif
+
+  Reset:
+  	kCount = 0
+  Run:
+    zkw k1[kCount], ko1
+    zkw k2[kCount], ko2
+    zkw k3[kCount], ko3
+    zkw k4[kCount], ko4
+    zkw k5[kCount], ko5
+    zkw k6[kCount], ko6
+    zkw k7[kCount], ko7
+    zkw k8[kCount], ko8
+endop
+
+;@ ins a a
+;@ outs a a a a a a a a
+opcode 8Counter, 0, kkkkkkkkkk
+setksmps 1
+  kclk,krst,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
+  kCount init 0
+
+  k1[] fillarray 1,0,0,0,0,0,0,0
+  k2[] fillarray 0,1,0,0,0,0,0,0
+  k3[] fillarray 0,0,1,0,0,0,0,0
+  k4[] fillarray 0,0,0,1,0,0,0,0
+  k5[] fillarray 0,0,0,0,1,0,0,0
+  k6[] fillarray 0,0,0,0,0,1,0,0
+  k7[] fillarray 0,0,0,0,0,0,1,0
+  k8[] fillarray 0,0,0,0,0,0,0,1
+
+  aRst zar krst
+  aClk zar kclk
+
+  kRst = k(aRst)
+  kClk = k(aClk)
+
+  if kRst !=0 kgoto Reset
+
+  ktrig	trigger kClk, 0, 0
+  if (ktrig != 1) kgoto Run
+  	kCount += 1
+  	kCount = kCount%8
+
+  Reset:
+  	kCount = 0
+  Run:
+    zaw a(k1[kCount]), ko1
+    zaw a(k2[kCount]), ko2
+    zaw a(k3[kCount]), ko3
+    zaw a(k4[kCount]), ko4
+    zaw a(k5[kCount]), ko5
+    zaw a(k6[kCount]), ko6
+    zaw a(k7[kCount]), ko7
+    zaw a(k8[kCount]), ko8
 endop
