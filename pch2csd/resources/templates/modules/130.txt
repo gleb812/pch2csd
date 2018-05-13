@@ -1,21 +1,108 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
 opcode BinCounter, 0, kk
-  kClk, kRst xin
+kclk,kres,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
+; Based on #131
+  kClk zkr kclk
+  kRes zkr kres
+  k0 init 0
+  k1 init 0
+  k2 init 0
+  k3 init 0
+  k4 init 0
+  k5 init 0
+  k6 init 0
+  k7 init 0
   kCount init 0
-  if (kClk != 0) then
-  	kCount += 1
-  	zkw int(kCount*.5), 1 ; CHANGE 
-  	zkw int(kCount*.25), 1 ; CHANGE 
-  	zkw int(kCount*.125), 1 ; CHANGE 
-  	zkw int(kCount*.0625), 1 ; CHANGE 
-  	zkw int(kCount*.03125), 1 ; CHANGE 
-  	zkw int(kCount*.015625), 1 ; CHANGE 
-  	zkw int(kCount*.0078125), 1 ; CHANGE 
-  	zkw int(kCount*.00390625), 1 ; CHANGE
-  endif
-  
-  if (kRst != 0) then
-  	kCount = 0 
-  endif
+
+  if kRst != 1 goto Norm
+    KCount = 0
+    k0 = 0
+    k1 = 0
+    k2 = 0
+    k3 = 0
+    k4 = 0
+    k5 = 0
+    k6 = 0
+    k7 = 0
+    goto Halt
+
+Norm:
+  ktrig trigger kClk, 0, 0
+  if ktrig != 1 goto Halt
+    kCount += 1
+    KCount wrap kCount, 0, 255
+    k0 = kin&1
+    k1 = (kin>>1)&1
+    k2 = (kin>>2)&1
+    k3 = (kin>>3)&1
+    k4 = (kin>>4)&1
+    k5 = (kin>>5)&1
+    k6 = (kin>>6)&1
+    k7 = (kin>>7)&1
+Halt:
+  zkw k0,ko0
+  zkw k1,ko1
+  zkw k2,ko2
+  zkw k3,ko3
+  zkw k4,ko4
+  zkw k5,ko5
+  zkw k6,ko6
+  zkw k7,ko7
+endop
+
+;@ ins a a
+;@ outs a a a a a a a a
+opcode BinCounter, 0, kk
+kclk,kres,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
+setksmps 1
+; Based on #131
+  aClk zar kclk
+  aRes zar kres
+  kClk = k(aClk)
+  kRes = k(aRes)
+  k0 init 0
+  k1 init 0
+  k2 init 0
+  k3 init 0
+  k4 init 0
+  k5 init 0
+  k6 init 0
+  k7 init 0
+  kCount init 0
+
+  if kRst != 1 goto Norm
+    KCount = 0
+    k0 = 0
+    k1 = 0
+    k2 = 0
+    k3 = 0
+    k4 = 0
+    k5 = 0
+    k6 = 0
+    k7 = 0
+    goto Halt
+
+Norm:
+  ktrig trigger kClk, 0, 0
+  if ktrig != 1 goto Halt
+    kCount += 1
+    KCount wrap kCount, 0, 255
+    k0 = kin&1
+    k1 = (kin>>1)&1
+    k2 = (kin>>2)&1
+    k3 = (kin>>3)&1
+    k4 = (kin>>4)&1
+    k5 = (kin>>5)&1
+    k6 = (kin>>6)&1
+    k7 = (kin>>7)&1
+Halt:
+  zaw a(k0),ko0
+  zaw a(k1),ko1
+  zaw a(k2),ko2
+  zaw a(k3),ko3
+  zaw a(k4),ko4
+  zaw a(k5),ko5
+  zaw a(k6),ko6
+  zaw a(k7),ko7
 endop
