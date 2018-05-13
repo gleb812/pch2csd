@@ -1,15 +1,46 @@
 ;@ ins k k k k k k k k
-;@ args k
-opcode DAConv, 0, 0
-  ky0 zkr 1 ; CHANGE 
-  ky1 zkr 2 ; CHANGE 
-  ky2 zkr 1 ; CHANGE 
-  ky3 zkr 2 ; CHANGE 
-  ky4 zkr 1 ; CHANGE 
-  ky5 zkr 2 ; CHANGE 
-  ky6 zkr 1 ; CHANGE 
-  ky7 zkr 2 ; CHANGE
-  kOut = ky0*128+ky1*64+ky2*32+ky3*16+ky4*8+ky5*4+ky6*2+ky7
-  zkw kOut, 1 ; CHANGE 
-  ;Normirovka ????
+;@ outs k
+opcode DAConv, 0, kkkkkkkkk
+k0,k1,k2,k3,k4,k5,k6,k7,kout xin
+  ky0 zkr k0
+  ky1 zkr k1
+  ky2 zkr k2
+  ky3 zkr k3
+  ky4 zkr k4
+  ky5 zkr k5
+  ky6 zkr k6
+  ky7 zkr k7
+
+  kOut = ky0*1+ky1*2+ky2*4+ky3*8+ky4*16+ky5*32+ky6*64
+
+  if k7 == 0 goto Over
+    kOut = 127 - kOut ; two-complement bin
+
+  Over:
+  kOut /= 127  ; normalized to -1...1
+  zkw kOut, kout
+endop
+
+;@ ins a a a a a a a a
+;@ outs a
+opcode DAConv, 0, kkkkkkkkk
+setksmps 1
+k0,k1,k2,k3,k4,k5,k6,k7,kout xin
+  ay0 zar k0
+  ay1 zar k1
+  ay2 zar k2
+  ay3 zar k3
+  ay4 zar k4
+  ay5 zar k5
+  ay6 zar k6
+  ay7 zar k7
+
+  aOut = ay0*1+ay1*2+ay2*4+ay3*8+ay4*16+ay5*32+ay6*64
+
+  if k(ay7) == 0 goto Over
+    kOut = 127 - kOut ; two-complement bin
+
+  Over:
+  kOut /= 127  ; normalized to -1...1
+  zaw a(kOut), kout
 endop
