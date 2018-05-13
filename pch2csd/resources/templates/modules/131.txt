@@ -1,14 +1,57 @@
 ;@ ins k
 ;@ outs k k k k k k k k
 opcode ADConv, 0, 0
-  kyin zkr 1 ; CHANGE 
-  zkw int(kyin*.5), 1 ; CHANGE 
-  zkw int(kyin*.25), 1 ; CHANGE 
-  zkw int(kyin*.125), 1 ; CHANGE 
-  zkw int(kyin*.0625), 1 ; CHANGE 
-  zkw int(kyin*.03125), 1 ; CHANGE 
-  zkw int(kyin*.015625), 1 ; CHANGE 
-  zkw int(kyin*.0078125), 1 ; CHANGE 
-  zkw int(kyin*.00390625), 1 ; CHANGE
-  ;Normirovka ????
+kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
+  kin zkr kIn
+  kin *= 128 ; de-norm
+  k7 = (kin >= 0 ? 0 : 1) ; sign bit
+  if k7 != 1 goto Norm
+    kin = 128 - kin ; complement
+Norm:
+  k0 = kin&1
+  k1 = (kin>>1)&1
+  k2 = (kin>>2)&1
+  k3 = (kin>>3)&1
+  k4 = (kin>>4)&1
+  k5 = (kin>>5)&1
+  k6 = (kin>>6)&1
+
+  zkw k0,ko0
+  zkw k1,ko1
+  zkw k2,ko2
+  zkw k3,ko3
+  zkw k4,ko4
+  zkw k5,ko5
+  zkw k6,ko6
+  zkw k7,ko7
+endop
+
+;@ ins a
+;@ outs a a a a a a a a
+opcode ADConv, 0, 0
+kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
+setksmps 1
+  ain zar kIn
+  kin = k(ain)
+  kin *= 128 ; de-norm
+  k7 = (kin >= 0 ? 0 : 1) ; sign bit
+  if k7 != 1 goto Norm
+    kin = 128 - kin ; complement
+Norm:
+  k0 = kin&1
+  k1 = (kin>>1)&1
+  k2 = (kin>>2)&1
+  k3 = (kin>>3)&1
+  k4 = (kin>>4)&1
+  k5 = (kin>>5)&1
+  k6 = (kin>>6)&1
+
+  zaw a(k0),ko0
+  zaw a(k1),ko1
+  zaw a(k2),ko2
+  zaw a(k3),ko3
+  zaw a(k4),ko4
+  zaw a(k5),ko5
+  zaw a(k6),ko6
+  zaw a(k7),ko7
 endop
