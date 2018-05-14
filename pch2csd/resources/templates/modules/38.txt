@@ -1,27 +1,56 @@
-;@ map s 3 LOGsub LOGlow LOGhii
-;@ map d CLA000
-;@ map d BUT003
-;@ map d BUT002
-
 ;@ ins k k
-;@ k
-opcode Pulse, 0, kk
-  kIn, kMod, kTime, kPN xin ; P- positive, N - negative
-  ; WHAT TO DO WITH RANGES? LO_HI_MD
-  kOut init 0		
+;@ outs k
+opcode Pulse, 0, kkkkkkk
+  kTime,kMod,kRange,kMode,kin,kmodi,kout xin
+  kIn zkr kin
+  kModIn zkr kmodi
+  kOut init 0
+  KCurrent init 0
 
-  if kIn < 0 goto Halt
+  kTimer table kTime+kMod*kModIn, giLOGsub
+  ; TODO only first range by now
 
-  ;reinit
-  iTime = i(kTime)  ; WHAT IF USER CAN CHANGE DUR AT RUN TIME?	
-  timout 0, iTime, Pulse
-  
-  kOut = 0
-  goto Halt
-  
-  Pulse:
-  kOut = 1
+  if kMode != 0 goto AltMode
+    kTrig trigger kIn,0.5,0
+    goto Next
+AltMode:
+    kTrig trigger kIn,0.5,1
+Next:
+  if kTrig != 1 goto Over
+      kCurrent = kTimer
+Over:
+  KCurrent -= 1/kr
+  kCurrent limit 0, 100*kr
+  kOut = (KCurrent > 0 ? 1:0)
+  zkw kOut, kout
+endop
 
-  Halt:	
-  zkw kOut, 1 ; CHANGE
+;@ ins a a
+;@ outs a
+opcode Pulse, 0, kkkkkkk
+  kTime,kMod,kRange,kMode,kin,kmodi,kout xin
+  setksmps 1
+  aIn zar kin
+  aModIn zar kmodi
+  kIn = k(aIn)
+  kModIn = k(aModIn)
+  kOut init 0
+  KCurrent init 0
+
+  kTimer table kTime+kMod*kModIn, giLOGsub
+  ; TODO only first range by now
+
+  if kMode != 0 goto AltMode
+    kTrig trigger kIn,0.5,0
+    goto Next
+AltMode:
+    kTrig trigger kIn,0.5,1
+Next:
+  if kTrig != 1 goto Over
+      kCurrent = kTimer
+Over:
+  KCurrent -= 1/kr
+  kCurrent limit 0, 100*kr
+  kOut = (KCurrent > 0 ? 1:0)
+  zaw a(kOut), kout
 endop
