@@ -1,30 +1,26 @@
-;@ map s 4 RNDsub RNDlow RNDhir RNDbpm
-;@ map d BUT006
-;@ map d BUT006
-;@ map d BUT006
-;@ map d BUT002
-
+;@ map  RNDsub RNDlow RNDhir RNDbpm
 
 ;@ ins k
 ;@ outs k
-opcode LfoC, 0, kkkkkkk
-; kOutType not impl
+opcode LfoC, 0, kkkkkkkk
 ; kKBT not impl
 ; only 4 first waves implemented - sin,tri,saw,quad
 ; Modulation not implemented
-; kMod - blue - -64..+64
+; kMod - blue - -1...+1
 ; kTuneMode only default works
-; kWave (a MODE, not a PARAMETER) is not detected by the parser!
 
-;                0    1     2     3  4   5  
+;                0    1     2     3  4   5
 k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
 k2[] fillarray 0.5, -0.5, -0.5, 0.5, 0,  0
 k3[] fillarray 1,   -1,     1,   -1, 1, -1
- 
-	kRate,kMode,kOutType,kRange,kON, kRateIn,kOut xin
-	
-	kout oscilikt 1, kRate, 1 ; problems with kwave
+
+	kRate,kMode,kOutType,kRange,kON,kWave, kRateIn,kOut xin
+
+
+  kRate table kRate, giRNDlow ; only low range so far
+
+	kout oscilikt 1, kRate, 1 ; only sine so far
 	kout = (kout*k1[kOutType]+k2[kOutType])*k3[kOutType]
 
-	zkw kout*kON*64, kOut 
+	zkw kout*kON, kOut
 endop
