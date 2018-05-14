@@ -3,11 +3,11 @@
 opcode Constant, 0, kkk
     kLev, kPolSw, kout xin
 
-    if kPolSw != 0 goto Uni 
+    if kPolSw != 0 goto Uni
       kLev table kLev, giLVLlev
       goto Over
 Uni:
       kLev table kLev, giLVLpos
 Over:
-      zkw kLev, kout
+      zkw kLev/64, kout
 endop
