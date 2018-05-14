@@ -20,7 +20,7 @@ Next:
       kCurrent = kTimer
 Over:
   KCurrent -= 1/kr
-  kCurrent limit 0, 100*kr
+  kCurrent limit kTimer, 0, 100*kr
   kOut = (KCurrent > 0 ? 1:0)
   zkw kOut, kout
 endop
@@ -50,7 +50,7 @@ Next:
       kCurrent = kTimer
 Over:
   KCurrent -= 1/kr
-  kCurrent limit 0, 100*kr
+  kCurrent limit kTimer, 0, 100*kr
   kOut = (KCurrent > 0 ? 1:0)
   zaw a(kOut), kout
 endop
