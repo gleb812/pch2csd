@@ -1,32 +1,72 @@
-;@ map d DLYsmp
-;@ map d BUT002
-
 ;@ ins k k
 ;@ outs k
-opcode ClkDiv, 0, ii
-  iDivider, iType xin
-  kyClk zkr 1 ; CHANGE 
-  kyRes zkr 2 ; CHANGE 
-  kCounter init 0
+opcode ClkDiv, 0, kk
+  kDiv, kType, kclk,kres,kout xin
+  kClk zkr kclk
+  kRes zkr kres
+  kCount init 0
+  kGate init 0
+  kDiv += 1 ; 0-127 -> 1-128
 
-  if (kyRes == 1) then
-  	kCounter = 0
-  	kOut = 0
-  endif
+  if kType != 1 goto GateMode
+    kTrig trigger kClk,0.5,2
+    if kTrig != 1 goto Over
+      if kRes != 0 goto Reset
+        kCount += 1
+        kCount = kCount%(kDiv*2)
+        kGate = (kCount <= kDiv ? 1:0)
+        goto Over
 
-  
-  if (kyClk != 0) then
-  	kCounter+= 1
-  endif
+GateMode:
+  kTrig trigger kClk,0.5,0
+  if kTrig != 1 goto Over
+    if kRes != 0 goto Reset
+    kCount += 1
+    kCount = kCount%kDiv
+      kGate = (kCount == 1 ? 1:0)
+      goto Over
 
-  kDiv = kCounter%iDivider
-  
-  if (kDiv == 1) then
-  	kOut = 1
-  	if (iType == 0) goto run
-  	kOut = 0
-  endif
+  Reset:
+  kGate = 0
+  kCount = 0
+  Over:
+  zkw kClk * kGate, kout
+endop
 
-  run:
-  zkw kOut, 1 ; CHANGE
+;@ ins a a
+;@ outs a
+opcode ClkDiv, 0, kk
+  kDiv, kType, kclk,kres,kout xin
+  setksmps 1
+  aClk zar kclk
+  aRes zar kres
+  kClk = k(aClk)
+  kRes = k(aRes)
+  kCount init 0
+  kGate init 0
+  kDiv += 1 ; 0-127 -> 1-128
+
+  if kType != 1 goto GateMode
+    kTrig trigger kClk,0.5,2
+    if kTrig != 1 goto Over
+      if kRes != 0 goto Reset
+        kCount += 1
+        kCount = kCount%(kDiv*2)
+        kGate = (kCount <= kDiv ? 1:0)
+        goto Over
+
+GateMode:
+  kTrig trigger kClk,0.5,0
+  if kTrig != 1 goto Over
+    if kRes != 0 goto Reset
+    kCount += 1
+    kCount = kCount%kDiv
+      kGate = (kCount == 1 ? 1:0)
+      goto Over
+
+  Reset:
+  kGate = 0
+  kCount = 0
+  Over:
+  zaw a(kClk) * kGate, kout
 endop
