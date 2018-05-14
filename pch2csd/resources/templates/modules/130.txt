@@ -1,6 +1,6 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
-opcode BinCounter, 0, kk
+opcode BinCounter, 0, kkkkkkkkkk
 kclk,kres,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
 ; Based on #131
   kClk zkr kclk
