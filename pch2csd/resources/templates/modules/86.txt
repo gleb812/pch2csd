@@ -1,6 +1,6 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
-opcode 8Counter, 0, kkkkkkkkkk
+opcode E8Counter, 0, kkkkkkkkkk
   kclk,krst,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
   kCount init 0
 
@@ -16,12 +16,16 @@ opcode 8Counter, 0, kkkkkkkkkk
   kRst zkr krst
   kClk zkr kclk
 
-  if kRst !=0 kgoto Reset
+  kRst K2Y kRst
+  kClk K2Y kClk
+
+  if kRst !=0 goto Reset
 
   ktrig	trigger kClk, 0, 0
-  if (ktrig != 1) kgoto Run
+  if (ktrig != 1) goto Run
   	kCount += 1
   	kCount = kCount%8
+    goto Run
 
   Reset:
   	kCount = 0
@@ -38,7 +42,7 @@ endop
 
 ;@ ins a a
 ;@ outs a a a a a a a a
-opcode 8Counter, 0, kkkkkkkkkk
+opcode E8Counter, 0, kkkkkkkkkk
 setksmps 1
   kclk,krst,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
   kCount init 0
@@ -58,13 +62,16 @@ setksmps 1
   kRst = k(aRst)
   kClk = k(aClk)
 
-  if kRst !=0 kgoto Reset
+  kRst K2Y kRst
+  kClk K2Y kClk
+
+  if kRst !=0 goto Reset
 
   ktrig	trigger kClk, 0, 0
-  if (ktrig != 1) kgoto Run
+  if (ktrig != 1) goto Run
   	kCount += 1
   	kCount = kCount%8
-
+    goto Run
   Reset:
   	kCount = 0
   Run:
