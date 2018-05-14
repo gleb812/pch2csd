@@ -11,14 +11,14 @@ gkBPM init 120
 
 opcode K2Y, k, k  ; THIS IS TEMPORARY!
     kin xin
-    kin = signum(kin)
-    kout limit kin,0,1
+    kout = (kin > 0 ? 1 : 0)
     xout kout
 endop
 
 opcode A2O, a, a  ; THIS IS TEMPORARY!
+    setksmps 1
     ain xin
-    ain = signum(ain)
-    aout limit ain,0,1
-    xout aout
+    kin = k(ain)
+    kout = (kin > 0 ? 1 : 0)
+    xout a(kout)
 endop
