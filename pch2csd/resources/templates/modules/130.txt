@@ -5,6 +5,10 @@ kclk,kres,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
 ; Based on #131
   kClk zkr kclk
   kRes zkr kres
+
+  kClk K2Y kClk
+  kRes K2Y kRes
+
   k0 init 0
   k1 init 0
   k2 init 0
@@ -15,8 +19,8 @@ kclk,kres,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
   k7 init 0
   kCount init 0
 
-  if kRst != 1 goto Norm
-    KCount = 0
+  if kRes != 1 goto Norm
+    kCount = 0
     k0 = 0
     k1 = 0
     k2 = 0
@@ -31,15 +35,15 @@ Norm:
   ktrig trigger kClk, 0, 0
   if ktrig != 1 goto Halt
     kCount += 1
-    KCount wrap kCount, 0, 255
-    k0 = kin&1
-    k1 = (kin>>1)&1
-    k2 = (kin>>2)&1
-    k3 = (kin>>3)&1
-    k4 = (kin>>4)&1
-    k5 = (kin>>5)&1
-    k6 = (kin>>6)&1
-    k7 = (kin>>7)&1
+    kCount wrap kCount, 0, 256
+    k0 = kCount&1
+    k1 = (kCount>>1)&1
+    k2 = (kCount>>2)&1
+    k3 = (kCount>>3)&1
+    k4 = (kCount>>4)&1
+    k5 = (kCount>>5)&1
+    k6 = (kCount>>6)&1
+    k7 = (kCount>>7)&1
 Halt:
   zkw k0,ko0
   zkw k1,ko1
@@ -61,6 +65,10 @@ setksmps 1
   aRes zar kres
   kClk = k(aClk)
   kRes = k(aRes)
+
+  kClk K2Y kClk
+  kRes K2Y kRes
+
   k0 init 0
   k1 init 0
   k2 init 0
@@ -71,8 +79,8 @@ setksmps 1
   k7 init 0
   kCount init 0
 
-  if kRst != 1 goto Norm
-    KCount = 0
+  if kRes != 1 goto Norm
+    kCount = 0
     k0 = 0
     k1 = 0
     k2 = 0
@@ -87,15 +95,15 @@ Norm:
   ktrig trigger kClk, 0, 0
   if ktrig != 1 goto Halt
     kCount += 1
-    KCount wrap kCount, 0, 255
-    k0 = kin&1
-    k1 = (kin>>1)&1
-    k2 = (kin>>2)&1
-    k3 = (kin>>3)&1
-    k4 = (kin>>4)&1
-    k5 = (kin>>5)&1
-    k6 = (kin>>6)&1
-    k7 = (kin>>7)&1
+    kCount wrap kCount, 0, 255
+    k0 = kCount&1
+    k1 = (kCount>>1)&1
+    k2 = (kCount>>2)&1
+    k3 = (kCount>>3)&1
+    k4 = (kCount>>4)&1
+    k5 = (kCount>>5)&1
+    k6 = (kCount>>6)&1
+    k7 = (kCount>>7)&1
 Halt:
   zaw a(k0),ko0
   zaw a(k1),ko1
