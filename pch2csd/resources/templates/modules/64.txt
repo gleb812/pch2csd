@@ -7,6 +7,11 @@ kType1,kType2,kin1,kin2,kin3,kin4,ko1,ko2 xin
   ky3 zkr kin3
   ky4 zkr kin4
 
+  ky1 K2Y ky1
+  ky2 K2Y ky2
+  ky3 K2Y ky3
+  ky4 K2Y ky4
+
 ; FIRST GATE
   if (kType1 == 0) then ;AND
   	kOut1 = ky1*ky2
@@ -59,6 +64,11 @@ kType1,kType2,kin1,kin2,kin3,kin4,ko1,ko2 xin
   ky2 = k(ay2)
   ky3 = k(ay3)
   ky4 = k(ay4)
+
+  ky1 K2Y ky1
+  ky2 K2Y ky2
+  ky3 K2Y ky3
+  ky4 K2Y ky4
 
 ; FIRST GATE
   if (kType1 == 0) then ;AND
