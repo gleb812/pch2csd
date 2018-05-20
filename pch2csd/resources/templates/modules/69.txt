@@ -1,6 +1,6 @@
 ;@ ins k k
 ;@ outs k
-opcode ClkDiv, 0, kk
+opcode ClkDiv, 0, kkk
   kDiv, kType, kclk,kres,kout xin
   kClk zkr kclk
   kRes zkr kres
@@ -35,7 +35,7 @@ endop
 
 ;@ ins a a
 ;@ outs a
-opcode ClkDiv, 0, kk
+opcode ClkDiv, 0, kkk
   kDiv, kType, kclk,kres,kout xin
   setksmps 1
   aClk zar kclk
