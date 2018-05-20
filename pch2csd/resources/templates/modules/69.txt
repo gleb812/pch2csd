@@ -4,18 +4,22 @@ opcode ClkDiv, 0, kkkkk
   kDiv, kType, kclk,kres,kout xin
   kClk zkr kclk
   kRes zkr kres
+
+  kClk K2Y kClk
+  kRes K2Y kClk
+
   kCount init 0
   kGate init 0
   kDiv += 1 ; 0-127 -> 1-128
 
   if kType != 1 goto GateMode
     kTrig trigger kClk,0.5,2
-    if kTrig != 1 goto Over
+    if kTrig != 1 goto Over1
       if kRes != 0 goto Reset
-        kCount += 1
         kCount = kCount%(kDiv*2)
+        kCount += 1
         kGate = (kCount <= kDiv ? 1:0)
-        goto Over
+        goto Over1
 
 GateMode:
   kTrig trigger kClk,0.5,0
@@ -30,7 +34,12 @@ GateMode:
   kGate = 0
   kCount = 0
   Over:
-  zkw kClk * kGate, kout
+  kOut = kClk * kGate
+  goto Next
+  Over1:
+  kOut = kGate
+  Next:
+  zkw kOut, kout
 endop
 
 ;@ ins a a
@@ -42,18 +51,22 @@ opcode ClkDiv, 0, kkkkk
   aRes zar kres
   kClk = k(aClk)
   kRes = k(aRes)
+
+  kClk K2Y kClk
+  kRes K2Y kClk
+
   kCount init 0
   kGate init 0
   kDiv += 1 ; 0-127 -> 1-128
 
   if kType != 1 goto GateMode
     kTrig trigger kClk,0.5,2
-    if kTrig != 1 goto Over
+    if kTrig != 1 goto Over1
       if kRes != 0 goto Reset
-        kCount += 1
         kCount = kCount%(kDiv*2)
+        kCount += 1
         kGate = (kCount <= kDiv ? 1:0)
-        goto Over
+        goto Over1
 
 GateMode:
   kTrig trigger kClk,0.5,0
@@ -68,5 +81,10 @@ GateMode:
   kGate = 0
   kCount = 0
   Over:
-  zaw a(kClk) * kGate, kout
+  kOut = kClk * kGate
+  goto Next
+  Over1:
+  kOut = kGate
+  Next:
+  zaw a(kOut), kout
 endop
