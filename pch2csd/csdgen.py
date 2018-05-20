@@ -218,7 +218,7 @@ class Csd:
                 raise ValueError("error: the map {} doesn't exist in "
                                  "value_maps.json".format(t))
             vals = [str(v) for v in self.patch.data.value_maps[t]]
-            s.write('gi{} ftgen {}, 0, 128, 2, '.format(t, 100 + i))
+            s.write('gi{} ftgen {}, 0, 128, -2, '.format(t, 100 + i))
             s.write(', '.join(vals))
             s.write('\n')
 
