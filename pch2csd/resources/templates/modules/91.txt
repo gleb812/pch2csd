@@ -3,8 +3,12 @@
 opcode FlipFlop, 0, kkkkkk
   kType,kclk,krst,kin,knotq,kq xin
   kClk zkr kclk
-  kIn zkr kin
+  kIn  zkr kin
   kRst zkr krst
+
+  kClk K2Y kClk
+  kIn  K2Y kIn
+  kRst K2Y kRst
 
   kQ init 0
 
@@ -17,10 +21,13 @@ opcode FlipFlop, 0, kkkkkk
   if (kType!=0) kgoto RS
   	kQ = kIn
   	kgoto Run
-  RS:
-    if kIn != 0 kgoto Run
+RS:
+    if kIn != 0 kgoto QSet
   	   kQ = 1 - kQ
-
+  kgoto Run
+QSet:
+  kQ = 1
+  kgoto Run
 Reset:
   kQ = 0
 Run:
@@ -43,7 +50,11 @@ setksmps 1
   kIn  = k(aIn)
   kRst = k(aRst)
 
-  kQ init 0 
+  kClk K2Y kClk
+  kIn  K2Y kIn
+  kRst K2Y kRst
+
+  kQ init 0
 
   if kRst != 0 kgoto Reset
 
@@ -54,10 +65,13 @@ setksmps 1
   if (kType!=0) kgoto RS
   	kQ = kIn
   	kgoto Run
-  RS:
-    if kIn != 0 kgoto Run
-  	   kQ = 1 - kQ
-
+RS:
+      if kIn != 0 kgoto QSet
+    	   kQ = 1 - kQ
+    kgoto Run
+QSet:
+    kQ = 1
+    kgoto Run
 Reset:
   kQ = 0
 Run:

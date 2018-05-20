@@ -4,6 +4,10 @@ opcode Invert, 0, kkkk
   kI1,kI2,kO1,kO2 xin
   ki1 zkr kI1
   ki2 zkr kI2
+
+  ki1 K2Y ki1
+  ki2 K2Y ki2
+
   kni1 = -ki1+1
   kni2 = -ki2+1
   zkw kni1, kO1
@@ -14,10 +18,19 @@ endop
 ;@ outs a a
 opcode Invert, 0, kkkk
   kI1,kI2,kO1,kO2 xin
+  setksmps 1
   ai1 zar kI1
   ai2 zar kI2
-  ani1 = -ai1+1
-  ani2 = -ai2+1
-  zaw ani1, kO1 
-  zaw ani2, kO2
+
+  ki1 = k(ai1)
+  ki2 = k(ai2)
+
+  ki1 K2Y ki1
+  ki2 K2Y ki2
+
+  kni1 = -ki1+1
+  kni2 = -ki2+1
+
+  zaw a(kni1), kO1
+  zaw a(kni2), kO2
 endop
