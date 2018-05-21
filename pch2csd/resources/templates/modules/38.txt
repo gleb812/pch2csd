@@ -18,6 +18,7 @@ opcode Pulse, 0, kkkkkkk
   elseif kRange == 2 then
     kTimer table kTime, giLOGhii
   endif
+  kTimer /= 1000
 
   if kMode != 0 goto AltMode
     kTrig trigger kIn,0.5,0
@@ -28,9 +29,9 @@ Next:
   if kTrig != 1 goto Over
       kCurrent = kTimer
 Over:
-  KCurrent -= 1/kr
-  kCurrent limit kTimer, 0, 100*kr
-  kOut = (KCurrent > 0 ? 1:0)
+  kCurrent -= 1/kr
+  kCurrent limit kCurrent, 0, 100*kr
+  kOut = (kCurrent > 0 ? 1:0)
   zkw kOut, kout
 endop
 
@@ -56,6 +57,7 @@ opcode Pulse, 0, kkkkkkk
   elseif kRange == 2 then
     kTimer table kTime, giLOGhii
   endif
+  kTimer /= 1000
 
   if kMode != 0 goto AltMode
     kTrig trigger kIn,0.5,0
@@ -66,8 +68,8 @@ Next:
   if kTrig != 1 goto Over
       kCurrent = kTimer
 Over:
-  KCurrent -= 1/kr
-  kCurrent limit kTimer, 0, 100*kr
-  kOut = (KCurrent > 0 ? 1:0)
+  kCurrent -= 1/kr
+  kCurrent limit kCurrent, 0, 100*kr
+  kOut = (kCurrent > 0 ? 1:0)
   zaw a(kOut), kout
 endop
