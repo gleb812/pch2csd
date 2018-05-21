@@ -1,4 +1,4 @@
-:@ maps giLOGsub giLOGlow giLOGhii
+:@ map giLOGsub giLOGlow giLOGhii
 ;@ ins k k
 ;@ outs k
 opcode Pulse, 0, kkkkkkk
