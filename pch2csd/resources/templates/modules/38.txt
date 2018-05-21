@@ -1,4 +1,4 @@
-:@ map giLOGsub giLOGlow giLOGhii
+:@ map LOGsub LOGlow LOGhii
 ;@ ins k k
 ;@ outs k
 opcode Pulse, 0, kkkkkkk
@@ -9,14 +9,14 @@ opcode Pulse, 0, kkkkkkk
   kIn K2Y kIn
 
   kOut init 0
-  KCurrent init 0
-
+  kCurrent init 0
+  kTime += kMod * kModIn
   if kRange == 0 then
-    kTimer table kTime+kMod*kModIn, giLOGsub
+    kTimer table kTime, giLOGsub
   elseif kRange == 1 then
-    kTimer table kTime+kMod*kModIn, giLOGlow
+    kTimer table kTime, giLOGlow
   elseif kRange == 2 then
-    kTimer table kTime+kMod*kModIn, giLOGhii
+    kTimer table kTime, giLOGhii
   endif
 
   if kMode != 0 goto AltMode
@@ -47,14 +47,14 @@ opcode Pulse, 0, kkkkkkk
 
   kModIn = k(aModIn)
   kOut init 0
-  KCurrent init 0
-
+  kCurrent init 0
+  kTime += kMod * kModIn
   if kRange == 0 then
-    kTimer table kTime+kMod*kModIn, giLOGsub
+    kTimer table kTime, giLOGsub
   elseif kRange == 1 then
-    kTimer table kTime+kMod*kModIn, giLOGlow
+    kTimer table kTime, giLOGlow
   elseif kRange == 2 then
-    kTimer table kTime+kMod*kModIn, giLOGhii
+    kTimer table kTime, giLOGhii
   endif
 
   if kMode != 0 goto AltMode
