@@ -1,27 +1,43 @@
-;@ map s x LOGsub LOGlow LOGhii
-;@ map d CLA000
-;@ map d BUT003
-;@ map d BUT003
-
+;@ map LOGsub LOGlow LOGhii
 ;@ ins k k
 ;@ outs k
-opcode Pulse, 0, kk
-  kIn, kMod, kTime, kPN xin ; P- positive, N - negative
-  ; WHAT TO DO WITH RANGES? LO_HI_MD
-  kOut init 0		
+opcode Delay, 0, kkkkkkk
+  kTime,kMod,kRange,kMode,kIn,kTMod,kout xin
+  kCurrent init 0
+  kOut init 0
+  kin zkr kIn
+  ktmod zkr kTMod
 
-  if kIn < 0 goto Halt
+  kin K2Y kin
 
-  ;reinit
-  iTime = i(kTime)  ; WHAT IF USER CAN CHANGE DUR AT RUN TIME?	
-  timout 0, iTime, Pulse
-  
-  kOut = 0
-  goto Halt
-  
-  Pulse:
-  kOut = 1
+  kON trigger kin, 0, 0
+  kOFF trigger kin,0, 1
 
-  Halt:	
-  zkw kOut, 1 ; CHANGE
+  if kON != 1 goto Next
+    kCurr1 = 0
+  Next:
+    kCurr1 limit kCurr1, 0, kTime
+      if kMode != 1 goto Modes0_2
+      kOut1 = kin
+      goto Next2
+  Modes0_2:
+    kOut1 = (kCurr1 < kTime ? 0:kin)
+  Next2:
+    kCurr1 += 1/kr
+
+  if kOFF != 1 goto Next3
+    kCurr2 = 0
+    Next3:
+    kCurr2 limit kCurr2, 0, kTime
+        if kMode != 0 goto Modes1_2
+        kOut2 = kin
+        goto Next4
+    Modes1_2:
+      kOut2 = (kCurr2 < kTime ? kin:0)
+    Next4:
+      kCurr2 += 1/kr
+
+  kOut = kOut1 + kOut2
+  kOut limit kOut, 0, 1
+  zkw kOut, kout
 endop

@@ -1,4 +1,4 @@
-:@ map LOGsub LOGlow LOGhii
+;@ map LOGsub LOGlow LOGhii
 ;@ ins k k
 ;@ outs k
 opcode Pulse, 0, kkkkkkk
