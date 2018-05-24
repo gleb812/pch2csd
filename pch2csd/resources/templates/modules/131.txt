@@ -6,7 +6,7 @@ kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
   kin *= 128 ; de-norm
   k7 = (kin >= 0 ? 0 : 1) ; sign bit
   if k7 != 1 goto Norm
-    kin = 128 - kin ; complement
+    kin = 128 + kin ; complement
 Norm:
   k0 = kin&1
   k1 = (kin>>1)&1
@@ -36,7 +36,7 @@ setksmps 1
   kin *= 128 ; de-norm
   k7 = (kin >= 0 ? 0 : 1) ; sign bit
   if k7 != 1 goto Norm
-    kin = 128 - kin ; complement
+    kin = 128 + kin ; complement
 Norm:
   k0 = kin&1
   k1 = (kin>>1)&1

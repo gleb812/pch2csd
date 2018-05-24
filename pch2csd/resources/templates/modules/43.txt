@@ -3,9 +3,9 @@
 opcode Constant, 0, kkk
     kLev, kPolSw, kout xin
 
-    if kPolSw != 0 goto Uni
+    if kPolSw != 0 kgoto Uni
       kLev table kLev, giLVLlev
-      goto Over
+      kgoto Over
 Uni:
       kLev table kLev, giLVLpos
 Over:
