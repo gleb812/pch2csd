@@ -1,6 +1,6 @@
 ;@ ins k
 ;@ outs k k k k k k k k
-opcode ADConv, 0, 0
+opcode ADConv, 0, kkkkkkkkk
 kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
   kin zkr kIn
   kin *= 128 ; de-norm
@@ -28,7 +28,7 @@ endop
 
 ;@ ins a
 ;@ outs a a a a a a a a
-opcode ADConv, 0, 0
+opcode ADConv, 0, kkkkkkkkk
 kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
 setksmps 1
   ain zar kIn
