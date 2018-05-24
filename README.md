@@ -37,7 +37,7 @@ Command line options:
 
 ```
 $ pch2csd -h
-usage: pch2csd [-h] [-p | -c | -v | -e] [arg]
+usage: pch2csd [-h] [-d] [-p | -c | -v | -e] [arg]
 
 convert Clavia Nord Modular G2 patches to the Csound code
 
@@ -46,6 +46,7 @@ positional arguments:
 
 optional arguments:
   -h, --help       show this help message and exit
+  -d, --debug      print a stack trace in case of error
   -p, --print      parse the patch file and print its content
   -c, --check-udo  validate the UDO template file (overrides '-p')
   -v, --version    show program's version number and exit
