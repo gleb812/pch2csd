@@ -1,9 +1,43 @@
 ;@ ins k
 ;@ outs k k
-opcode swOnOffT, 0, k   ; MULTIMODE support a/k?
-; Need to check..
-  kSw xin ;kSw = 0 / 1
-  a1 zar 1 ; CHANGE 
-  zaw a1*kSw, 2 ; CHANGE
-  ; poka bez Ctrl 
+opcode swOnOffT, 0, kkkk
+  kSw, kin, kout, kctrl xin
+  kSWOF init 0
+  kSw K2Y kSw
+  kIn zkr kin
+
+  kON trigger kSw, 0.5, 0
+  kOF trigger kSw, 0.5, 1
+
+  if kON != 1 goto Next1
+    kSWOF = 1
+  Next1:
+  if kOF! = 1 goto Next2
+    kSWOF = 0
+  Next2:
+
+  zkw kIn*kSWOF, kout
+  zkw kSWOF/16,  kctrl
+endop
+
+;@ ins a
+;@ outs a k
+opcode swOnOffT, 0, kkkk
+kSw, kin, kout, kctrl xin
+kSWOF init 0
+kSw K2Y kSw
+aIn zar kin
+
+kON trigger kSw, 0.5, 0
+kOF trigger kSw, 0.5, 1
+
+if kON != 1 goto Next1
+  kSWOF = 1
+Next1:
+if kOF! = 1 goto Next2
+  kSWOF = 0
+Next2:
+
+zaw aIn*kSWOF, kout
+zkw kSWOF/16,  kctrl
 endop
