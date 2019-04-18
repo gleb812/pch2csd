@@ -3,10 +3,11 @@
 opcode ADConv, 0, kkkkkkkkk
 kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
   kin zkr kIn
-  kin *= 128 ; de-norm
+  kin *= 127 ; de-norm
+  kin = ceil(kin)
   k7 = (kin >= 0 ? 0 : 1) ; sign bit
   if k7 != 1 goto Norm
-    kin = 128 + kin ; complement
+    kin = 127 + kin ; complement
 Norm:
   k0 = kin&1
   k1 = (kin>>1)&1
@@ -33,10 +34,11 @@ kIn,ko0,ko1,ko2,ko3,ko4,ko5,ko6,ko7 xin
 setksmps 1
   ain zar kIn
   kin = k(ain)
-  kin *= 128 ; de-norm
+  kin *= 127 ; de-norm
+  kin = ceil(kin)
   k7 = (kin >= 0 ? 0 : 1) ; sign bit
   if k7 != 1 goto Norm
-    kin = 128 + kin ; complement
+    kin = 127 + kin ; complement
 Norm:
   k0 = kin&1
   k1 = (kin>>1)&1

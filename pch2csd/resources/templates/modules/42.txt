@@ -16,38 +16,40 @@ opcode Delay, 0, kkkkkkk
   endif
 
 kTime /= 1000
-
-  kin K2Y kin
+kin K2Y kin
 
   kON trigger kin, .5, 0
   kOFF trigger kin,.5, 1
 
-  if kON != 1 goto Next
-    kCurr1 = 0
-  Next:
-    kCurr1 limit kCurr1, 0, kTime
-      if kMode != 1 goto Modes0_2
-      kOut1 = kin
-      goto Next2
-  Modes0_2:
-    kOut1 = (kCurr1 < kTime ? 0:kin)
-  Next2:
-    kCurr1 += 1/kr
+if kON != 1 goto Next0
+   kSet = 1
+   kRel = 0
+   kCurT = 0
+Next0:
+if kOFF !=1 goto Next2
+   kSet = 0
+   kRel = 1
+   kCurT = 0
+Next2:
 
-  if kOFF != 1 goto Next3
-    kCurr2 = 0
-    Next3:
-    kCurr2 limit kCurr2, 0, kTime
-        if kMode != 0 goto Modes1_2
-        kOut2 = 0
-        goto Next4
-    Modes1_2:
-      kOut2 = (kCurr2 < kTime ? 1:0)
-    Next4:
-      kCurr2 += 1/kr
-
-  kOut = kOut1 + kOut2
-  kOut limit kOut, 0, 1
+if kSet != 1 goto Next
+  if kMode != 1 kgoto Next1
+     kOut = 1
+     kgoto Next
+Next1:
+     kOut = (kCurT < kTime ? 0 : 1)
+     kCurT += 1/kr
+     kCurT limit kCurT, 0, kTime
+Next:
+if kRel != 1 goto Out
+  if kMode != 0 kgoto Next3
+     kOut = 0
+     kgoto Out
+Next3:
+     kOut = (kCurT < kTime ? 1 : 0)
+     kCurT += 1/kr
+     kCurT limit kCurT, 0, kTime
+Out:
   zkw kOut, kout
 endop
 
@@ -77,31 +79,34 @@ kTime /= 1000
   kON trigger kin, .5, 0
   kOFF trigger kin,.5, 1
 
-  if kON != 1 goto Next
-    kCurr1 = 0
-  Next:
-    kCurr1 limit kCurr1, 0, kTime
-      if kMode != 1 goto Modes0_2
-      kOut1 = kin
-      goto Next2
-  Modes0_2:
-    kOut1 = (kCurr1 < kTime ? 0:kin)
+  if kON != 1 goto Next0
+     kSet = 1
+     kRel = 0
+     kCurT = 0
+  Next0:
+  if kOFF !=1 goto Next2
+     kSet = 0
+     kRel = 1
+     kCurT = 0
   Next2:
-    kCurr1 += 1/kr
 
-  if kOFF != 1 goto Next3
-    kCurr2 = 0
-    Next3:
-    kCurr2 limit kCurr2, 0, kTime
-        if kMode != 0 goto Modes1_2
-        kOut2 = 0
-        goto Next4
-    Modes1_2:
-      kOut2 = (kCurr2 < kTime ? 1:0)
-    Next4:
-      kCurr2 += 1/kr
-
-  kOut = kOut1 + kOut2
-  kOut limit kOut, 0, 1
+  if kSet != 1 goto Next
+    if kMode != 1 kgoto Next1
+       kOut = 1
+       kgoto Next
+  Next1:
+       kOut = (kCurT < kTime ? 0 : 1)
+       kCurT += 1/kr
+       kCurT limit kCurT, 0, kTime
+  Next:
+  if kRel != 1 goto Out
+    if kMode != 0 kgoto Next3
+       kOut = 0
+       kgoto Out
+  Next3:
+       kOut = (kCurT < kTime ? 1 : 0)
+       kCurT += 1/kr
+       kCurT limit kCurT, 0, kTime
+  Out:
   zaw a(kOut), kout
 endop

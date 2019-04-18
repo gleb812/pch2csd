@@ -11,10 +11,19 @@ k0,k1,k2,k3,k4,k5,k6,k7,kout xin
   ky6 zkr k6
   ky7 zkr k7
 
+  ky0 K2Y ky0
+  ky1 K2Y ky1
+  ky2 K2Y ky2
+  ky3 K2Y ky3
+  ky4 K2Y ky4
+  ky5 K2Y ky5
+  ky6 K2Y ky6
+  ky7 K2Y ky7
+
   kOut = ky0*1+ky1*2+ky2*4+ky3*8+ky4*16+ky5*32+ky6*64
 
-  if k7 == 0 goto Over
-    kOut = 127 - kOut ; two-complement bin
+  if ky7 == 0 goto Over
+    kOut = -127 + kOut ; two-complement bin
 
   Over:
   kOut /= 127  ; normalized to -1...1
@@ -36,9 +45,9 @@ k0,k1,k2,k3,k4,k5,k6,k7,kout xin
   ay7 zar k7
 
   aOut = ay0*1+ay1*2+ay2*4+ay3*8+ay4*16+ay5*32+ay6*64
-
+  kOut = k(aOut)
   if k(ay7) == 0 goto Over
-    kOut = 127 - kOut ; two-complement bin
+    kOut = -127 + kOut ; two-complement bin
 
   Over:
   kOut /= 127  ; normalized to -1...1

@@ -6,7 +6,7 @@ opcode ClkDiv, 0, kkkkk
   kRes zkr kres
 
   kClk K2Y kClk
-  kRes K2Y kClk
+  kRes K2Y kRes
 
   kCount init 0
   kGate init 0
@@ -53,7 +53,7 @@ opcode ClkDiv, 0, kkkkk
   kRes = k(aRes)
 
   kClk K2Y kClk
-  kRes K2Y kClk
+  kRes K2Y kRes
 
   kCount init 0
   kGate init 0

@@ -15,6 +15,7 @@ setup(
     author='Gleb Rogozinsky, Mikhail Chesnokov, Eugene Cherny',
     description='Convert Clavia Nord Modular G2 patches to the Csound code.',
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     keywords='csound code-generation',
     url=pch2csd.__homepage__,
     license='MIT',
