@@ -1,7 +1,7 @@
 ;@ ins k k k
 ;@ outs k k
 opcode FlipFlop, 0, kkkkkk
-  kType,kclk,krst,kin,knotq,kq xin
+  kType,kclk,kin,krst,knotq,kq xin  ; kin and krst permutated
   kClk zkr kclk
   kIn  zkr kin
   kRst zkr krst
@@ -41,7 +41,7 @@ endop
 ;@ outs a a
 opcode FlipFlop, 0, kkkkkk
 setksmps 1
-  kType,kclk,krst,kin,knotq,kq xin
+  kType,kclk,kin,krst,knotq,kq xin ; kin and krst permutated
   aClk zar kclk
   aIn zar kin
   aRst zar krst

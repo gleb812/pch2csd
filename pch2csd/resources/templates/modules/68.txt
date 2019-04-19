@@ -14,7 +14,7 @@ kSw = kSwing/50
 
 if kSource == 0 goto InterS ; Internal Tempo
 	kBPM = gkBPM ; Master Tempo
-	goto Over
+	kgoto Over
 InterS:
   kBPM table kBPM, giRNDbpm
 Over:
@@ -29,7 +29,7 @@ arst = a(kRst+kOnT+kST)
 
 a1,aS1 syncphasor kBPM/kSync, arst
 a2,aS2 syncphasor kBPM*24, arst
-a3,aS3 syncphasor kBPM*4, arst
+a3,aS3 syncphasor kBPM*2, arst
 a3 *= 2
 a3 wrap a3, 0, kSw
 a16 table a3, 23, 1
