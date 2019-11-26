@@ -78,5 +78,5 @@ Over2:
 One:
   kOut1 = 0.9993*kS + (kO-0.9993*kS)*exp(-kE*kPh/kTime)
 Two:
-  zkw kON*(a(kOut1)-kSHIFT)/kDIV,kout
+  zkw kON*(kOut1-kSHIFT)/kDIV,kout
 endop
