@@ -5,28 +5,30 @@
 opcode RandomA, 0, kkkkkkkkk
   kRate,kMode,kType,kRange,kON,kEdge,kStep,kin,kout xin
   kMod zkr kin
-  
+
 ; Type is OutType
   if kType  == 0 then
     kSHIFT = 128
-    kDIV = 512
-  elseif kRange == 1 then
+    kDIV = 128
+  elseif kType == 1 then
     kSHIFT = 0
-    kDIV = 1024
-  elseif kRange == 2 then
+    kDIV = 256
+  elseif kType == 2 then
     kSHIFT = 256
-    kDIV = 1024
+    kDIV = 256
+  endif
 
-  if kRange == 0 then
-    kTime table kRate+kMod, RNDlow
-  elseif kRange == 1 then
-    kTime table kRate+kMod, RNDhir
-    kTime = 1/kTime ; Hz->s
+  if kRange == 1 then
+    kTime table kRate+kMod, giRNDlow
   elseif kRange == 2 then
-    kTime table kRate+kMod, RNDbpm
-    kTime = 60/kTime ; BPM->s
+    kTime table kRate+kMod, giRNDhir
+    kTime = 1/kTime ; Hz->s
   elseif kRange == 3 then
-    kTime table kRate+kMod, RNDsub
+    kTime table kRate+kMod, giRNDbpm
+    kTime = 60/kTime ; BPM->s
+  elseif kRange == 0 then
+    kTime table kRate+kMod, giRNDsub
+  endif
 
     if kEdge == 0 then
       kE = 120  ;EDGE 100%
@@ -38,10 +40,21 @@ opcode RandomA, 0, kkkkkkkkk
       kE = 10 ; EDGE 50%
     elseif kEdge == 4 then
         kE = 20 ; EDGE 75%
+    endif
+
+    if kStep == 0 then
+      kstep = 100
+    elseif kStep == 1 then
+      kstep = 25
+    elseif kStep == 2 then
+      kstep = 50
+    elseif kStep == 3 then
+      kstep = 75
+    endif
 
   kOut1 init 0
   ih = 8  ; Rand Gen constant
-  kTH = round(kStep*255/100)
+  kTH = round(kstep*255/100)
   kndx init 0
   kndx = kndx%ih
 
