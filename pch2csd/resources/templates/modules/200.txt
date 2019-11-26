@@ -1,0 +1,69 @@
+;@ map RNDlow RNDhir RNDbpm RNDsub
+
+;@ ins k
+;@ outs k
+opcode RandomA, 0, kkkkkkkkk
+  kRate,kMode,kType,kRange,kON,kEdge,kStep,kin,kout xin
+  kMod zkr kin
+  
+; Type is OutType
+  if kType  == 0 then
+    kSHIFT = 128
+    kDIV = 512
+  elseif kRange == 1 then
+    kSHIFT = 0
+    kDIV = 1024
+  elseif kRange == 2 then
+    kSHIFT = 256
+    kDIV = 1024
+
+  if kRange == 0 then
+    kTime table kRate+kMod, RNDlow
+  elseif kRange == 1 then
+    kTime table kRate+kMod, RNDhir
+    kTime = 1/kTime ; Hz->s
+  elseif kRange == 2 then
+    kTime table kRate+kMod, RNDbpm
+    kTime = 60/kTime ; BPM->s
+  elseif kRange == 3 then
+    kTime table kRate+kMod, RNDsub
+
+    if kEdge == 0 then
+      kE = 120  ;EDGE 100%
+    elseif kEdge == 1 then
+      kE = 1  ;EDGE 0%
+    elseif kEdge == 2 then
+      kE = 3 ;EDGE 25%
+    elseif kEdge == 3 then
+      kE = 10 ; EDGE 50%
+    elseif kEdge == 4 then
+        kE = 20 ; EDGE 75%
+
+  kOut1 init 0
+  ih = 8  ; Rand Gen constant
+  kTH = round(kStep*255/100)
+  kndx init 0
+  kndx = kndx%ih
+
+  k0 metro 1/kTime
+  if k0 != 1 goto Over2
+  kPh = 0
+  kO = kOut1
+  k1 random 0, kTH
+  k1 = round(k1)
+  if kndx != 0 goto Over1
+  k2 random 0, 4*kTH/ih
+  k2 = round(k2)*ih
+Over1:
+  kndx += 1
+  kS = (k1 + k2)%256
+Over2:
+  kPh += 1/(kr)
+  if (kS < kO) goto One ; kS = next value, kO = previous value
+  kOut1 = kO + (1.013*kS-kO)*(1-exp(-kE*kPh/kTime))
+  goto Two
+One:
+  kOut1 = 0.9993*kS + (kO-0.9993*kS)*exp(-kE*kPh/kTime)
+Two:
+  zkw kON*(a(kOut1)-kSHIFT)/kDIV,kout
+endop
