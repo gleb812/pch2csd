@@ -46,7 +46,6 @@ opcode RandomA, 0, kkkkkkkkk
     endif
 
   kstep table kStep, giRNDstp
-
   kOut1 init 0
   ih = 8  ; Rand Gen constant
   kTH = round(kstep*255/100)

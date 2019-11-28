@@ -1,11 +1,30 @@
-;@ map s 2 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d BUT007
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
 
 ;@ ins a
 ;@ outs a
-opcode DlySingleA, 0, i
-  iTime xin
-  ain zar 2 ; CHANGE 
-  aout delay ain, iTime
-  zaw aout, 2  ; CHANGE 
+opcode DlySingleA, 0, kkkk
+  kTime,kRange,kin,kout xin
+
+  ain zar kin
+
+  if kRange == 0 then
+    kTime table kTime, DLY_5m
+  elseif kRange == 1 then
+    kTime table kTime, DLY25m
+  elseif kRange == 2 then
+    kTime table kTime, DLY100
+  elseif kRange == 3 then
+    kTime table kTime, DLY500
+  elseif kRange == 4 then
+    kTime table kTime, DLY_1s
+  elseif kRange == 5 then
+    kTime table kTime, DLY_2s
+  elseif kRange == 6 then
+    kTime table kTime, DLY2p7
+
+  abuf delayr 2.7 ; max delay time
+  aout deltapi kTime
+  delayw ain
+
+  zaw aout, kout
 endop

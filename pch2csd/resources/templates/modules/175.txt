@@ -1,34 +1,85 @@
-;@ map s 10 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map s 10 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map s 10 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map s 10 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map d BUT002
-;@ map d BUT007
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7 DLYCLK
 
 ;@ ins a a a a a
 ;@ outs a a a a a
-opcode DelayQuad, 0, kkkkiKKKK
-  kTime1, kTime2,kTime3, kTime4, imaxdel,kMod1,kMod2,kMod3,kMod4 xin
-  ; TIME vs CLOCK button
-  ain1 zar 2 ; CHANGE 
-  adel1 zar 1 ; CHANGE 
-  adel2 zar 2 ; CHANGE
-  adel3 zar 2 ; CHANGE 
-  adel4 zar 1 ; CHANGE
+opcode DelayQuad, 0, kkkkkkkkkkkkkkkkkkkk
+  kTime1,kMod1,kTime2,kMod2,kTime3,kMod3,kTime4,kMod4,kClk,kRange,kin,kmod1,kmod2,kmod3,kmod4,kout,kout1,kout2,kout3,kout4 xin
+  ain zar kin
+  amod1 zar kmod1
+  amod2 zar kmod2
+  amod3 zar kmod3
+  amod4 zar kmod4
 
-  aout1 vdelay ain, kTime1+adel1*kMod1, imaxdel
-  aout2 vdelay ain, kTime2+adel2*kMod2, imaxdel
-  aout3 vdelay ain, kTime3+adel1*kMod3, imaxdel
-  aout4 vdelay ain, kTime4+adel2*kMod4, imaxdel
-  aout delay ain, imaxdel
-  
-  zaw aout, 2  ; CHANGE 
-  zaw aout2, 2  ; CHANGE 
-  zaw aout1, 2  ; CHANGE 
-  zaw aout2, 2  ; CHANGE 
-  zaw aout2, 2  ; CHANGE 
+  kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
+
+if kClk != 1 goto Time
+    kTime1 table kTime1, DLYCLK
+    kTime2 table kTime2, DLYCLK
+    kTime3 table kTime3, DLYCLK
+    kTime4 table kTime4, DLYCLK
+    kTime1 /= gkBPM
+    kTime2 /= gkBPM
+    kTime3 /= gkBPM
+    kTime4 /= gkBPM
+    kgoto Next
+Time:
+  if kRange == 0 then
+    kTime1 table kTime1, DLY_5m
+    kTime2 table kTime2, DLY_5m
+    kTime3 table kTime3, DLY_5m
+    kTime4 table kTime4, DLY_5m
+  elseif kRange == 1 then
+    kTime1 table kTime1, DLY25m
+    kTime2 table kTime2, DLY25m
+    kTime3 table kTime3, DLY25m
+    kTime4 table kTime4, DLY25m
+  elseif kRange == 2 then
+    kTime1 table kTime1, DLY100
+    kTime2 table kTime2, DLY100
+    kTime3 table kTime3, DLY100
+    kTime4 table kTime4, DLY100
+  elseif kRange == 3 then
+    kTime1 table kTime1, DLY500
+    kTime2 table kTime2, DLY500
+    kTime3 table kTime3, DLY500
+    kTime4 table kTime4, DLY500
+  elseif kRange == 4 then
+    kTime1 table kTime1, DLY_1s
+    kTime2 table kTime2, DLY_1s
+    kTime3 table kTime3, DLY_1s
+    kTime4 table kTime4, DLY_1s
+  elseif kRange == 5 then
+    kTime1 table kTime1, DLY_2s
+    kTime2 table kTime2, DLY_2s
+    kTime3 table kTime3, DLY_2s
+    kTime4 table kTime4, DLY_2s
+  elseif kRange == 6 then
+    kTime1 table kTime1, DLY2p7
+    kTime2 table kTime2, DLY2p7
+    kTime3 table kTime3, DLY2p7
+    kTime4 table kTime4, DLY2p7
+Next:
+  kR = kRangeN[kRange]
+  aTime1 = a(kTime1) + kR * amod1 * a(kMod1)
+  aTime2 = a(kTime2) + kR * amod2 * a(kMod2)
+  aTime3 = a(kTime3) + kR * amod3 * a(kMod3)
+  aTime4 = a(kTime4) + kR * amod4 * a(kMod4)
+  aTime1 limit aTime1, 0.001, kR
+  aTime2 limit aTime2, 0.001, kR
+  aTime3 limit aTime3, 0.001, kR
+  aTime4 limit aTime4, 0.001, kR
+
+  abuf delayr 2.7 ; max delay time
+  aout1 deltapi aTime1
+  aout2 deltapi aTime2
+  aout3 deltapi aTime3
+  aout4 deltapi aTime4
+  aout  deltapi a(kR)
+  delayw ain
+
+  zaw aout1, kout1
+  zaw aout2, kout2
+  zaw aout3, kout3
+  zaw aout4, kout4
+  zaw aout,  kout
 endop

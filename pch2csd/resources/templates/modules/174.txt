@@ -1,18 +1,49 @@
-;@ map s 5 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map s 5 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map h BUT007
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
 
 ;@ ins a a a
 ;@ outs a a
-opcode DelayDual, 0, iiikk
-  iTime1, iTime2, imaxdel, kMod1, kMod2 xin
-  ain1 zar 2 ; CHANGE 
-  adel1 zar 1 ; CHANGE 
-  adel2 zar 1 ; CHANGE
-  aout1 vdelay ain, iTime1+adel1*kMod1, imaxdel
-  aout2 vdelay ain, iTime2+adel2*kMod2, imaxdel
-  zaw aout1, 2  ; CHANGE 
-  zaw aout2, 2  ; CHANGE 
+opcode DelayDual, 0, kkkkkkkkkk
+  kTime1, kMod1, kTime2, kMod2, kRange, kin, kmod1, kmod2, kout1, kout2 xin
+  ain zar kin
+  amod1 zar kmod1
+  amod2 zar kmod2
+
+  kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
+
+  if kRange == 0 then
+    kTime1 table kTime1, DLY_5m
+    kTime2 table kTime2, DLY_5m
+  elseif kRange == 1 then
+    kTime1 table kTime1, DLY25m
+    kTime2 table kTime2, DLY25m
+  elseif kRange == 2 then
+    kTime1 table kTime1, DLY100
+    kTime2 table kTime2, DLY100
+  elseif kRange == 3 then
+    kTime1 table kTime1, DLY500
+    kTime2 table kTime2, DLY500
+  elseif kRange == 4 then
+    kTime1 table kTime1, DLY_1s
+    kTime2 table kTime2, DLY_1s
+  elseif kRange == 5 then
+    kTime1 table kTime1, DLY_2s
+    kTime2 table kTime2, DLY_2s
+  elseif kRange == 6 then
+    kTime1 table kTime1, DLY2p7
+    kTime2 table kTime2, DLY2p7
+
+  kR = kRangeN[kRange]
+
+  aTime1 = a(kTime1) + kR * amod1 * a(kMod1)
+  aTime2 = a(kTime2) + kR * amod2 * a(kMod2)
+  aTime1 limit aTime1, 0.001, a(kR)
+  aTime2 limit aTime2, 0.001, a(kR)
+
+  abuf delayr 2.7 ; max delay time
+  aout1 deltapi aTime1
+  aout2 deltapi aTime2
+  delayw ain
+
+  zaw aout1, kout1
+  zaw aout2, kout2
 endop

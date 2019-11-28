@@ -1,17 +1,17 @@
-;@ map d FLTfrq
-;@ map d CLA000
-;@ map d MID000
-;@ map d MID000
-
+;@ map FLTfrq
+;@ map CLA000
+;@ map MID000
+;@ map MID000
+; TODO needs table mapping new style
 ;@ ins a k
-;@ outs
+;@ outs a
 opcode FltLP, 0, kkkkkkk
 ; KBT !!!!!
 	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin
-	ain zar kin  
-	kMod zkr kmod  
+	ain zar kin
+	kMod zkr kmod
 	aout tonex ain, kFreq+kFreqMod*kMod, 4 ; ORDER IN MODES!
-	zaw aout, kout 
+	zaw aout, kout
 endop
 
 
@@ -20,8 +20,8 @@ endop
 opcode FltLP, 0, kkkkkkk
 ; KBT !!!!!
 	kFreq, kFreqMod, kKBT, kOn, kin,kmod,kout xin
-	ain zar kin  
-	aMod zar kmod  
+	ain zar kin
+	aMod zar kmod
 	aout tonex ain, kFreq+kFreqMod*aMod, 4 ; ORDER IN MODES!
-	zaw aout, kout 
+	zaw aout, kout
 endop

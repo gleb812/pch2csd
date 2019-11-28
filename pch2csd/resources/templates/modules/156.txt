@@ -1,14 +1,20 @@
-;@ map MID000
-
 ;@ outs k k k
-opcode NoteDet, 0, k
-  kNote xin
-  iVal notnum
-  iVel veloc
-  iVelR veloc 0,1
-  if (kNote == iVal) then
-  	zkw 1, 1 ; CHANGE
-  	zkw iVel, 1 ; CHANGE
-  	zkw iVelR, 1 ; CHANGE
-  endif
+opcode NoteDet, 0, kkkk
+; TODO Check me!
+  kNote,koGate,koVel,koRelVel xin
+  kstatus,kchan,kdata1,kdata2 midiin
+  if kstatus != 144 goto Over
+  if kdata1 != kNote goto Over
+      kGate = 1
+      kVel = kdata2
+      kRelVel = kdata2/127
+      goto Run
+Over:
+      kGate = 0
+      kVel = 0
+      kRelVel = 0
+Run:
+      zkw kGate, koGate
+      zkw kVel, koVel
+      zkw kRelVel, koRelVel
 endop

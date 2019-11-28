@@ -1,9 +1,10 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
-opcode DlyShiftReg, 0, 0
-  kin zkr 2 ; CHANGE 
-  kClk zkr 1 ; CHANGE
-  
+opcode DlyShiftReg, 0, kkkkkkkkkk
+  kin,kclk,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
+  kIn zkr kin
+  kClk zkr kclk
+
   k1 init 0
   k2 init 0
   k3 init 0
@@ -12,6 +13,8 @@ opcode DlyShiftReg, 0, 0
   k6 init 0
   k7 init 0
   k8 init 0
+
+kClk trigger kClk, 0.0001, 0
 
 if (kClk != 0) then
   	k8 = k7
@@ -22,14 +25,58 @@ if (kClk != 0) then
   	k3 = k2
   	k2 = k1
   	k1 = kin
-endif 
+endif
 
-  zkw k1, 2  ; CHANGE 
-  zkw k2, 2  ; CHANGE 
-  zkw k3, 2  ; CHANGE 
-  zkw k4, 2  ; CHANGE 
-  zkw k5, 2  ; CHANGE 
-  zkw k6, 2  ; CHANGE 
-  zkw k7, 2  ; CHANGE 
-  zkw k8, 2  ; CHANGE 
+  zkw k1, ko1
+  zkw k2, ko1
+  zkw k3, ko1
+  zkw k4, ko1
+  zkw k5, ko1
+  zkw k6, ko1
+  zkw k7, ko1
+  zkw k8, ko1
+endop
+
+
+;@ ins a a
+;@ outs a a a a a a a a
+opcode DlyShiftReg, 0, kkkkkkkkkk
+  kin,kclk,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
+  setksmps 1
+  aIn zar kin
+  aClk zar kclk
+
+  kIn = k(aIn)
+  kClk = k(aClk)
+
+  k1 init 0
+  k2 init 0
+  k3 init 0
+  k4 init 0
+  k5 init 0
+  k6 init 0
+  k7 init 0
+  k8 init 0
+
+kClk trigger kClk, 0.0001, 0
+
+if (kClk != 0) then
+  	k8 = k7
+  	k7 = k6
+  	k6 = k5
+  	k5 = k4
+  	k4 = k3
+  	k3 = k2
+  	k2 = k1
+  	k1 = kin
+endif
+
+  zaw a(k1), ko1
+  zaw a(k2), ko1
+  zaw a(k3), ko1
+  zaw a(k4), ko1
+  zaw a(k5), ko1
+  zaw a(k6), ko1
+  zaw a(k7), ko1
+  zaw a(k8), ko1
 endop

@@ -1,13 +1,37 @@
-;@ map s 3 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map d BUT007
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
 
 ;@ ins a a
 ;@ outs a
-opcode DlySingleB, 0, iik
-  iTime, imaxdel, kMod xin
-  ain zar 2 ; CHANGE 
-  adel zar 1 ; CHANGE 
-  aout vdelay ain, iTime+adel*kMod, imaxdel
-  zaw aout, 2  ; CHANGE 
+opcode DlySingleB, 0, kkkkkk
+  kTime,kModLev,kRange,kin,kmod,kout xin
+
+  ain zar kin
+  amod zar kmod
+
+    kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
+
+  if kRange == 0 then
+    kTime table kTime, DLY_5m
+  elseif kRange == 1 then
+    kTime table kTime, DLY25m
+  elseif kRange == 2 then
+    kTime table kTime, DLY100
+  elseif kRange == 3 then
+    kTime table kTime, DLY500
+  elseif kRange == 4 then
+    kTime table kTime, DLY_1s
+  elseif kRange == 5 then
+    kTime table kTime, DLY_2s
+  elseif kRange == 6 then
+    kTime table kTime, DLY2p7
+
+  kR = kRangeN[kRange]
+
+  aTime = a(kTime) + kR * amod * a(kModLev)
+
+  abuf delayr 2.7 ; max delay time
+  aout deltapi aTime
+  delayw ain
+
+  zaw aout, kout
 endop

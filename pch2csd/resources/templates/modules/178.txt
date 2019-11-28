@@ -1,21 +1,46 @@
-;@ map d DLYsmp
 
 ;@ ins k k
 ;@ outs k
-opcode DlyClock, 0, k
-  kDel xin
-  kin zkr 2 ; CHANGE 
-  kClk zkr 1; CHANGE
-  
-  kCount init 0
-  
-  if (kClk != 0) then
-  	kCount += 1
-  	if (kCount == 1) then 
-  		kSample = kin
-  	elseif (kCount == kDel)
-  		zaw kSample, 2  ; CHANGE
-  		kCount = 0
-  	endif
-  endif
+opcode DlyClock, 0, kkkk
+  kDel, kin,kclk,kout xin
+  kIn zkr kin
+  kClk zkr kclk
+  kDel1 = kDel + 1
+
+kClk trigger kClk, 0.0001, 0
+
+if kClk != 1 goto Out
+   kCount = 127
+   while kCount > 0 do
+     kReg[kCount] = kReg[kCount-1]
+     kCount -= 1
+   od
+   kReg[0] = kIn
+Out:
+zkw kReg[kDel1], kout
+endop
+
+
+;@ ins a a
+;@ outs a
+opcode DlyClock, 0, kkkk
+  kDel, kin,kclk,kout xin
+  setksmps 1
+  aIn zar kin
+  aClk zar kclk
+  kIn = k(aIn)
+  kClk = k(aClk)
+  kDel1 = kDel + 1
+
+kClk trigger kClk, 0.0001, 0
+
+if kClk != 1 goto Out
+   kCount = 127
+   while kCount > 0 do
+     kReg[kCount] = kReg[kCount-1]
+     kCount -= 1
+   od
+   kReg[0] = kIn
+Out:
+zaw a(kReg[kDel1]), kout
 endop
