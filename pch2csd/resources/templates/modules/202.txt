@@ -1,13 +1,14 @@
-;@ map RNDlow RNDhir RNDbpm RNDsub
+;@ map RNDlow RNDhir RNDbpm RNDsub RNDstp
 
-;@ ins k
+;@ ins kk
 ;@ outs k
 opcode RandomA, 0, kkkkkkkkk
-  kRate,kMode,kType,kRange,kON,kEdge,kStep,kin,kout xin
-  kMod zkr kin
-; Gleb Rogozinsky 291119
-; TODO env is exp, but should be more like sigmoid, also check param order!
-; POLY is not working yet
+  kRate,kMode,kKBT,kRateM,kStep,kON,kType,kRange,kEdge,kin1,kin2,kout xin
+  kMod zkr kin1
+  kModM zkr kin2
+  ; Gleb Rogozinsky 291119
+  ; TODO env is exp, but should be more like sigmoid, also check param order!
+  ; POLY is not working yet
 ; Type is OutType
   if kType  == 0 then
     kSHIFT = 128
@@ -21,15 +22,15 @@ opcode RandomA, 0, kkkkkkkkk
   endif
 
   if kRange == 1 then
-    kTime table kRate+kMod, giRNDlow
+    kTime table kRate+kMod+kModM*kRateM, giRNDlow  ;?? 1/64
   elseif kRange == 2 then
-    kTime table kRate+kMod, giRNDhir
+    kTime table kRate+kMod+kModM*kRateM, giRNDhir
     kTime = 1/kTime ; Hz->s
   elseif kRange == 3 then
-    kTime table kRate+kMod, giRNDbpm
+    kTime table kRate+kMod+kModM*kRateM, giRNDbpm
     kTime = 60/kTime ; BPM->s
   elseif kRange == 0 then
-    kTime table kRate+kMod, giRNDsub
+    kTime table kRate+kMod+kModM*kRateM, giRNDsub
   endif
 
     if kEdge == 0 then
@@ -44,15 +45,7 @@ opcode RandomA, 0, kkkkkkkkk
         kE = 20 ; EDGE 75%
     endif
 
-    if kStep == 0 then
-      kstep = 100
-    elseif kStep == 1 then
-      kstep = 25
-    elseif kStep == 2 then
-      kstep = 50
-    elseif kStep == 3 then
-      kstep = 75
-    endif
+  kstep table kStep, giRNDstp
 
   kOut1 init 0
   ih = 8  ; Rand Gen constant
