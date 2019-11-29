@@ -33,17 +33,17 @@ opcode RandomA, 0, kkkkkkkkk
     kTime table kRate+kMod+kModM*kRateM, giRNDsub
   endif
 
-    if kEdge == 0 then
-      kE = 120  ;EDGE 100%
-    elseif kEdge == 1 then
-      kE = 1  ;EDGE 0%
-    elseif kEdge == 2 then
-      kE = 3 ;EDGE 25%
-    elseif kEdge == 3 then
-      kE = 10 ; EDGE 50%
-    elseif kEdge == 4 then
-        kE = 20 ; EDGE 75%
-    endif
+  if kEdge == 0 then
+    kE = 1  ;EDGE 0%
+  elseif kEdge == 1 then
+    kE = 3  ;EDGE 25%
+  elseif kEdge == 2 then
+    kE = 10 ;EDGE 50%
+  elseif kEdge == 3 then
+    kE = 20 ; EDGE 75%
+  elseif kEdge == 4 then
+      kE = 120 ; EDGE 100%
+  endif
 
   kstep table kStep, giRNDstp
   kOut1 init 0

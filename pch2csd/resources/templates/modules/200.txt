@@ -33,25 +33,25 @@ opcode RandomA, 0, kkkkkkkkk
   endif
 
     if kEdge == 0 then
-      kE = 120  ;EDGE 100%
-    elseif kEdge == 1 then
       kE = 1  ;EDGE 0%
+    elseif kEdge == 1 then
+      kE = 3  ;EDGE 25%
     elseif kEdge == 2 then
-      kE = 3 ;EDGE 25%
+      kE = 10 ;EDGE 50%
     elseif kEdge == 3 then
-      kE = 10 ; EDGE 50%
+      kE = 20 ; EDGE 75%
     elseif kEdge == 4 then
-        kE = 20 ; EDGE 75%
+        kE = 120 ; EDGE 100%
     endif
 
     if kStep == 0 then
-      kstep = 100
-    elseif kStep == 1 then
       kstep = 25
-    elseif kStep == 2 then
+    elseif kStep == 1 then
       kstep = 50
-    elseif kStep == 3 then
+    elseif kStep == 2 then
       kstep = 75
+    elseif kStep == 3 then
+      kstep = 100
     endif
 
   kOut1 init 0
