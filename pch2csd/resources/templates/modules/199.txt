@@ -1,0 +1,85 @@
+; nothing to map
+
+;@ outs k k k
+opcode MonoKey, 0, kkkk
+	kPriority,kopitch,kovel,kogate xin
+	kList[] init 64 ; Pitch list
+	kListV[] init 64 ; Veloc list
+	knum init 0 ; number of active notes
+	kp init 1 ; pointer to the last element
+	kChange = 0
+
+	kstatus, kchan, kdata1, kdata2 midiin
+	if kstatus != 144 goto Over ; NoteOn
+		kList[kp] = kdata1 + 1  ; avoid zero pitch
+		kListV[kp] = kdata2
+		knum += 1
+		kp += 1
+		kChange = 1
+Over:
+	if kstatus != 128 goto Over1 ; NoteOff
+		kndx =  kp-1
+Up1:
+		if (kndx == 0) goto Over3
+				if kList[kndx] != (kdata1+1) goto Over2
+						kList[kndx] = 0
+						goto Over3
+Over2:
+				kndx -= 1
+				goto Up1
+Over3:
+		kndx =  kp-1
+Up2:
+		if (kndx == 0) goto Over5
+				if kList[kndx] == 0 goto Over4
+						kp = kndx + 1
+						goto Over6
+Over4:
+				kndx -= 1
+			 goto Up2
+Over5:
+	 kp = 1
+Over6:
+		kChange = 1
+		knum -= 1
+Over1:
+	knum limit knum, 0, 32 ; MAX POLY 32
+	if knum == 0 then
+		kGate = 0
+  else
+	 	kGate = 1
+	endif
+if (kChange != 1)||(knum == 0) goto Nothing ; No changes at the current cycle
+if kPriority != 0 goto Next  ; LAST
+		kPitch = kList[kp-1] - 65 ; see NM manual
+		kVel = kListV[kp-1]
+		goto Nothing
+Next:
+if kPriority != 1 goto Next1  ; LOW
+	 kndx = 1
+		kPitch = 128
+Up3:
+		if (kndx == kp) goto Nothing
+			if (kList[kndx] >= kPitch)||(kList[kndx] == 0) goto Next3
+			 	kPitch = kList[kndx]-1 ; zero fix
+				kVel = kListV[kndx]
+Next3:
+		kndx += 1
+		goto Up3
+Next1:
+ ; HIGH
+	 kndx = 1
+		kPitch = 0
+Up4:
+		if (kndx == kp) goto Nothing
+			if (kList[kndx] <= kPitch) goto Next4
+			 	kPitch = kList[kndx] - 1; zero fix
+				kVel = kListV[kndx]
+Next4:
+		kndx += 1
+		goto Up4
+Nothing:
+	zkw kPitch/64, kopitch ; 1 or 64?
+	zkw kVel/127, kovel
+	zkw kGate, kogate ; 1 or 64?
+	endop
