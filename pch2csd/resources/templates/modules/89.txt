@@ -17,3 +17,6 @@ atap deltapi 0.0008 + kRange * alfo
 delayw ain + atap * kFdbk/100
 zaw kOn * (ain + atap)/2 , kout
 endop
+
+; Reversed by Ekaterina Kalmykova, Spring 2020
+; Coded by G. Rogozinsky
