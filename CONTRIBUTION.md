@@ -11,4 +11,4 @@ After making a contribution, please add yourself to the list in this file.
 - Michael Chesnokov
 - Eugene Cherny
 - Richard van Bemmelen (aka zappfinger)
-- 
+- Ekaterina Kalmykova
