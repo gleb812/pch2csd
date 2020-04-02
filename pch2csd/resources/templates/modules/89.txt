@@ -12,7 +12,7 @@ kRate table krate, giEFXraF
 kRange table krange, giEFXraK
 
 alfo oscil .001, kRate, giTriP
-abuf delayr 0.005
+abuf delayr 0.0055
 atap deltapi 0.0008 + kRange * alfo
 delayw ain + atap * kFdbk/100
 zaw kOn * (ain + atap)/2 , kout
