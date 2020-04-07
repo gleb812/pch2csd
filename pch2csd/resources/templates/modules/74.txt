@@ -1,0 +1,32 @@
+;@ SHPamp SHPwrp
+;@ ins k k
+;@ outs k
+opcode WaveWrap, 0, kkkkkk
+  kMod,klev,kOn, kin, kmodin, kout xin
+
+  kIn zkr kin
+  kModIn zkr kmodin
+
+  kLev table klev + kModIn * kMod, giSHPwrp
+  kamp table klev + kModIn * kMod, giSHPamp
+
+  kOut mirror kIn, kLev, -kLev
+  zkw kOut * kamp * kOn,  kout
+endop
+
+;@ ins a a
+;@ outs a
+opcode WaveWrap, 0, kkkkkk
+  kMod,klev,kOn, kin, kmodin, kout xin
+
+  aIn zar kin
+  aModIn zar kmodin
+
+  kLev table klev + kModIn * kMod, giSHPwrp
+  kamp table klev + kModIn * kMod, giSHPamp
+
+  aOut mirror aIn, kLev, -kLev
+  zkw aOut * kamp * kOn,  kout
+endop
+
+; Gleb Rogozinsky 07.04.2020
