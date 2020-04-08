@@ -1,18 +1,44 @@
-;@ map d BUT004
-;@ map d BUT002
+;@ ins k
+;@ outs k
+;TODO Inv x2 and Inv x3 are wrong for Nord. Need research
+opcode shpStatic, 0, kkkk
+  kmode, kOn, kin, kout xin
 
-
-opcode shpStatic, 0, i
-  iTable xin 
-  a1 zar 1 ; CHANGE
-  if (iTable == 0) then 
-  	aout = 1/(a1*a1*a1)
-  elseif (iTable == 1) then
-  	aout = 1/(a1*a1)
-  elseif (iTable == 2) then
-  	aout = a1*a1
-  elseif (iTable == 3) then
-  	aout = a1*a1*a1
+  ko zkr kin
+  ko *= 4  ; normalize to 1, since Nord's oscs are 0.25
+  if (kmode == 0) then
+  	ko = signum(ko) * (abs(ko))^(1/3)
+  elseif (kmode == 1) then
+  	ko = signum(ko) * (abs(ko))^(1/2)
+  elseif (kmode == 2) then
+  	ko *= ko * signum(ko)
+  elseif (kmode == 3) then
+  	ko *= ko * ko
   endif
-  zaw aout, 2 ; CHANGE
+  ko /= 4 ; denormalize.
+  ko limit ko, -1, 1
+  zkw ko * kOn, kout
+endop
+
+;@ ins a
+;@ outs a
+
+opcode shpStatic, 0, kkkk
+  kmode, kOn, kin, kout xin
+  setksmps 1
+
+  a1 zar kin
+  ko = k(a1 * 4)
+  if (kmode == 0) then
+  	ko = signum(ko) * (abs(ko))^(1/3)
+  elseif (kmode == 1) then
+  	ko = signum(ko) * (abs(ko))^(1/2)
+  elseif (kmode == 2) then
+  	ko *= ko * signum(ko)
+  elseif (kmode == 3) then
+  	ko *= ko * ko
+  endif
+  ko /= 4
+  ko limit ko, -1, 1
+  zaw a(ko) * kOn, kout
 endop
