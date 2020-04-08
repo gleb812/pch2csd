@@ -1,14 +1,44 @@
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d BUT002
+;@ map CLA001
+;@ ins k k
+;@ outs k
+; TODO check modulation
+opcode Clip, 0, kkkkkkk
+  kMod, klev, kShape, kOn, kin, kmod, kout xin
+  k1 zkr kin
+  kM zkr kmod
 
+  kModN table kMod, giCLA001
+  kLev table klev + kM * kModN, giCLA001
+  kLev *= .25 ; norm
+  k1 limit k1, -0.25, 0.25 ; buit-in limiter before clipper
 
-opcode Clip, 0, ikk
-  iSW, klimit, kMod xin ; iSW = 0/1 
-  a1 zar 1 ; CHANGE
-  k1 zkr 1 ; CHANGE
-  klimit += kMod*k1
-  aout limit a1, -klimit*iSW-1*(1-iSW), klimit; ??
-  zaw aout, 2 ; CHANGE
+  if kShape == 0 goto Asym
+    ko limit k1, -kLev, kLev
+    goto Out
+Asym:
+    ko limit k1, -2, kLev ; no care about lower lim
+Out:
+    zkw ko, kout
+endop
+
+;@ ins a a
+;@ outs a
+
+opcode Clip, 0, kkkkkkk
+  kMod, klev, kShape, kOn, kin, kmod, kout xin
+  a1 zar kin
+  aM zar kmod
+
+  kModN table kMod, giCLA001
+  aLev table klev + aM * kModN, giCLA001
+  aLev *= .25 ; norm
+  a1 limit a1, -0.25, 0.25 ; buit-in limiter before clipper
+
+  if kShape == 0 goto Asym
+    ao limit a1, -kLev, kLev
+    goto Out
+Asym:
+    ao limit a1, -2, kLev ; no care about lower lim
+Out:
+    zaw ao, kout
 endop
