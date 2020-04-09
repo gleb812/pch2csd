@@ -1,41 +1,84 @@
-;@ map s 7 OSCsem OSCsem OSCsem OSCprt
-;@ map d OSCcnt
-;@ map d BUT002
-;@ map d BUT006
-;@ map d BUT002
-;@ map d BUT006
+;@ map OSCsem OSCsem OSCsem OSCprt
+;@ map OSCcnt
 
 ;@ ins k
 ;@ outs a
 opcode OscD, 0, kkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
 ; TODO part mode needs fixing
 kCoarse,kFine,kKBT,kWave,kON,kTuneMode,kPitchIn,kOut xin
 
-kCoarse table kCoarse, giOSCsem
-kFine table kFine, giOSCcnt
-
 if kKBT != 1 goto NoKBT
-kNote = gkNote
-goto KBT
+  kNote = gkNote
+  goto KBT
 NoKBT:
-kNote = 64
+  kNote = 64
 KBT:
 
 kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-kM_ = kPitch+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
 Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kcoarse > 32 goto Part1
+  kFreq table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  KFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
 Out:
-aout oscilikt 0.5, kFreq, kWave+1
+aout oscilikt 1, kFreq, kWave+1
+zaw aout*kON, kOut
+endop
+
+;@ ins a
+;@ outs a
+opcode OscD, 0, kkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+kCoarse,kFine,kKBT,kWave,kON,kTuneMode,kPitchIn,kOut xin
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+aPitch zar kPitchIn
+kPitch = k(aPitch)
+Run:
+if kTuneMode==3 goto Part
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
+Part:
+if kcoarse > 32 goto Part1
+  kFreq table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  KFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut
 endop
