@@ -7,33 +7,39 @@
 opcode OscA, 0, kkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
-; TODO part mode needs fixing !
-kCoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
+; TODO check part mode
+kcoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
 
 kMod zkr kModIn
 
-kCoarse table kCoarse, giOSCsem
-kFine table kFine, giOSCcnt
-
 if kKBT != 1 goto NoKBT
-kNote = gkNote
-goto KBT
+  kNote = gkNote
+  goto KBT
 NoKBT:
-kNote = 64
+  kNote = 64
 KBT:
 
 kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
 Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kcoarse > 32 goto Part1
+  kFreq table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  KFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut
