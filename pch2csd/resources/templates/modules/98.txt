@@ -1,0 +1,32 @@
+;@ map EFXfrS EFXfrL EFXfrH
+
+;@ ins a k
+;@ outs a a
+; TODO check if works + NM is dirtier
+opcode FreqShift, 0, kkkkkkkk
+  kshift,kmod,krange,kOn, kin,ksh,kdown,kup xin
+
+  kshsig zkr ksh
+  aIn zar kin
+
+  if krange == 0 then
+      kShift table kshift + kmod * kshsig, giEFXfrS
+  elseif krange == 1 then
+      kShift table kshift + kmod * kshsig, giEFXfrL
+  elseif krange == 2 then
+      kShift table kshift + kmod * kshsig, giEFXfrH
+  endif
+
+  aRe,aIm hilbert aIn
+  asin oscili 1, kShift, giSin
+  acos oscili 1, kShift, giSin, .25
+  amod1 = aRe * acos
+  amod2 = aIm * asin
+  aUp = (amod1 - amod2) * 0.7
+  aDn = (amod1 + amod2) * 0.7
+  zaw aDn * kOn, kdown
+  zaw aUp * kOn, kup
+endop
+
+; Gleb Rogozinsky 10.04.20
+; this is exact copy of Bode Freq Shift from Csound Manual
