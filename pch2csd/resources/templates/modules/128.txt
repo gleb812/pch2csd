@@ -1,12 +1,29 @@
 ;@ ins k k
 ;@ outs k k
-opcode MinMax, 0, 0
-  kA zkr 1  ;CHANGE
-  kB zkr 2 ;CHANGE
-  
+opcode MinMax, 0, kkkk
+  ka,kb,kmin,kmax xin
+  kA zkr ka
+  kB zkr kb
+
   kMin min kA, kB
   kMax max kA, kB
-  
-  zkw kMin, 1 ;CHANGE
-  zkw kMax, 2 ; CHANGE 	
+
+  zkw kMin, kmin
+  zkw kMax, kmax
 endop
+
+;@ ins a a
+;@ outs a a
+opcode MinMax, 0, kkkk
+  ka,kb,kmin,kmax xin
+  aA zar ka
+  aB zar kb
+
+  aMin min aA, aB
+  aMax max aA, aB
+
+  zaw aMin, kmin
+  zaw aMax, kmax
+endop
+
+; UP 10.04.20

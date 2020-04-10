@@ -1,15 +1,36 @@
 ;@ ins k k
 ;@ outs k
-opcode CompSig, 0, 0   ; MULTIMODE support a/k?
-  k1 zkr 1 ; CHANGE 
-  k2 zkr 1 ; CHANGE 
+opcode CompSig, 0, kkk
+  kin1,kin2,kout xin
+  kIn1 zkr kin1
+  kIn2 zkr kin2
   kres init 0
-  
-  if (k1 >= k2) then 
-  	kres = 1
-  	goto run
-  endif	
-  kres = 0
+
+  if (kIn1 >= kIn2) then
+    kres = 1
+    goto run
+  endif
+kres = 0
 run:
-  zkw kres, 2 ; CHANGE
+  zkw kres, kout
+endop
+
+;@ ins a a
+;@ outs a
+opcode CompSig, 0, kkk
+  kin1,kin2,kout xin
+  setksmps 1
+  aIn1 zar kin1
+  aIn2 zar kin2
+  kIn1 = k(aIn1)
+  kIn2 = k(aIn2)
+  kres init 0
+
+if (kIn1 >= kIn2) then
+  kres = 1
+  goto run
+endif
+kres = 0
+run:
+zaw a(kres), kout
 endop

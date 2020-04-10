@@ -1,17 +1,39 @@
-;@ map d LVLlev
+;@ map LVLlev
 
 ;@ ins k
 ;@ outs k
-opcode CompLev, 0, k   ; MULTIMODE support a/k?
-  kVal xin
-  k1 zkr 1 ; CHANGE 
+opcode CompLev, 0, kkk
+  kval, kin,kout xin
+  kVal table kval, giLVLlev
+  kVal /= 64
+  kIn zkr kin
   kres init 0
-  
-  if (k1 >= kVal) then 
-  	kres = 1
-  	goto run
-  endif	
-  kres = 0
+
+  if (kIn >= kVal) then
+    kres = 1
+    goto run
+  endif
+kres = 0
 run:
-  zkw kres, 2 ; CHANGE
+  zkw kres, kout
+endop
+
+;@ ins a
+;@ outs a
+opcode CompLev, 0, kkk
+kval, kin,kout xin
+setksmps 1
+kVal table kval, giLVLlev
+kVal /= 64
+aIn zar kin
+kIn = k(aIn)
+kres init 0
+
+if (kIn >= kVal) then
+  kres = 1
+  goto run
+endif
+kres = 0
+run:
+zaw a(kres), kout
 endop

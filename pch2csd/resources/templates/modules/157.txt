@@ -1,54 +1,106 @@
-;@ map d BUT006
-;@ map d BUT003
-
 ;@ ins k
 ;@ outs k
-opcode LevConv, 0, ii
-  iIn, iOut xin
-  ; O4en' Tupo!
-  kin zkr 1 ; CHANGE
-  if (iIn == 0) then
-  	if (iOut==0) then
+opcode LevConv, 0, kkkk
+  kI, kO, kIn,kOut xin
+
+  kin zkr kIn
+  if (kI == 0) then
+  	if (kO ==0) then
   		kout = kin
-  	elseif (iOut==1) then
+  	elseif (kO ==1) then
   		kout = -kin
-  	elseif (iOut==2) then
+  	elseif (kO ==2) then
   		kout = (kin+1)*.5
-  	elseif (iOut==3) then
+  	elseif (kO ==3) then
   		kout = (-kin+1)*.5
-  	elseif (iOut==4) then	
+  	elseif (kO ==4) then
   		kout = (kin+1)*.5
-  	elseif (iOut==5) then	
+  	elseif (kO ==5) then
   		kout = -(kin+1)*.5
   	endif
-  elseif (iIn == 1) then
-  	if (iOut==0) then
+  elseif (kI == 1) then
+  	if (kO ==0) then
   		kout = 2*kin-1
-  	elseif (iOut==1) then
+  	elseif (kO ==1) then
   		kout = -(2*kin-1)
-  	elseif (iOut==2) then
+  	elseif (kO ==2) then
   		kout = kin
-  	elseif (iOut==3) then
+  	elseif (kO ==3) then
   		kout = 1-kin
-  	elseif (iOut==4) then	
+  	elseif (kO ==4) then
   		kout = -kin
-  	elseif (iOut==5) then	
+  	elseif (kO ==5) then
   		kout = -1+kin
   	endif
-  elseif (iIn == 2) then
-  	if (iOut==0) then
+  elseif (kI == 2) then
+  	if (kO ==0) then
   		kout = 2*kin+1
-  	elseif (iOut==1) then
+  	elseif (kO ==1) then
   		kout = -(2*kin+1)
-  	elseif (iOut==2) then
+  	elseif (kO ==2) then
   		kout = kin+1
-  	elseif (iOut==3) then
+  	elseif (kO ==3) then
   		kout = -kin
-  	elseif (iOut==4) then	
+  	elseif (kO ==4) then
   		kout = kin
-  	elseif (iOut==5) then	
+  	elseif (kO ==5) then
   		kout = -1+kin
   	endif
-  
-  zkw kout,1 ;CHANGE
+
+  zkw kout,kOut
 endop
+
+;@ ins a
+;@ outs a
+opcode LevConv, 0, kkkk
+  kI, kO, kIn,kOut xin
+  setksmps 1
+  ain zar kIn
+  kin = k(ain)
+  if (kI == 0) then
+  	if (kO ==0) then
+  		kout = kin
+  	elseif (kO ==1) then
+  		kout = -kin
+  	elseif (kO ==2) then
+  		kout = (kin+1)*.5
+  	elseif (kO ==3) then
+  		kout = (-kin+1)*.5
+  	elseif (kO ==4) then
+  		kout = (kin+1)*.5
+  	elseif (kO ==5) then
+  		kout = -(kin+1)*.5
+  	endif
+  elseif (kI == 1) then
+  	if (kO ==0) then
+  		kout = 2*kin-1
+  	elseif (kO ==1) then
+  		kout = -(2*kin-1)
+  	elseif (kO ==2) then
+  		kout = kin
+  	elseif (kO ==3) then
+  		kout = 1-kin
+  	elseif (kO ==4) then
+  		kout = -kin
+  	elseif (kO ==5) then
+  		kout = -1+kin
+  	endif
+  elseif (kI == 2) then
+  	if (kO ==0) then
+  		kout = 2*kin+1
+  	elseif (kO ==1) then
+  		kout = -(2*kin+1)
+  	elseif (kO ==2) then
+  		kout = kin+1
+  	elseif (kO ==3) then
+  		kout = -kin
+  	elseif (kO ==4) then
+  		kout = kin
+  	elseif (kO ==5) then
+  		kout = -1+kin
+  	endif
+
+  zaw a(kout),kOut
+endop
+
+; UP 10.04.20

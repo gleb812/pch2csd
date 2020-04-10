@@ -1,20 +1,21 @@
-;@ map LVLamp CLAEXP
-;@ map BUT002
+;@ map LVLamp
 
-;@ ins k:In
-;@ outs k:Out
-opcode LevAmp,0,iiii
-  iKnob, iScale, izIn, izOut xin
-  iMult = iKnob  ; TODO properly implement logarithmic mapping
-  kIn zkr izIn
-  zkw kIn*iMult
+;@ ins k
+;@ outs k
+opcode LevAmp,0,kkkk
+  kKnob, kScale, kin, kout xin
+  kIn zkr kin
+  kLev table kScale, giLVLamp
+  zkw kIn*kLev, kout
 endop
 
-;@ ins a:In
-;@ outs a:Out
-opcode LevAmp,0,iiii
-  iKnob, iScale, izIn, izOut xin
-  iMult = iKnob
-  aIn zar izIn
-  zaw aIn*iMult
+;@ ins a
+;@ outs a
+opcode LevAmp,0,kkkk
+  kKnob, kScale, kin, kout xin
+  aIn zar kin
+  kLev table kScale, giLVLamp
+  zaw aIn*kLev, kout
 endop
+
+; UP 10.04.20
