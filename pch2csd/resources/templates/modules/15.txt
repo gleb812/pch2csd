@@ -1,7 +1,7 @@
 ;@ ins k k k k k k k k
 ;@ outs k k
-opcode sw81, 0, kkkkkkkkk
-  kSel, kin1,kin2,kin3,kin4,kin5,kin6,kin7, kout, kctrl xin
+opcode sw81, 0, kkkkkkkkkkk
+  kSel, kin1,kin2,kin3,kin4,kin5,kin6,kin7,kin8, kout, kctrl xin
   kSw[][] init 8,8
   kSw fillarray 1,0,0,0,0,0,0,0, 0,1,0,0,0,0,0,0, 0,0,1,0,0,0,0,0, 0,0,0,1,0,0,0,0,  0,0,0,0,1,0,0,0, 0,0,0,0,0,1,0,0, 0,0,0,0,0,0,1,0  0,0,0,0,0,0,0,1
   kIn1 zkr kin1
@@ -20,8 +20,8 @@ endop
 
 ;@ ins a a a a a a a a
 ;@ outs a k
-opcode sw81, 0, kkkkkkkkk
-  kSel, kin1,kin2,kin3,kin4,kin5,kin6,kin7, kout, kctrl xin
+opcode sw81, 0, kkkkkkkkkkk
+  kSel, kin1,kin2,kin3,kin4,kin5,kin6,kin7,kin8, kout, kctrl xin
   kSw[][] init 8,8
   kSw fillarray 1,0,0,0,0,0,0,0, 0,1,0,0,0,0,0,0, 0,0,1,0,0,0,0,0, 0,0,0,1,0,0,0,0,  0,0,0,0,1,0,0,0, 0,0,0,0,0,1,0,0, 0,0,0,0,0,0,1,0  0,0,0,0,0,0,0,1
   aIn1 zar kin1
