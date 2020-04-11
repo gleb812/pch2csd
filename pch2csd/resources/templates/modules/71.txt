@@ -1,12 +1,28 @@
-;@ map d LVLatt
-;@ map d LVLrel
+;@ map LVLatt LVLrel
 
 ;@ ins k
 ;@ outs k
-opcode EnvFollow, 0, kk   ; MULTIMODE support a/k?
-; Need to check..
-  kAtt, kRel xin
-  a1 zar 1 ; CHANGE 
+opcode EnvFollow, 0, kkkk
+  katt, krel, kin,kout  xin
+  kAtt table katt, giLVLatt
+  kRel table krel, giLVLrel
+  k1 zkr kin
+  a1 = a(k1)
+  ; based on Jean-Marc Jot algorithm implementation in Csound
   ares follow2 a1, kAtt, kRel
-  zaw ares, 2 ; CHANGE
+  zkw k(ares), kout
 endop
+
+;@ ins a
+;@ outs k
+opcode EnvFollow, 0, kkkk
+  katt, krel, kin,kout  xin
+  kAtt table katt, giLVLatt
+  kRel table krel, giLVLrel
+  a1 zar kin
+  ; based on Jean-Marc Jot algorithm implementation in Csound
+  ares follow2 a1, kAtt, kRel
+  zaw ares, kout
+endop
+
+; Gleb Rogozinsky 11/04/20
