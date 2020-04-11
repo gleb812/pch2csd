@@ -1,14 +1,35 @@
 ;@ ins k k k
 ;@ outs k
-opcode ValSw2, 0, ik   ; MULTIMODE support a/k? == sw14 !!!
-; Need to check..
-  iVal, kSw xin 
-  a1 zar 1 ; CHANGE  
-  a2 zar 1 ; CHANGE 
-  if (kSw != iVal) goto default
-  zaw a1, 2 ; CHANGE
+opcode ValSw2, 0, kkkkk
+kval, kin1,kin2,kctrl,kout xin
+; TODO check values 1/ 128 / ..
+  k1 zkr kin1
+  k2 zkr kin2
+  kCtrl zkr kctrl
+
+  kVal table kval, giCLA001
+  if (kVal != kCtrl) goto default
+  zkw k2, kout
   goto halt
 default:
-  zaw a2, 2 ; CHANGE
+  zkw k1, kout
+halt:
+endop
+
+;@ ins a a a
+;@ outs a
+opcode ValSw2, 0, kkkkk
+kval, kin1,kin2,kctrl,kout xin
+  setksmps 1
+  a1 zar kin1
+  a2 zar kin2
+  aCtrl zar kctrl
+  kCtrl = k(aCtrl)
+  kVal table kval, giCLA001
+  if (kVal != kCtrl) goto default
+  zaw a2, kout
+  goto halt
+default:
+  zaw a1, kout
 halt:
 endop
