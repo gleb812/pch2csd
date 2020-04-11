@@ -1,0 +1,147 @@
+;@ map LVLatG LVLreG LVLthr
+
+;@ ins k
+;@ outs k k
+
+opcode NoiseGate, 0, kkkkkkk
+kthr,katt,krel,kOn, kin,kout,kenv xin
+
+kIn zkr kin
+
+if kOn == 1 goto Run
+    kEnv = 1
+    goto EnvOut
+Run:
+kA table katt, LVLatG
+kR table krel, LVLreG
+kTHR table kthr, LVLthr
+kTHR = 10^(kTHR/20)
+
+kGate init 0
+if kIn >= kTHR goto Active
+  kGate = 0
+  goto Next
+Active:
+  kGate = 1
+Next:
+; ENVELOPE SYNTH IS BASED ON ADSR ENV GENERATOR WITHOUT DECAY
+if kGate == 0 goto Free
+		if kstate = 3 then
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif
+
+		if kstate == 2 goto ESustain
+
+		kstate = 1 ;Attack
+		kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Sustain
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+
+ESustain:
+		kEnv = 1
+		kgoto EnvOut
+
+Free:
+	if kstate == 0 goto EnvOut
+	if kstate == 3 goto Release
+		kstate = 3
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+
+Release:
+		kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		kTime += 1
+
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
+
+zkw kEnv,kenv
+zkw kIn * kEnv,kout
+endop
+
+;@ ins a
+;@ outs a k
+
+opcode NoiseGate, 0, kkkkkkk
+kthr,katt,krel,kOn, kin,kout,kenv xin
+
+aIn zar kin
+
+if kOn == 1 goto Run
+    kEnv = 1
+    goto EnvOut
+Run:
+kA table katt, LVLatG
+kR table krel, LVLreG
+kTHR table kthr, LVLthr
+kTHR = 10^(kTHR/20)
+
+kGate init 0
+if kIn >= kTHR goto Active
+  kGate = 0
+  goto Next
+Active:
+  kGate = 1
+Next:
+; ENVELOPE SYNTH IS BASED ON ADSR ENV GENERATOR WITHOUT DECAY
+if kGate == 0 goto Free
+		if kstate = 3 then
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif
+
+		if kstate == 2 goto ESustain
+
+		kstate = 1 ;Attack
+		kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Sustain
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+
+ESustain:
+		kEnv = 1
+		kgoto EnvOut
+
+Free:
+	if kstate == 0 goto EnvOut
+	if kstate == 3 goto Release
+		kstate = 3
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+
+Release:
+		kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		kTime += 1
+
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
+
+zkw kEnv,kenv
+zaw aIn * kEnv,kout
+endop
