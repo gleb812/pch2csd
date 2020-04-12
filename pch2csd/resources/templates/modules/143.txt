@@ -1,10 +1,24 @@
-opcode NoteSend, 0, kkkk
-  kGate, kNote, kVel, kChnl xin
-  
-  if (kGate!=0) then
-  	midiout 144, kChnl, kNote, kVel  ; GENERIC 127 NOTEON
-  	; zkw what???
-  endif
+;@ ins k k k
+opcode NoteSend, 0, kkkkkkk
+  kVel, kNote, kChnl, kgate,kvel,knote xin
 
+  kGate zkr kgate
+  kVelin zkr kvel
+  kNotein zkr knote
+; TODO check mod levels
+  kVel limit kVel + kVelin * 64, 0, 127
+  kNote limit kNote + kVNotein * 64, 0, 127
 
+  kOn init 0
+  kOFF init 0
+
+  kOn trigger kGate, 0, 0
+  kOFF trigger kGate, 0, 1
+
+  if kOn == 0 goto Next
+    midiout 144, kChnl, kNote, kVel  ;  NOTEON
+Next:
+  if kOn == 0 goto Out
+    midiout 128, kChnl, kNote, 0 ; NOTEOFF
+Out:
 endop
