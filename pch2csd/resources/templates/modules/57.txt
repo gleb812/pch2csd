@@ -1,0 +1,28 @@
+;@ ins k
+;@ outs k
+opcode Automate, 0, kkkkkk
+  kCtrl, kVal, kCh, kEcho, kIn, kOut xin
+
+  ksend zkr kIn
+  kout init 0
+
+
+  kstatus, kchan, kdata1, kdata2 midiin
+  ; TODO strong check and ECHO
+
+  if (kstatus == 176 && kchan == kCh && kdata1 == kCtrl) goto Rx
+    kData = 0
+    goto Over
+Rx:
+    kData = kdata2
+Over:
+
+  kTrig trigger ksend, 0.01, 0
+  if kTrig==0 goto Halt
+    kData limit kData + kVal, 0, 127
+  	midiout 176, kCh, kCtrl, kData
+    kout = 1
+Halt:
+  zkw kout, kOut
+  kout = 0 ; reset after send
+endop

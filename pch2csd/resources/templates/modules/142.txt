@@ -1,6 +1,3 @@
-;@ map d MID000
-;@ map d MID000
-
 ;@ ins k k
 ;@ outs k
 opcode PCSend, 0, kkkkk

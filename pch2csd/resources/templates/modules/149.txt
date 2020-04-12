@@ -1,0 +1,21 @@
+opcode NoteZone, 0, kkkkkk
+kRxCh, kRxMin, kRxMax, kTrans, kTxCh, kThru xin
+
+kstatus, kchan, kdata1, kdata2 midiin
+; TODO strong check
+if kstatus == 176 && kThru == 1 then
+   midiout 176, kchan, kdata1, kdata2
+endif
+
+if (kstatus==128 && kchan==kRxCh) then   ; NOTEOFF
+  if (kdata1 <= kRxMax && kdata1 >= kRxMin) then
+    kTxdata = kdata1 + kTrans
+    midiout 128, kTxCh, kTxdata, 0
+endif
+
+if (kstatus==144 && kchan==kRxCh) then ; NOTEON
+  if (kdata1 <= kRxMax && kdata1 >= kRxMin) then
+    kTxdata = kdata1 + kTrans
+    midiout 144, kTxCh, kTxdata, kdata2
+endif
+endop

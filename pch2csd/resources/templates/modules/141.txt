@@ -1,7 +1,3 @@
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-
 ;@ ins k k
 ;@ outs k
 opcode CtrlSend, 0, kkkkkk
