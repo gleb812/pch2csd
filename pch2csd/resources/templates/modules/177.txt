@@ -1,28 +1,66 @@
-;@ map w 8 9 DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d CLA000
-;@ map d BUT007
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map CLA001
 
+;@ ins a k k
+;@ outs a
+opcode DelayB, 0, kkkkkkkkkkk
+  kTime,kFB,kLP,kDW,kRange,kFBmodL,kDWmodL,kHP, kin,kfbmod,kdwmod,kout xin
 
-opcode DelayB, 0, KKKKKKKK
-  kTime, kFB, kLP, kHP,  kDW, kFBmod, kDWmod xin
-  
-  ain zar 2 ; CHANGE 
-  kDW += kDWmod
-  kFB += kFBmod
-  
+  ain    zar kin
+  kDWmod zkr kdwmod
+  kFBmod zkr kfbmod
+; TODO check modulation levels and filter types
+
+  kFB_ table kFB + kFBmodL*kFBmod,giCLA001
+  kDW_ table kDW + kDWmodL*kDWmod,giCLA001
+
+  if kRange == 0 then
+    kTime table kTime, giDLY500
+  elseif kRange == 1 then
+    kTime table kTime, giDLY_1s
+  elseif kRange == 2 then
+    kTime table kTime, giDLY_2s
+  elseif kRange == 3 then
+    kTime table kTime, giDLY2p7
+	endif
+
   abuf delayr 2.7
   atap deltapi kTime
-  delayw ain+atap*kFB
-  
+  delayw ain+atap*kFB_
+
   aout tone atap, kLP ; check filter type etc
   aout atone aout, kHP ; check filter type etc
-  zaw aout*kDW+ain*(1-kDW), 1 ; CHANGE 
+  zaw aout*kDW_+ain*(1-kDW_), kout
+endop
+
+;@ ins a a a
+;@ outs a
+opcode DelayB, 0, kkkkkkkkkkk
+  kTime,kFB,kLP,kDW,kRange,kFBmodL,kDWmodL,kHP, kin,kfbmod,kdwmod,kout xin
+
+  ain    zar kin
+  aDWmod zar kdwmod
+  aFBmod zar kfbmod
+; TODO check modulation levels and filter types
+
+  aFB_ table kFB + kFBmodL*aFBmod,giCLA001
+  aDW_ table kDW + kDWmodL*aDWmod,giCLA001
+
+  if kRange == 0 then
+    kTime table kTime, giDLY500
+  elseif kRange == 1 then
+    kTime table kTime, giDLY_1s
+  elseif kRange == 2 then
+    kTime table kTime, giDLY_2s
+  elseif kRange == 3 then
+    kTime table kTime, giDLY2p7
+	endif
+
+  abuf delayr 2.7
+  atap deltapi kTime
+  delayw ain+atap*aFB_
+
+  aout tone atap, kLP ; check filter type etc
+  aout atone aout, kHP ; check filter type etc
+  zaw aout*aDW_+ain*(1-aDW_), kout
 endop

@@ -11,19 +11,19 @@ opcode DlySingleB, 0, kkkkkk
     kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
 
   if kRange == 0 then
-    kTime table kTime, DLY_5m
+    kTime table kTime, giDLY_5m
   elseif kRange == 1 then
-    kTime table kTime, DLY25m
+    kTime table kTime, giDLY25m
   elseif kRange == 2 then
-    kTime table kTime, DLY100
+    kTime table kTime, giDLY100
   elseif kRange == 3 then
-    kTime table kTime, DLY500
+    kTime table kTime, giDLY500
   elseif kRange == 4 then
-    kTime table kTime, DLY_1s
+    kTime table kTime, giDLY_1s
   elseif kRange == 5 then
-    kTime table kTime, DLY_2s
+    kTime table kTime, giDLY_2s
   elseif kRange == 6 then
-    kTime table kTime, DLY2p7
+    kTime table kTime, giDLY2p7
 
   kR = kRangeN[kRange]
 

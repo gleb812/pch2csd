@@ -11,26 +11,26 @@ opcode DelayDual, 0, kkkkkkkkkk
   kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
 
   if kRange == 0 then
-    kTime1 table kTime1, DLY_5m
-    kTime2 table kTime2, DLY_5m
+    kTime1 table kTime1, giDLY_5m
+    kTime2 table kTime2, giDLY_5m
   elseif kRange == 1 then
-    kTime1 table kTime1, DLY25m
-    kTime2 table kTime2, DLY25m
+    kTime1 table kTime1, giDLY25m
+    kTime2 table kTime2, giDLY25m
   elseif kRange == 2 then
-    kTime1 table kTime1, DLY100
-    kTime2 table kTime2, DLY100
+    kTime1 table kTime1, giDLY100
+    kTime2 table kTime2, giDLY100
   elseif kRange == 3 then
-    kTime1 table kTime1, DLY500
-    kTime2 table kTime2, DLY500
+    kTime1 table kTime1, giDLY500
+    kTime2 table kTime2, giDLY500
   elseif kRange == 4 then
-    kTime1 table kTime1, DLY_1s
-    kTime2 table kTime2, DLY_1s
+    kTime1 table kTime1, giDLY_1s
+    kTime2 table kTime2, giDLY_1s
   elseif kRange == 5 then
-    kTime1 table kTime1, DLY_2s
-    kTime2 table kTime2, DLY_2s
+    kTime1 table kTime1, giDLY_2s
+    kTime2 table kTime2, giDLY_2s
   elseif kRange == 6 then
-    kTime1 table kTime1, DLY2p7
-    kTime2 table kTime2, DLY2p7
+    kTime1 table kTime1, giDLY2p7
+    kTime2 table kTime2, giDLY2p7
 
   kR = kRangeN[kRange]
 

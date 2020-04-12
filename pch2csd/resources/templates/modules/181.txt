@@ -7,22 +7,24 @@ opcode DlyEight, 0, kkkkkkkkkkk
   ain zar kin
 
   if kRange == 0 then
-    kTime table kTime, DLY5m8
+    kTime table kTime, giDLY5m8
   elseif kRange == 1 then
-    kTime table kTime, DLY258
+    kTime table kTime, giDLY258
   elseif kRange == 2 then
-    kTime table kTime, DLY1h8
+    kTime table kTime, giDLY1h8
   elseif kRange == 3 then
-    kTime table kTime, DLY5h8
+    kTime table kTime, giDLY5h8
   elseif kRange == 4 then
-    kTime table kTime, DLY1s8
+    kTime table kTime, giDLY1s8
   elseif kRange == 5 then
-    kTime table kTime, DLY2s8
+    kTime table kTime, giDLY2s8
   elseif kRange == 6 then
-    kTime table kTime, DLY278
+    kTime table kTime, giDLY278
+
+  kTime /= 8
 
   abuf delayr 2.7
-  a1 deltapi a(kTime) 
+  a1 deltapi a(kTime)
   a2 deltapi a(kTime)*2
   a3 deltapi a(kTime)*3
   a4 deltapi a(kTime)*4

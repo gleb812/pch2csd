@@ -13,10 +13,10 @@ opcode DelayQuad, 0, kkkkkkkkkkkkkkkkkkkk
   kRangeN[] fillarray 0.0053, 0.0251, 0.101, 0.5, 1, 2, 2.7
 
 if kClk != 1 goto Time
-    kTime1 table kTime1, DLYCLK
-    kTime2 table kTime2, DLYCLK
-    kTime3 table kTime3, DLYCLK
-    kTime4 table kTime4, DLYCLK
+    kTime1 table kTime1, giDLYCLK
+    kTime2 table kTime2, giDLYCLK
+    kTime3 table kTime3, giDLYCLK
+    kTime4 table kTime4, giDLYCLK
     kTime1 /= gkBPM
     kTime2 /= gkBPM
     kTime3 /= gkBPM
@@ -24,40 +24,40 @@ if kClk != 1 goto Time
     kgoto Next
 Time:
   if kRange == 0 then
-    kTime1 table kTime1, DLY_5m
-    kTime2 table kTime2, DLY_5m
-    kTime3 table kTime3, DLY_5m
-    kTime4 table kTime4, DLY_5m
+    kTime1 table kTime1, giDLY_5m
+    kTime2 table kTime2, giDLY_5m
+    kTime3 table kTime3, giDLY_5m
+    kTime4 table kTime4, giDLY_5m
   elseif kRange == 1 then
-    kTime1 table kTime1, DLY25m
-    kTime2 table kTime2, DLY25m
-    kTime3 table kTime3, DLY25m
-    kTime4 table kTime4, DLY25m
+    kTime1 table kTime1, giDLY25m
+    kTime2 table kTime2, giDLY25m
+    kTime3 table kTime3, giDLY25m
+    kTime4 table kTime4, giDLY25m
   elseif kRange == 2 then
-    kTime1 table kTime1, DLY100
-    kTime2 table kTime2, DLY100
-    kTime3 table kTime3, DLY100
-    kTime4 table kTime4, DLY100
+    kTime1 table kTime1, giDLY100
+    kTime2 table kTime2, giDLY100
+    kTime3 table kTime3, giDLY100
+    kTime4 table kTime4, giDLY100
   elseif kRange == 3 then
-    kTime1 table kTime1, DLY500
-    kTime2 table kTime2, DLY500
-    kTime3 table kTime3, DLY500
-    kTime4 table kTime4, DLY500
+    kTime1 table kTime1, giDLY500
+    kTime2 table kTime2, giDLY500
+    kTime3 table kTime3, giDLY500
+    kTime4 table kTime4, giDLY500
   elseif kRange == 4 then
-    kTime1 table kTime1, DLY_1s
-    kTime2 table kTime2, DLY_1s
-    kTime3 table kTime3, DLY_1s
-    kTime4 table kTime4, DLY_1s
+    kTime1 table kTime1, giDLY_1s
+    kTime2 table kTime2, giDLY_1s
+    kTime3 table kTime3, giDLY_1s
+    kTime4 table kTime4, giDLY_1s
   elseif kRange == 5 then
-    kTime1 table kTime1, DLY_2s
-    kTime2 table kTime2, DLY_2s
-    kTime3 table kTime3, DLY_2s
-    kTime4 table kTime4, DLY_2s
+    kTime1 table kTime1, giDLY_2s
+    kTime2 table kTime2, giDLY_2s
+    kTime3 table kTime3, giDLY_2s
+    kTime4 table kTime4, giDLY_2s
   elseif kRange == 6 then
-    kTime1 table kTime1, DLY2p7
-    kTime2 table kTime2, DLY2p7
-    kTime3 table kTime3, DLY2p7
-    kTime4 table kTime4, DLY2p7
+    kTime1 table kTime1, giDLY2p7
+    kTime2 table kTime2, giDLY2p7
+    kTime3 table kTime3, giDLY2p7
+    kTime4 table kTime4, giDLY2p7
 Next:
   kR = kRangeN[kRange]
   aTime1 = a(kTime1) + kR * amod1 * a(kMod1)
