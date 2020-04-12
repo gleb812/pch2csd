@@ -1,16 +1,35 @@
-;@ map d CLA000
-;@ map d MID000
+;@ map CLA001
 
 ;@ ins k k k
 ;@ outs k
-opcode LevMod, 0, kk   
-  kMod, kBal xin
-  kModD 	zkr 1 ; CHANGE 
-  kModIn 	zkr 2 ; CHANGE 
-  kIn 	zkr 3 ; CHANGE 
 
-  kOut = kIn*(1-kBal * (1 - kModD * kMod)) + (1 - kModD * kMod) * kBal * kIn * kModIn
+opcode LevMod, 0, kkkkkk
+  kdpt, kbal,  kin,kmod,kdp,kout xin
 
-  zkw kOut, 2 ; CHANGE
-  ; normirovka ??
+  kModD 	zkr kdp
+  kModIn 	zkr kmod
+  kIn 	  zkr kin
+
+  kBal table kbal, giCLA001
+  kDpt table kdpt, giCLA001
+  kOut = kIn * (1 + kBal * kModIn)
+  kOut = kIn*(1 - kBal * (1 - kDpt * kMod)) + (1 - kDpt * kMod) * kBal * kIn * aModIn
+  zkw kOut, kout
+endop
+
+;@ ins a a a
+;@ outs a
+
+opcode LevMod, 0, kkkkkk
+  kdpt, kbal,  kin,kmod,kdp,kout xin
+
+  aModD 	zar kdp
+  aModIn 	zar kmod
+  aIn 	  zar kin
+
+  kBal table kbal, giCLA001
+  kDpt table kdpt, giCLA001
+  aOut = aIn*(1-kBal * (1 - kDpt * kMod)) + (1 - kDpt * kMod) * kBal * aIn * aModIn
+
+  zaw aOut, kout
 endop
