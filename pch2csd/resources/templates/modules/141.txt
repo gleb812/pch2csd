@@ -1,26 +1,19 @@
 ;@ ins k k
 ;@ outs k
 opcode CtrlSend, 0, kkkkkk
-  kCtrl, kVal, kCh, kSend, kValue, kOut xin
-; TODO Done. Except This,SlotA-D
-  ksend zkr kSend
-  kvalue zkr kValue
+  kCtrl, kVal, kCh, ksend, kvalue, kout xin
 
-  kvalloc init 0
-  kout init 0
+  ; TODO CHECK modulation lev
+    kSend zkr ksend
+    kValue zkr kvalue
+    kOut init 0
 
-  if kValue == 1 goto NoValInp
-    kvalloc = kvalue
-    goto ValInp
-  NoValInp:
-    kvalloc = kVal
-  ValInp:
-
-  kTrig trigger ksend, 0, 0
-  if kTrig==0 goto Halt
-  	midiout 176, kCh, kCtrl, kvalloc ; GENERIC 7bit CTRL
-    kout = 1
+    kValue limit kVal + kValue * 64, 0, 127
+    kTrig changed kValue
+    if kTrig == 0 goto Halt
+    	midiout 176, kCh, kCtrl, kValue ; GENERIC CC MESSAGE
+      kOut = 1
   Halt:
-  zkw kout, kOut
-  kout = 0 ; reset after send
-endop
+    zkw kOut, kout
+    kout = 0 ; reset after send
+  endop
