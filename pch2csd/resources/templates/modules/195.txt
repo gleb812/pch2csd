@@ -1,0 +1,51 @@
+;@ map CLA001 AMPEXP
+
+;@ ins k k
+;@ outs k
+opcode ModAmt, 0, kkkkkkk
+  kdpt,kOn,kexplin,kinvm, kin,kmod,kout xin
+
+  kModIn 	zkr kmod
+  kIn 	  zkr kin
+
+  if kexplin == 0 goto Exp
+    kDpt table kdpt, giCLA001
+    goto Next
+Exp:
+    kDpt table kdpt, giAMPEXP
+Next:
+  if kinvm == 1 goto InvM
+    ; m mode
+    kOut = kIn * (kDpt * kModIn * kOn)
+    goto Out
+InvM:
+    ; 1-m mode
+    kOut = kIn * (1 - kDpt * kModIn * kOn)
+Out:
+    zkw kOut, kout
+endop
+
+;@ ins a a
+;@ outs a
+opcode ModAmt, 0, kkkkkkk
+  kdpt,kOn,kexplin,kinvm, kin,kmod,kout xin
+
+  aModIn 	zar kmod
+  aIn 	  zar kin
+
+  if kexplin == 0 goto Exp
+    kDpt table kdpt, giCLA001
+    goto Next
+Exp:
+    kDpt table kdpt, giAMPEXP
+Next:
+  if kinvm == 1 goto InvM
+    ; m mode
+    aOut = aIn * (kDpt * aModIn * kOn)
+    goto Out
+InvM:
+    ; 1-m mode
+    aOut = aIn * (1 - kDpt * aModIn * kOn)
+Out:
+    zaw aOut, kout
+endop
