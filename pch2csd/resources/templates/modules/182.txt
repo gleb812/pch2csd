@@ -1,35 +1,59 @@
-;@ map s 12 DLY500 DLY_1s DLY135
-;@ map s 12 DLY500 DLY_1s DLY135
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d CLA000
-;@ map d BUT003
+;@ map DLY500 DLY_1s DLY_2s DLY2p7
+;@ map CLA001
 
 ;@ ins a
 ;@ outs a a
-opcode DlyStereo, 0, KKKKKKKKKK
-  kTimeL,kTimeR,kFBL,kFBR,kXFBL,kXFBR,kLP,kHP,kDW xin
-  
-  ain zar 2 ; CHANGE 
-  ainF tone ain, kLP ; check filter type etc
-  ainF atone ainF, kHP ; check filter type etc
-  atapL init 0
-  atapR init 0
-  
+opcode DlyStereo, 0, kkkkkkkkkkkkkkk
+  kTimeL,kTimeR,kFBL,kFBR,kXL,kXR,kClk,kLP,kDW,kOn,kHP,kRange,kin,kol,kor xin
+
+  ain    zar kin
+
+  kFBL table kFBL,giCLA001
+  kFBR table kFBR,giCLA001
+  kDW  table kDW, giCLA001
+  ; TODO filters and overall check
+
+  if kClk != 1 goto Time
+      kTimeL table kTime1, giDLYCLK
+      kTimeR table kTime2, giDLYCLK
+      kTimeL /= gkBPM
+      kTimeR /= gkBPM
+      kgoto Next
+  Time:
+
+  if kRange == 0 then
+    kTimeL table kTime, giDLY500
+    kTimeR table kTime, giDLY500
+  elseif kRange == 1 then
+    kTimeL table kTime, giDLY_1s
+    kTimeR table kTime, giDLY_1s
+  elseif kRange == 2 then
+    kTimeL table kTime, giDLY_2s
+    kTimeR table kTime, giDLY_2s
+  elseif kRange == 3 then
+    kTimeL table kTime, giDLY2p7
+    kTimeR table kTime, giDLY2p7
+	endif
+Next:
   abufL delayr 2.7
   atapL deltapi kTimeL
-  delayw ainF+atapL*kFBL+atapR*kXFBR
-  
+  delayw ain+atapL*kFBL
+
   abufR delayr 2.7
   atapR deltapi kTimeR
-  delayw ainF+atapR*kFBR+atapL*kXFBL
-  
-  zaw atapL*kDW+ain*(1-kDW), 1 ; CHANGE 
-  zaw atapR*kDW+ain*(1-kDW), 1 ; CHANGE 
+  delayw ain+atapR*kFBR
+
+  ;aoutL tone atapL, kLP ; check filter type etc
+  ;aoutL atone aoutL, kHP ; check filter type etc
+  ;aoutR tone atapR, kLP ; check filter type etc
+  ;aoutR atone aoutR, kHP ; check filter type etc
+
+if kOn == 1 goto Out
+  zaw ain, kol
+  zaw ain, kor
+  goto Bypass
+Out:
+  zaw aoutL*kDW+ain*(1-kDW), kol
+  zaw aoutR*kDW+ain*(1-kDW), kor
+Bypass:
 endop
