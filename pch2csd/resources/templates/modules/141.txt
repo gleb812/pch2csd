@@ -8,12 +8,12 @@ opcode CtrlSend, 0, kkkkkk
     kValue zkr kvalue
     kOut init 0
 
-    kValue limit kVal + kValue * 64, 0, 127
+    kValue limit kVal + kValue * 127, 0, 127
     kTrig changed kValue
     if kTrig == 0 goto Halt
     	midiout 176, kCh, kCtrl, kValue ; GENERIC CC MESSAGE
       kOut = 1
   Halt:
     zkw kOut, kout
-    kout = 0 ; reset after send
+    kOut = 0 ; reset after send
   endop
