@@ -1,13 +1,20 @@
-opcode NoteRcv, 0, kk
-   kNote, kChnl xin
-  
-  kstatus, kchan, kdata1, kdata2 midiin
+;@ outs k k k
+opcode NoteRcv, 0, kkkkk
+   kNote, kChnl, kgate,kvel,krelvel xin
+   ; RELVEL seems to be unused
+   kVel init 0
+   kdata init 0
+   kGate init 0
 
-  if (kstatus==144 && kchan==kChnl && kdata1==kNote) then
-  	zkw kdata2, 1 ;CHANGE
-  	zkw 1, 2 ;CHANGE   - GATE
-  	zkw kdata1/128, 3; CHANGE - CHECK SCALING?
+  if (gkstatus==144 && gkchan==kChnl && gkdata1==kNote) then
+       kdata = gkdata2
+       kGate = 1
   endif
 
+  if (gkstatus==128 && gkchan==kChnl && gkdata1==kNote) then
+       kGate = 0
+  endif
 
+  zkw kGate, kgate
+  zkw kdata, kvel
 endop
