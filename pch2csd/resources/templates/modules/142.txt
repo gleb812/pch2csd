@@ -7,12 +7,12 @@ opcode PCSend, 0, kkkkk
   kValue zkr kvalue
   kOut init 0
 
-  kValue limit kProg + kValue * 64, 0, 127
+  kValue limit kProg + kValue * 127, 0, 127
   kTrig changed kValue
   if kTrig == 0 goto Halt
   	midiout 192, kCh, kValue, 0 ; GENERIC PC MESSAGE
     kOut = 1
 Halt:
   zkw kOut, kout
-  kout = 0 ; reset after send
+  kOut = 0 ; reset after send
 endop
