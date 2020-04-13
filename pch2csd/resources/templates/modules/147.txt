@@ -1,12 +1,17 @@
-opcode CtrlRcv, 0, kk
-   kCtrl, kChnl xin
-  
-  kstatus, kchan, kdata1, kdata2 midiin
+;@ outs k k
+opcode CtrlRcv, 0, kkkk
+   kCtrl, kChnl, krcv, kval xin
 
-  if (kstatus==176 && kchan==kChnl && kdata1==kCtrl) then
-  	zkw kdata2, 1 ;CHANGE
-  	zkw 1, 2 ;CHANGE
+   kdata init 0
+   kVal init 0
+
+  if (gkstatus==176 && gkchan==kChnl && gkdata1==kCtrl) then
+    kdata = gkdata2
+    kTrig changed kdata
+    if kTrig != 1 goto Out
+  	   zkw kdata, kval
+  	   zkw 1, krcv
   endif
-
-
+  Out:
+  zkw 0, krcv
 endop
