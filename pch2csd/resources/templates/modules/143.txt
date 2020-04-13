@@ -5,9 +5,9 @@ opcode NoteSend, 0, kkkkkkk
   kGate zkr kgate
   kVelin zkr kvel
   kNotein zkr knote
-; TODO check mod levels
-  kVel limit kVel + kVelin * 64, 0, 127
-  kNote limit kNote + kVNotein * 64, 0, 127
+
+  kVel limit kVel + kVelin * 127, 0, 127
+  kNote limit kNote + kVNotein * 127, 0, 127
 
   kOn init 0
   kOFF init 0
@@ -19,6 +19,6 @@ opcode NoteSend, 0, kkkkkkk
     midiout 144, kChnl, kNote, kVel  ;  NOTEON
 Next:
   if kOn == 0 goto Out
-    midiout 128, kChnl, kNote, 0 ; NOTEOFF
+    midiout 128, kChnl, kNote, kVel ; NOTEOFF
 Out:
 endop

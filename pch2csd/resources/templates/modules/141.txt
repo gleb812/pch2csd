@@ -3,7 +3,6 @@
 opcode CtrlSend, 0, kkkkkk
   kCtrl, kVal, kCh, ksend, kvalue, kout xin
 
-  ; TODO CHECK modulation lev
     kSend zkr ksend
     kValue zkr kvalue
     kOut init 0

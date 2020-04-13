@@ -2,7 +2,7 @@
 ;@ outs k
 opcode PCSend, 0, kkkkk
   kProg, kCh, ksend, kvalue, kout xin
-; TODO CHECK modulation lev
+
   kSend zkr ksend
   kValue zkr kvalue
   kOut init 0
