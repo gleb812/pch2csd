@@ -1,21 +1,23 @@
+;@ map LVLlev
+
 opcode NoteZone, 0, kkkkkk
 kRxCh, kRxMin, kRxMax, kTrans, kTxCh, kThru xin
 
-kstatus, kchan, kdata1, kdata2 midiin
-; TODO strong check
-if kstatus == 176 && kThru == 1 then
-   midiout 176, kchan, kdata1, kdata2
+kTrans table kTrans, giLVLlev
+
+if (gkstatus == 176 && kThru == 1) then
+   midiout 176, gkchan, gkdata1, gkdata2
 endif
 
-if (kstatus==128 && kchan==kRxCh) then   ; NOTEOFF
+if (gkstatus==128 && gkchan==kRxCh) then   ; NOTEOFF
   if (kdata1 <= kRxMax && kdata1 >= kRxMin) then
-    kTxdata = kdata1 + kTrans
-    midiout 128, kTxCh, kTxdata, 0
+    kTxdata limit gkdata1 + kTrans, 0, 127
+    midiout 128, kTxCh, kTxdata, gkdata2
 endif
 
-if (kstatus==144 && kchan==kRxCh) then ; NOTEON
-  if (kdata1 <= kRxMax && kdata1 >= kRxMin) then
-    kTxdata = kdata1 + kTrans
-    midiout 144, kTxCh, kTxdata, kdata2
+if (gkstatus==144 && gkchan==kRxCh) then ; NOTEON
+  if (gkdata1 <= kRxMax && gkdata1 >= kRxMin) then
+    kTxdata limit gkdata1 + kTrans, 0, 127
+    midiout 144, kTxCh, kTxdata, gkdata2
 endif
 endop
