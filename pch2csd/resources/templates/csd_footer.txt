@@ -1,12 +1,16 @@
 ; GLOBAL MIDI
+gkstat init 0
+gkchan init 0
+gkdata1 init 0
+gkdata2 init 0
 instr 3
-  kstat, kchan, kdata1, kdata2 midiin
-  if kstat!=144 goto Next
-  gkGate = 1
-  gkNote = kdata1
+  gkstat, gkchan, gkdata1, gkdata2 midiin
+  if kstat != 144 goto Next
+    gkGate = 1
+    gkNote = gkdata1
   Next:
   if kstat!=128 goto Over
-  gkGate = 0
+    gkGate = 0
   Over:
 endin
 
@@ -23,6 +27,6 @@ i2 0 [60*60*24*7]
 i3 0 [60*60*24*7]
 ; use i4 to emultate MIDI commands if needed
 ; p4 is pitch
-;i4 0 1 64 
+;i4 0 1 64
 </CsScore>
 </CsoundSynthesizer>
