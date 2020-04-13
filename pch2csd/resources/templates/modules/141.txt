@@ -6,10 +6,11 @@ opcode CtrlSend, 0, kkkkkk
     kSend zkr ksend
     kValue zkr kvalue
     kOut init 0
+    kSend trigger kSend, 0, 0
 
     kValue limit kVal + kValue * 127, 0, 127
-    kTrig changed kValue
-    if kTrig == 0 goto Halt
+    kTrig changed kValue, kSend
+    if (kTrig == 0) goto Halt
     	midiout 176, kCh, kCtrl, kValue ; GENERIC CC MESSAGE
       kOut = 1
   Halt:
