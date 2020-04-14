@@ -1,9 +1,41 @@
 ;@ ins k
 ;@ outs k k k
-opcode sw12, 0, k   ; MULTIMODE support a/k? == sw12M
-; THIS opcode is for RT only.. Need to check..
-  kSw xin ;kSw = 0 / 1
-  a1 zar 1 ; CHANGE 
-  zaw a1, kSw ; CHANGE
-  ; poka bez Ctrl 
+opcode sw12, 0, kkkkk
+  kSw, kin, koutOn, koutOff, kctrl xin
+
+  kIn zkr kin
+
+  kSw K2Y kSw
+
+  if kSW != 0 goto ON
+    zkw kIn,koutOff
+    zkw kIn * 0,koutOn
+    zkw 0, kctrl
+    goto Next
+ON:
+    zkw kIn,koutOn
+    zkw kIn * 0,koutOff
+    zkw 4/128, kctrl  ;? check
+Next:
+endop
+
+;@ ins a
+;@ outs a a k
+opcode sw12, 0, kkkkk
+  kSw, kin, koutOn, koutOff, kctrl xin
+
+  aIn zar kin
+
+  kSw K2Y kSw
+
+  if kSW != 0 goto ON
+    zaw aIn*0,koutOff
+    zaw aIn,koutOff
+    zkw 0, kctrl
+    goto Next
+ON:
+    zaw aIn,koutOn
+    zaw aIn*0,koutOff
+    zkw 4/128, kctrl  ;? check
+Next:
 endop
