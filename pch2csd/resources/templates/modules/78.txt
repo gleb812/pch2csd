@@ -1,9 +1,37 @@
 ;@ ins k
 ;@ outs k k k k k k k k k
-opcode sw18, 0, k   ; MULTIMODE support a/k? == sw14 !!!
-; Need to check..
-  kSw xin ;kSw = nomera shin
-  a1 zar 1 ; CHANGE  
-  zaw a1, kSw ; CHANGE
-  ; poka bez Ctrl 
+opcode sw18, 0, kkkkkkkkkkk
+  kSw, kin,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8, kctrl xin
+  kSw[][] init 8,8
+  kSw fillarray 1,0,0,0,0,0,0,0, 0,1,0,0,0,0,0,0, 0,0,1,0,0,0,0,0, 0,0,0,1,0,0,0,0,  0,0,0,0,1,0,0,0, 0,0,0,0,0,1,0,0, 0,0,0,0,0,0,1,0  0,0,0,0,0,0,0,1
+  kIn zkr kin
+
+  zkw kIn*kSw[kSel][0], ko1
+  zkw kIn*kSw[kSel][1], ko2
+  zkw kIn*kSw[kSel][2], ko3
+  zkw kIn*kSw[kSel][3], ko4
+  zkw kIn*kSw[kSel][4], ko5
+  zkw kIn*kSw[kSel][5], ko6
+  zkw kIn*kSw[kSel][6], ko7
+  zkw kIn*kSw[kSel][7], ko8
+  zkw kSel/4,  kctrl
+endop
+
+;@ ins a
+;@ outs a a a a a a a a k
+opcode sw18, 0, kkkkkkkkkkk
+  kSw, kin,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8, kctrl xin
+  kSw[][] init 8,8
+  kSw fillarray 1,0,0,0,0,0,0,0, 0,1,0,0,0,0,0,0, 0,0,1,0,0,0,0,0, 0,0,0,1,0,0,0,0,  0,0,0,0,1,0,0,0, 0,0,0,0,0,1,0,0, 0,0,0,0,0,0,1,0  0,0,0,0,0,0,0,1
+  aIn zar kin
+
+  zaw aIn*kSw[kSel][0], ko1
+  zaw aIn*kSw[kSel][1], ko2
+  zaw aIn*kSw[kSel][2], ko3
+  zaw aIn*kSw[kSel][3], ko4
+  zaw aIn*kSw[kSel][4], ko5
+  zaw aIn*kSw[kSel][5], ko6
+  zaw aIn*kSw[kSel][6], ko7
+  zaw aIn*kSw[kSel][7], ko8
+  zaw kSel/4,  kctrl
 endop
