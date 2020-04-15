@@ -1,12 +1,33 @@
 ;@ ins k k
 ;@ outs k
 opcode sH, 0, 0
-  kCtrl zkr 1; CHANGE
-  kIn zkr 2; CHANGE
+kin, kctrl,kout xin
+  kCtrl zkr kctrl
+  kIn zkr kin
+
   kOut init 0
-  if (kCtrl != 0) then
-  	kOut = kIn
-  endif
-  
-  zkw kOut, 2; CHANGE
+
+  kTrack trigger kCtrl, 0, 0
+  if kTrack != 1 goto Over
+    kOut = kIn
+Over:
+  zkw kOut, kout
+endop
+
+;@ ins a a
+;@ outs a
+opcode sH, 0, 0
+kin, kctrl,kout xin
+  setksmps 1
+  aCtrl zar kctrl
+  kCtrl = k(aCtrl)
+  aIn zar kin
+
+  aOut init 0
+
+  kTrack trigger kCtrl, 0, 0
+  if kTrack != 1 goto Over
+    aOut = aIn
+Over:
+  zaw aOut, kout
 endop
