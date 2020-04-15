@@ -2,12 +2,11 @@
 ;@ outs k
 opcode ValSw2, 0, kkkkk
 kval, kin1,kin2,kctrl,kout xin
-; TODO check values 1/ 128 / ..
   k1 zkr kin1
   k2 zkr kin2
   kCtrl zkr kctrl
-
-  kVal table kval, giCLA001
+  kCtrl *= 64
+;  kVal table kval, giCLA001
   if (kVal != kCtrl) goto default
   zkw k2, kout
   goto halt
@@ -25,7 +24,8 @@ kval, kin1,kin2,kctrl,kout xin
   a2 zar kin2
   aCtrl zar kctrl
   kCtrl = k(aCtrl)
-  kVal table kval, giCLA001
+  kCtrl *= 64
+;  kVal table kval, giCLA001
   if (kVal != kCtrl) goto default
   zaw a2, kout
   goto halt
