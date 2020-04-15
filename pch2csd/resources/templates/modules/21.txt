@@ -1,7 +1,7 @@
 ;@ ins k k
 ;@ outs k k k k k k k k
-opcode Mux18, 0, 0
-
+opcode Mux18, 0, kkkkkkkkkkk
+  kin,kc,ko1,ko2,ko3,ko4,ko5,ko6,ko7,ko8 xin
   kM1[] fillarray 1,0,0,0,0,0,0,0
   kM2[] fillarray 0,1,0,0,0,0,0,0
   kM3[] fillarray 0,0,1,0,0,0,0,0
@@ -11,15 +11,20 @@ opcode Mux18, 0, 0
   kM7[] fillarray 0,0,0,0,0,0,1,0
   kM8[] fillarray 0,0,0,0,0,0,0,1
 
-  kCtrl zkr 1; CHANGE
-  kIn zkr 1; CHANGE
-  
-  zkw kIn*kM1[kCtrl], 1; CHANGE
-  zkw kIn*kM2[kCtrl], 2; CHANGE
-  zkw kIn*kM3[kCtrl], 3; CHANGE
-  zkw kIn*kM4[kCtrl], 4; CHANGE
-  zkw kIn*kM5[kCtrl], 5; CHANGE
-  zkw kIn*kM6[kCtrl], 6; CHANGE
-  zkw kIn*kM7[kCtrl], 7; CHANGE
-  zkw kIn*kM8[kCtrl], 8; CHANGE
+  kCtrl zkr kc
+  kIn zkr kin
+
+  kCtrl *= 64
+  kCtrl limit kCtrl, 0, 28
+  kCtrl /= 4
+  kCtrl = floor(kCtrl)
+
+  zkw kIn*kM1[kCtrl], ko1
+  zkw kIn*kM2[kCtrl], ko2
+  zkw kIn*kM3[kCtrl], ko3
+  zkw kIn*kM4[kCtrl], ko4
+  zkw kIn*kM5[kCtrl], ko5
+  zkw kIn*kM6[kCtrl], ko6
+  zkw kIn*kM7[kCtrl], ko7
+  zkw kIn*kM8[kCtrl], ko8
 endop

@@ -1,16 +1,37 @@
 ;@ ins k k k k k k k k k
 ;@ outs k
-opcode Mux81, 0, 0
-  kCtrl zkr 1; CHANGE
-  k1 zkr 1; CHANGE
-  k2 zkr 1; CHANGE
-  k3 zkr 1; CHANGE
-  k4 zkr 1; CHANGE
-  k5 zkr 1; CHANGE
-  k6 zkr 1; CHANGE
-  k7 zkr 1; CHANGE
-  k8 zkr 1; CHANGE
-  
-  ; quantize Ctrl and then if ififififif?
-  
+opcode Mux81, 0, kkkkkkkkkk
+  k1,k2,k3,k4,k5,k6,k7,k8,kc,ko xin
+  kCtrl zkr kc
+  ki1 zkr k1
+  ki2 zkr k2
+  ki3 zkr k3
+  ki4 zkr k4
+  ki5 zkr k5
+  ki6 zkr k6
+  ki7 zkr k7
+  ki8 zkr k8
+
+  kCtrl *= 64
+  kCtrl limit kCtrl, 0, 28
+
+  if kCtrl < 4 then
+    kOut = ki1
+  elseif kCtrl < 8 then
+    kOut = ki2
+  elseif kCtrl < 12 then
+    kOut = ki3
+  elseif kCtrl < 16 then
+    kOut = ki4
+  elseif kCtrl < 20 then
+    kOut = ki5
+  elseif kCtrl < 24 then
+    kOut = ki6
+  elseif kCtrl < 28 then
+    kOut = ki7
+  else
+    kOut = ki8
+  endif
+
+  zkw kOut, ko
 endop
