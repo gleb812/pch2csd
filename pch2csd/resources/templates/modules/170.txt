@@ -1,12 +1,10 @@
-;@ map d BUT004
-;@ map d BUT004
-;@ map d BUT002
-
-;@ outs a:Left a:Right
-opcode In2, 0, iiiii
-    ; TODO: switch inputs
-  iInSw, iOnOffSw, iPad, izL, izR xin
+;@ outs a a
+opcode In2, 0, kkkkk
+  kInSw, kOnOffSw, kPad, kzL, kzR xin
+  kPad += 1
   aL, aR ins
-  zaw aL, izL
-  zaw aR, izR
+  zaw aL * kPad * kOnOffSw, kzL
+  zaw aR * kPad * kOnOffSw, kzR
 endop
+
+; TODO bus?
