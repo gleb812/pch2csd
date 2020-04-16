@@ -9,19 +9,18 @@ opcode MonoKey, 0, kkkk
 	kp init 1 ; pointer to the last element
 	kChange = 0
 
-	kstatus, kchan, kdata1, kdata2 midiin
-	if kstatus != 144 goto Over ; NoteOn
-		kList[kp] = kdata1 + 1  ; avoid zero pitch
-		kListV[kp] = kdata2
+	if gkstatus != 144 goto Over ; NoteOn
+		kList[kp] = gkdata1 + 1  ; avoid zero pitch
+		kListV[kp] = gkdata2
 		knum += 1
 		kp += 1
 		kChange = 1
 Over:
-	if kstatus != 128 goto Over1 ; NoteOff
+	if gkstatus != 128 goto Over1 ; NoteOff
 		kndx =  kp-1
 Up1:
 		if (kndx == 0) goto Over3
-				if kList[kndx] != (kdata1+1) goto Over2
+				if kList[kndx] != (gkdata1+1) goto Over2
 						kList[kndx] = 0
 						goto Over3
 Over2:
