@@ -1,12 +1,47 @@
 ;@ ins k k
 ;@ outs k
-opcode TH, 0, 0 ; ???? EQUAL TO S&H ??
-  kCtrl zkr 1; CHANGE
-  kIn zkr 2; CHANGE
+opcode TH, 0, kkk
+kin, kctrl,kout xin
+  kCtrl zkr kctrl
+  kIn zkr kin
+
+  kLow init 0
   kOut init 0
-  if (kCtrl != 0) then
-  	kOut = kIn
-  endif
-  
-  zkw kOut, 2; CHANGE
+  ; TODO what is LOW level?
+  kTrack trigger kCtrl, 0.001, 1
+  if kTrack != 1 goto Over
+    kLow = 1
+    kOut = kIn
+
+Over:
+  if kLow != 1 goto High
+    zkw kOut, kout
+    goto End
+High:
+    zkw kIn, kout
+End:
+endop
+
+;@ ins a a
+;@ outs a
+opcode TH, 0, kkk
+kin, kctrl,kout xin
+  aCtrl zar kctrl
+  kCtrl = k(aCtrl)
+  aIn zar kin
+
+  kLow init 0
+  kOut init 0
+  kTrack trigger kCtrl, 0.001, 1
+  if kTrack != 1 goto Over
+    kLow = 1
+    kOut = k(aIn)
+
+Over:
+  if kLow != 1 goto High
+    zaw a(kOut), kout
+    goto End
+High:
+    zaw aIn, kout
+End:
 endop
