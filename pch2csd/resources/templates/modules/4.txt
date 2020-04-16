@@ -1,10 +1,13 @@
-;@ map d BUT007
-;@ map d BUT007
-;@ map d BUT007
-
 ;@ ins a a
 opcode Out2, 0, kkkkk
 ksource, kMute, kPad, kL, kR xin
+kM1[] fillarray 1,0,0,0,0,0
+kM2[] fillarray 0,1,0,0,0,0
+kM3[] fillarray 0,0,1,0,0,0
+kM4[] fillarray 0,0,0,1,0,0
+kM5[] fillarray 0,0,0,0,1,0
+kM6[] fillarray 0,0,0,0,0,1
+
 kpad = kPad + 1
 aL zar kL
 aR zar kR
@@ -14,7 +17,12 @@ aR limit aR, -4, 4
 aL *= .25 ; back to 0dbfs = 1
 aR *= .25
 
-outs aL*kMute*kpad,aR*kMute*kpad
-endop
+aOL = aL*kMute*kpad
+aOR = aR*kMute*kpad
 
-;TODO Source selection. Check FX and BUS numeration in ZAK
+outs kM1[ksource]*aOL,kM1[ksource]*aOR  ; SOURCE 0
+gaFX1 += kM3[ksource]*aOL                     ; SOURCE 2
+gaFX2 += kM3[ksource]*aOR
+gaFX3 += kM4[ksource]*aOL                     ; SOURCE 3
+gaFX4 += kM4[ksource]*aOR
+endop

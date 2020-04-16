@@ -1,10 +1,9 @@
-;@ map d BUT007
-;@ map d BUT007
-;@ map d BUT007
-
 ;@ ins a a a a
 opcode Out4, 0, kkkkkkk
-ksource, kMute, kPad, k1, k2, k3, k4 xin
+ks, kMute, kPad, k1, k2, k3, k4 xin
+kM1[] fillarray 1,0,0
+kM2[] fillarray 0,1,0
+kM3[] fillarray 0,0,1
 kpad = kPad + 1
 a1 zar k1
 a2 zar k2
@@ -20,7 +19,13 @@ a2 *= .25
 a3 *= .25
 a4 *= .25
 
-outq a1*kMute*kpad,a2*kMute*kpad,a3*kMute*kpad,a4*kMute*kpad
+aO1 = a1*kMute*kpad
+aO2 = a2*kMute*kpad
+aO3 = a3*kMute*kpad
+aO4 = a4*kMute*kpad
+outq kM1[ks]*aO1,kM1[ks]*aO2,kM1[ks]*aO3,kM1[ks]*aO4
+gaFX1 += kM2[ks] * aO1
+gaFX2 += kM2[ks] * aO2
+gaFX3 += kM2[ks] * aO3
+gaFX4 += kM2[ks] * aO4
 endop
-
-;TODO Source selection. Check FX and BUS numeration in ZAK

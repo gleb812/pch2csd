@@ -7,7 +7,13 @@ kr = 22050 ;24000?
 nchnls = 2
 0dbfs = 1
 
-gkBPM init 120
+gkBPM init 120 ; GLOBAL TEMPO
+gaFX1 init 0 ; do we really need 3&4 fx bus?
+gaFX2 init 0
+gaFX3 init 0
+gaFX4 init 0
+;gaBU1 init 0 ; do we really need 3&4 bus?
+;gaBU2 init 0
 
 opcode K2Y, k, k  ; THIS IS TEMPORARY!
     kin xin
