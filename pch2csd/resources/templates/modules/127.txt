@@ -1,0 +1,9 @@
+;@ outs a a
+opcode FxIn, 0, kkkkk
+  kS, kOnOffSw, kPad, kzL, kzR xin
+  kPad += 1
+  aL = (gaFX1*(1-kS) + gaFX3*kS) * kPad * kOnOffSw
+  aR = (gaFX2*(1-kS) + gaFX4*kS) * kPad * kOnOffSw
+  zaw aL, kzL
+  zaw aR, kzR
+endop
