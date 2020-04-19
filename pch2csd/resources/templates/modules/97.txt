@@ -26,6 +26,7 @@ Run:
 if kTuneMode==3 goto Part
   kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
   goto Out
 Part:
@@ -33,7 +34,7 @@ if kcoarse > 32 goto Part1
   kFreq table kcoarse, giOSCprt
   kFine table kFine, giOSCcnt
   kFine /= 48.5670262
-  KFreq += kFreq * kFine
+  kFreq += kFreq * kFine
   goto Out
 Part1:
   kPart table kcoarse, giOSCprt

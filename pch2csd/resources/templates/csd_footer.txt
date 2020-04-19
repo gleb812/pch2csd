@@ -5,11 +5,11 @@ gkdata1 init 0
 gkdata2 init 0
 instr 3
   gkstat, gkchan, gkdata1, gkdata2 midiin
-  if kstat != 144 goto Next
+  if gkstat != 144 goto Next
     gkGate = 1
     gkNote = gkdata1
   Next:
-  if kstat!=128 goto Over
+  if gkstat!=128 goto Over
     gkGate = 0
   Over:
 endin
