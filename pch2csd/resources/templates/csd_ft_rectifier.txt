@@ -1,7 +1,3 @@
 ;---------------------------------
 ; Function tables for rectifier
-; WILL BE DELETED SOON
-;giHalfPos ftgen 10, 0, 32768, 7, 0, 16384, 0, 16384, 1
-;giHalfNeg ftgen 11, 0, 32768, 7, -1, 16384, 0
-;giFullPos ftgen 12, 0, 32768, 7, 1, 16384, 0, 16384, 1
-;giFullNeg ftgen 13, 0, 32768, 7, -1, 16384, 0, 16384, -1
+; DELETE IT EUGENE!
