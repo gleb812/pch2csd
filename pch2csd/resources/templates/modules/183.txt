@@ -1,7 +1,5 @@
-;@ map OSCsem OSCsem OSCsem OSCprt
+;@ map OSCsem OSCprt
 ;@ map OSCcnt
-;@ map CLA000
-;@ map CLA000
 
 ;@ ins k k k k k
 ;@ outs a
@@ -33,13 +31,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
+  kCoarse table kCoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
 Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kCoarse > 32 goto Part1
+  kFreq table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  kFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 
 aout oscilikts 1, kFreq + aPM*kIndx*cpsmidinn(kNote), kWave+1, async, 0

@@ -116,7 +116,6 @@ opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
 ; kMod - blue - -64..+64
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
-; TODO Part mode must be copied from OscA
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
 
 aMod zkr kModIn ;????

@@ -1,6 +1,5 @@
-;@ map OSCsem OSCsem OSCsem OSCprt
+;@ map OSCsem OSCprt
 ;@ map OSCcnt
-;@ map CLA000
 
 ;@ ins k k
 ;@ outs a

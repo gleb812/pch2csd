@@ -9,7 +9,7 @@ opcode OscC, 0, kkkkkkkkkkkkkk
 ; kMod - blue - -64..+64
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
-; TODO Part mode must be copied from OscA
+; 
 kCoarse,kFine,kKBT,kTuneMode,kFM,kON,kFMPTrk,kPitchM,kWave,kModIn,kSyncIn,kFMIn,kPitchIn,kOut xin
 
 kMod zkr kModIn ;????
@@ -41,13 +41,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
+  kCoarse table kCoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
 Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kCoarse > 32 goto Part1
+  kFreq table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  kFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 
 aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
@@ -94,14 +105,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 aPitch zar kPitchIn
 Run:
-
-kPitch = k(aPitch)
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
 if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
+  kCoarse table kCoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
 Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kCoarse > 32 goto Part1
+  kFreq table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFine /= 48.5670262
+  kFreq += kFreq * kFine
+  goto Out
+Part1:
+  kPart table kCoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kCoarse
 Out:
 
 aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0

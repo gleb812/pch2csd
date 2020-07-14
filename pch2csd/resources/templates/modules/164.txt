@@ -1,17 +1,5 @@
-;@ map s 5 OSCsem OSCsem OSCsem OSCprt
-;@ map d OSCcnt
-;@ map d BUT002
-;@ map d CLA000
-;@ map d BUT006
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
+;@ map OSCsem OSCprt
+;@ map OSCcnt
 
 ;@ ins k k a a a
 ;@ outs a
@@ -36,11 +24,23 @@ kCoarse,kFine,kKBT,kPchMod,kTuneMode,kSqLev,kPWMod,kSawLev,kSwPh,kSubLev,kON,kPW
   if kPitchIn == 0 goto Run
     kPitch zkr kPitchIn
   Run:
-    kM_ = kPitch+kPchMod*kMod+kNote+kFine*0.01
   if kTuneMode==3 goto Part
+    kCoarse table kCoarse, giOSCsem
+    kFine table kFine, giOSCcnt
+    kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
     kFreq = cpsmidinn(kM_+kCoarse)
     goto Out
   Part:
+  if kCoarse > 32 goto Part1
+    kFreq table kCoarse, giOSCprt
+    kFine table kFine, giOSCcnt
+    kFine /= 48.5670262
+    kFreq += kFreq * kFine
+    goto Out
+  Part1:
+    kPart table kCoarse, giOSCprt
+    kFine table kFine, giOSCcnt
+    kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
     kFreq = cpsmidinn(kM_)*kCoarse
   Out:
 
