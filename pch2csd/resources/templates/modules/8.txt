@@ -1,0 +1,187 @@
+;@ map OSCsem OSCprt OSCcnt
+
+;@ ins k k a a a
+;@ outs a
+opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
+setksmps 1
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+; TODO Part mode must be copied from OscA
+kCoarse,kFine,kKBT,kPitchM,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
+
+kMod zkr kModIn ;????
+aFM zar kFMIn
+async zar kSyncIn
+
+; FM Ind Calc
+kFM *= 100 ; NEEDS CHANGING CLA000 to CLA-REAL..
+kIndx = 0.000039*kFM*kFM*kFM - 0.00049*kFM*kFM + 0.016*kFM - 0.033 ; SHOULD BE BETTER APPR
+kIndx limit kIndx, 0, 80
+; Out FM Calc
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+; FMLin vs FMTrk
+if kFMPTrk != 1 goto FMLin
+  kFMNote = kNote
+  goto FMTrk
+FMLin:
+  kFMNote = 64
+FMTrk:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+;sound
+kF = kFreq + aFM*kIndx*cpsmidinn(kFMNote)
+ksync = k(async)
+kVal limit kShapeM * kShapeIn + kShape, 0, 127
+if kWave == 0 then
+    kVal = 460 * kVal / 127 + 500
+    ksig loopseg kF, ksync, 0,  0,(1000-kVal), 0.25,kVal, 0.5,kVal, 0.75,(1000-kVal), 1, 0
+    asig = a(ksig)
+    aout tablei asig, 1, 1
+elseif kWave  == 1 then
+    kVal = 470 * kVal / 127 + 30
+    ksig loopseg kF, ksync, 0,  0,kVal, 0.5,1000-kVal, 1, 0
+    asig = a(ksig)
+    aout tablei asig, 1, 1
+elseif kWave  == 2 then
+    kVal = 12 * kVal / 127
+    ksig looptseg kF, ksync, 0,  0,kVal,500, 0.5,-kVal,500,1, 0,0
+    aout = a(ksig)
+elseif kWave  == 3 then
+    kVal = 9.7 * kVal / 127 + 0.3
+    aw oscilikts 1, kF, giSin, async, 0
+    aout distort1 aw * kVal, 3, 1, -1.2, 1.2, 1
+elseif kWave  == 4 then
+    kVal = 500 * kVal / 127
+    ksig loopseg kF,0,0,  0,1000-kVal, 1,kVal, 0,kVal,  -1,1000-kVal, 0,0
+    aout = a(ksig)
+elseif kWave  == 5 then
+    kVal = 0.5 * kVal / 127
+    asaw1 oscilikts 1, kF, giSaw, async, 0
+    asaw2 oscilikts 1, kF, giSaw, async, kVal
+    aout = asaw1 + asaw2
+elseif kWave  == 6 then
+    kVal = 999 * kVal / 127
+    ksig loopseg kF,0,0,  1,1000-kVal, 1,0, -1,kVal,  -1,0
+    aout = a(ksig)
+elseif kWave  == 7 then
+    kVal = 500 * kVal / 127
+    ksig loopseg kF,0,0,  0,0, 1,1000-kVal, 1,0, -1,1000-kVal, -1,0, 0,kVal*2
+    aout = a(ksig)
+endif
+
+zaw aout*kON, kOut
+endop
+
+;@ ins a a a a a
+;@ outs a
+opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
+setksmps 1
+; kModLev - 0...1
+; kMod - blue - -64..+64
+; FREQ SEMI FAC - ALL THE SAME!
+; PART MODE = 3
+; TODO Part mode must be copied from OscA
+kCoarse,kFine,kKBT,kPitchM,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
+
+aMod zar kModIn ;????
+kMod = k(aMod)
+aFM zar kFMIn
+kFM = k(aFM)
+async zar kSyncIn
+
+; FM Ind Calc
+kFM *= 100 ; NEEDS CHANGING CLA000 to CLA-REAL..
+kIndx = 0.000039*kFM*kFM*kFM - 0.00049*kFM*kFM + 0.016*kFM - 0.033 ; SHOULD BE BETTER APPR
+kIndx limit kIndx, 0, 80
+; Out FM Calc
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+; FMLin vs FMTrk
+if kFMPTrk != 1 goto FMLin
+  kFMNote = kNote
+  goto FMTrk
+FMLin:
+  kFMNote = 64
+FMTrk:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+
+kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+if kTuneMode==3 goto Part
+kFreq = cpsmidinn(kM_+kCoarse)
+goto Out
+Part:
+kFreq = cpsmidinn(kM_)*kCoarse
+Out:
+;sound
+kF = kFreq + aFM*kIndx*cpsmidinn(kFMNote)
+ksync = k(async)
+kVal limit kShapeM * kShapeIn + kShape, 0, 127
+if kWave == 0 then
+    kVal = 460 * kVal / 127 + 500
+    ksig loopseg kF, ksync, 0,  0,(1000-kVal), 0.25,kVal, 0.5,kVal, 0.75,(1000-kVal), 1, 0
+    asig = a(ksig)
+    aout tablei asig, 1, 1
+elseif kWave  == 1 then
+    kVal = 470 * kVal / 127 + 30
+    ksig loopseg kF, ksync, 0,  0,kVal, 0.5,1000-kVal, 1, 0
+    asig = a(ksig)
+    aout tablei asig, 1, 1
+elseif kWave  == 2 then
+    kVal = 12 * kVal / 127
+    ksig looptseg kF, ksync, 0,  0,kVal,500, 0.5,-kVal,500,1, 0,0
+    aout = a(ksig)
+elseif kWave  == 3 then
+    kVal = 9.7 * kVal / 127 + 0.3
+    aw oscilikts 1, kF, giSin, async, 0
+    aout distort1 aw * kVal, 3, 1, -1.2, 1.2, 1
+elseif kWave  == 4 then
+    kVal = 500 * kVal / 127
+    ksig loopseg kF,0,0,  0,1000-kVal, 1,kVal, 0,kVal,  -1,1000-kVal, 0,0
+    aout = a(ksig)
+elseif kWave  == 5 then
+    kVal = 0.5 * kVal / 127
+    asaw1 oscilikts 1, kF, giSaw, async, 0
+    asaw2 oscilikts 1, kF, giSaw, async, kVal
+    aout = asaw1 + asaw2
+elseif kWave  == 6 then
+    kVal = 999 * kVal / 127
+    ksig loopseg kF,0,0,  1,1000-kVal, 1,0, -1,kVal,  -1,0
+    aout = a(ksig)
+elseif kWave  == 7 then
+    kVal = 500 * kVal / 127
+    ksig loopseg kF,0,0,  0,0, 1,1000-kVal, 1,0, -1,1000-kVal, -1,0, 0,kVal*2
+    aout = a(ksig)
+endif
+
+zaw aout*kON, kOut
+endop
