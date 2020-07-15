@@ -6,7 +6,6 @@
 opcode OscA, 0, kkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; TODO check part mode
 kcoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
 
 kMod zkr kModIn
@@ -32,14 +31,57 @@ Part:
 if kcoarse > 32 goto Part1
   kFreq table kcoarse, giOSCprt
   kFine table kFine, giOSCcnt
-  kFine /= 48.5670262
-  kFreq += kFreq * kFine
+  kFreq *= cent(kFine)
   goto Out
 Part1:
   kPart table kcoarse, giOSCprt
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kCoarse
+  kFreq = cpsmidinn(kM_)*kPart
+Out:
+aout oscilikt 1, kFreq, kWave+1
+zaw aout*kON, kOut
+endop
+
+;@ ins a a
+;@ outs a
+opcode OscA, 0, kkkkkkkkkk
+; kModLev - 0...1
+; kMod - blue - -64..+64
+kcoarse,kFine,kKBT,kModLev,kWave,kON,kTuneMode,kPitchIn,kModIn,kOut xin
+
+aMod zar kModIn
+kMod = k(aMod)
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+aPitch zar kPitchIn
+kPitch = k(aPitch)
+Run:
+if kTuneMode==3 goto Part
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+  goto Out
+Part:
+if kcoarse > 32 goto Part1
+  kFreq table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kFreq *= cent(kFine)
+  goto Out
+Part1:
+  kPart table kcoarse, giOSCprt
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_)*kPart
 Out:
 aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut
