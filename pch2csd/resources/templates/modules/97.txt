@@ -21,23 +21,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-if kTuneMode==3 goto Part
+if kTuneMode!=3 then
   kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kcoarse > 32 goto Part1
-  kFreq table kcoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFreq *= cent(kFine)
-  goto Out
-Part1:
-  kPart table kcoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kPart
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+      ;kFreq = 1000
+    endif
+endif
 Out:
 aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut
@@ -65,23 +66,24 @@ if kPitchIn == 0 goto Run
 aPitch zar kPitchIn
 kPitch = k(aPitch)
 Run:
-if kTuneMode==3 goto Part
+if kTuneMode!=3 then
   kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kcoarse > 32 goto Part1
-  kFreq table kcoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFreq *= cent(kFine)
-  goto Out
-Part1:
-  kPart table kcoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kPart
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+      ;kFreq = 1000
+    endif
+endif
 Out:
 aout oscilikt 1, kFreq, kWave+1
 zaw aout*kON, kOut

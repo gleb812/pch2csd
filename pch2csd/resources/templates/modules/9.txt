@@ -9,7 +9,7 @@ opcode OscC, 0, kkkkkkkkkkkkkk
 ; kMod - blue - -64..+64
 ; FREQ SEMI FAC - ALL THE SAME!
 ; PART MODE = 3
-; 
+;
 kCoarse,kFine,kKBT,kTuneMode,kFM,kON,kFMPTrk,kPitchM,kWave,kModIn,kSyncIn,kFMIn,kPitchIn,kOut xin
 
 kMod zkr kModIn ;????
@@ -41,24 +41,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-if kTuneMode==3 goto Part
-  kCoarse table kCoarse, giOSCsem
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kCoarse > 32 goto Part1
-  kFreq table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFine /= 48.5670262
-  kFreq += kFreq * kFine
-  goto Out
-Part1:
-  kPart table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kCoarse
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+      ;kFreq = 1000
+    endif
+endif
 Out:
 
 aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0
@@ -105,24 +105,24 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 aPitch zar kPitchIn
 Run:
-if kTuneMode==3 goto Part
-  kCoarse table kCoarse, giOSCsem
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kCoarse > 32 goto Part1
-  kFreq table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFine /= 48.5670262
-  kFreq += kFreq * kFine
-  goto Out
-Part1:
-  kPart table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kCoarse
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+      ;kFreq = 1000
+    endif
+endif
 Out:
 
 aout oscilikts 1, kFreq + aFM*kIndx*cpsmidinn(kFMNote), kWave+1, async, 0

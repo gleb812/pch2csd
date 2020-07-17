@@ -6,9 +6,6 @@ opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
 ;setksmps 1
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
-; TODO Part mode must be copied from OscA
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
 
 kMod zkr kModIn ;????
@@ -40,26 +37,23 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-
-if kTuneMode==3 goto Part
-  kCoarse table kCoarse, giOSCsem
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kCoarse > 32 goto Part1
-  kFreq table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFine /= 48.5670262
-  kFreq += kFreq * kFine
-  goto Out
-Part1:
-  kPart table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kCoarse
-
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 kF = kFreq + aFM*kIndx*cpsmidinn(kFMNote)
 ksync = k(async)
@@ -114,8 +108,6 @@ opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
 ;setksmps 1
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
 
 aMod zkr kModIn ;????
@@ -149,26 +141,23 @@ if kPitchIn == 0 goto Run
 aPitch zkr kPitchIn
 kPitch = k(aPitch)
 Run:
-
-if kTuneMode==3 goto Part
-  kCoarse table kCoarse, giOSCsem
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
-  goto Out
-Part:
-if kCoarse > 32 goto Part1
-  kFreq table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kFine /= 48.5670262
-  kFreq += kFreq * kFine
-  goto Out
-Part1:
-  kPart table kCoarse, giOSCprt
-  kFine table kFine, giOSCcnt
-  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-  kFreq = cpsmidinn(kM_)*kCoarse
-
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 kF = kFreq + aFM*kIndx*cpsmidinn(kFMNote)
 ksync = k(async)

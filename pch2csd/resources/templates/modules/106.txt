@@ -1,11 +1,5 @@
-;@ map s 7 OSCsem OSCsem OSCsem OSCprt
-;@ map d OSCcnt
-;@ map d BUT002
-;@ map d CLA000
-;@ map d BUT006
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
+;@ map OSCsem OSCprt
+;@ map OSCcnt
 
 ;@ ins k k k
 ;@ outs a
@@ -31,12 +25,23 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
-Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 
 a1 rand 1
@@ -58,11 +63,8 @@ endop
 ;@ ins a a a
 ;@ outs a
 opcode OscNoise, 0, kkkkkkkkkkkk
-; TODO No Width Modulation
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
 kCoarse,kFine,kKBT,kModLev,kTuneMode,kWid,kWMod,kON,kPitchIn,kModIn,kWidIn,kOut xin
 
 aMod zar kModIn
@@ -79,12 +81,23 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 aPitch zar kPitchIn
 Run:
-kM_ = k(aPitch)+kModLev*k(aMod)+kNote+kFine*0.01
-if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
-Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 
 a1 rand 1

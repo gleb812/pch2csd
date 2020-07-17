@@ -1,22 +1,13 @@
-;@ map s 3 OSCsem OSCsem OSCsem OSCprt
-;@ map d OSCcnt
-;@ map d BUT006
-;@ map d BUT002
-;@ map d CLA000
-;@ map d CLA000
-;@ map d CLA000
-;@ map d BUT002
-;@ map d BUT002
+;@ map OSCsem OSCprt
+;@ map OSCcnt
 
-; TODO Seems to work. Check Decay time
+; TODO Check Decay time
 
 ;@ ins k k a
 ;@ args a
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
 ; OSCPERC = OSCA + ENVD
 kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
 
@@ -45,12 +36,23 @@ kPitch init 64
 if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
-Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 
 	kTime limit kTime,0,kD*kr
@@ -91,8 +93,6 @@ endop
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-; FREQ SEMI FAC - ALL THE SAME!
-; PART MODE = 3
 ; OSCPERC = OSCA + ENVD
 kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
 
@@ -123,12 +123,23 @@ if kPitchIn == 0 goto Run
 aPitch zar kPitchIn
 kPitch = k(aPitch) ; maybe...
 Run:
-kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
-if kTuneMode==3 goto Part
-kFreq = cpsmidinn(kM_+kCoarse)
-goto Out
-Part:
-kFreq = cpsmidinn(kM_)*kCoarse
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
 Out:
 
 	kTime limit kTime,0,kD*kr
