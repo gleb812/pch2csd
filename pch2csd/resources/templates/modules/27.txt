@@ -1,0 +1,43 @@
+;@ map OSCsem OSCprt OSCcnt
+
+;@ ins k k
+;@ outs k
+opcode OscMaster, 0, kkkkkkkkkkkkkkkkk
+; TODO check freq to midi conversion
+; kModLev - 0...1
+; kMod - blue - -64..+64
+kCoarse,kFine,kKBT,kTuneMode,kModLev, kPitchIn,kModIn,kOut xin
+kMod zkr kModIn
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+
+if kTuneMode!=3 then
+  kCoarse table kCoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kCoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kCoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
+
+    kpch = floor((pchoct(octcps(kFreq)) * 100)) * 0.01
+    kout = (int(kpch) - 3) * 12 +  frac(kpch) * 100
+  zkw kout,kOut
+endop
