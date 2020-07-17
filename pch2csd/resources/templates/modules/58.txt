@@ -1,0 +1,76 @@
+;@ map OSCmaD OSCslD OSCfrD OSCatD
+
+; TODO Sweeps 
+
+;@ ins k k k
+;@ outs a
+opcode DrumSynth, 0, kkkkkkkkkkkkkkkkkkkk
+kMFreq,kSRat,kMDec,kSDec,kMLev,kSLev,kNFreq,kNRes,kNSwp,kNDec,kNMode,kBAmt,kBDec,kClk,kNLev,kON, kTrig,kVel,kPitchIn,kOut xin
+
+	kstate init 0
+	kEnv init 0
+	kTime init 0
+	async init 0
+
+	kGate zkr kTrig
+	kMFreq table kMFreq, giOSCmaD
+	kSRat  table kSRat, giOSCslD
+	kNFreq table kNFreq, giOSCfrD
+	kMDec  table kMDec, giOSCatD
+	kSDec  table kSDec, giOSCatD
+	kNDec  table kNDec, giOSCatD
+	kBDec  table kBDec, giOSCatD
+	kNRes /= 127
+
+	kPitch init 0
+	if kPitchIn == 0 goto Run
+	  kPitch zkr kPitchIn
+	Run:
+	kMFreq *= 2^(kPitch / 12)
+
+	kTime limit kTime,0,kD*kr
+	if kTime != kD*kr goto skip
+		kTime = 0
+		kstate = 0
+		kEnv = 0
+		kEnvP = kPunch+1
+skip:
+	kGateT trigger kGate, 0.000001, 0
+	if kGateT == 1 then
+		if kstate == 1 then  ; NEW EVENT WHILE ACTIVE
+			kTime = 0
+			kEnv = 1
+		else
+			kstate = 1  ; NEW EVENT JUST TRIGGERED
+			kEnv = 1
+			kTime = 0
+		endif
+	else
+		if kstate == 1 then
+			kTime += 1
+			kDcyM = exp(-4.2*kTime/(kMDec*kr))
+			kDcyS = exp(-4.2*kTime/(kSDec*kr))
+			kDcyN = exp(-4.2*kTime/(kNDec*kr))
+			kDcyB = exp(-4.2*kTime/(kBDec*kr))
+		endif
+	endif
+; we use oscilikts 'cos we need phase sync
+; OSC PART
+aM oscilikts 0.5 * kDcyM,	kMFreq, giSin, a(kGateT), 0
+aS oscilikts 0.5 * kDcyS,  kMFreq * kSRat, giSin, a(kGateT), 0
+
+; NOISE PART
+aN rand 0.5, 3
+ahp,alp,abp,abr statevar aN, kNFreq, kNRes
+if kNMode == 0 then
+  aN = alp
+elseif kNMode == 1 then
+  aN = abp
+else
+  aN = ahp
+endif
+
+aMix = aM * kMLev + aS * kSLev + aN * kNLev * kDcyN
+
+	zaw aMix * kON, kOut
+endop
