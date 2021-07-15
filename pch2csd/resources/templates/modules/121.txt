@@ -1,140 +1,215 @@
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-;@ map d MID000
-
 ;@ ins k k k k k k k k
 ;@ outs k k k
 opcode seqNote,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
-;16 steps
-;16 events
-;cycles
-;length
-;pulse
-;clear
-;rand
-
+;16 steps,16 events,cycles,length,pulse,clear,rand
 ;inputs:
-; clk
-; rst
-; loop
-; park
-; note
-; trig
-; recval
-; recenable
-;
+; clk,rst,loop,park,note,trig,recval,recenable
 ;outputs:
-; link
-; note
-; trig
+; link,note,trig
 
-kNote[] fillarray 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64, 70
-kGate[] fillarray 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kN10,kN11,kN12,kN13,kN14,kN15,kN16,
-kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kG10,kG11,kG12,kG13,kG14,kG15,kG16,
+kN0,kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kNA,kNB,kNC,kND,kNE,kNF,
+kG0,kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kGA,kGB,kGC,kGD,kGE,kGF,
 kCyc,kLen,kPulse,kClr,krnd,
 kclki,krsti,kloopi,kparki,knotei,ktrigi,krecvali,kreci, klinko,knoteo,ktrigo xin
-; TODO Randomize and clear - 
-; TODO No Rec now
-; TODO Link & Park
-kNote[0] = kN1
-kNote[1] = kN2
-kNote[2] = kN3
-kNote[3] = kN4
-kNote[4] = kN5
-kNote[5] = kN6
-kNote[6] = kN7
-kNote[7] = kN8
-kNote[8] = kN9
-kNote[9] = kN10
-kNote[10] = kN11
-kNote[11] = kN12
-kNote[12] = kN13
-kNote[13] = kN14
-kNote[14] = kN15
-kNote[15] = kN16
 
-kGate[0] = kG1
-kGate[1] = kG2
-kGate[2] = kG3
-kGate[3] = kG4
-kGate[4] = kG5
-kGate[5] = kG6
-kGate[6] = kG7
-kGate[7] = kG8
-kGate[8] = kG9
-kGate[9] = kG10
-kGate[10] = kG11
-kGate[11] = kG12
-kGate[12] = kG13
-kGate[13] = kG14
-kGate[14] = kG15
-kGate[15] = kG16
-
-kClk zkr kclki
-kRst zkr krsti
-
+; INIT
+kPark init 1
 kndx init 0
-kndx_prev init -1
+kNote[] fillarray i(kN0),i(kN1),i(kN2),i(kN3),i(kN4),i(kN5),i(kN6),i(kN7),i(kN8),i(kN9),i(kNA),i(kNB),i(kNC),i(kND),i(kNE),i(kNF)
+kGate[] fillarray i(kG0),i(kG1),i(kG2),i(kG3),i(kG4),i(kG5),i(kG6),i(kG7),i(kG8),i(kG9),i(kGA),i(kGB),i(kGC),i(kGD),i(kGE),i(kGF)
+kLink init 0
+kTrigo init 0
+klnkpls init 0
+krval init 0
+kReset init 0
 
-kRst trigger krsti, 0.001, 0
-if kRst != 1 goto Norm
-	kndx = 0
-	kndx_prev = -1
-Norm:
+kOct init 2  ; rnd octave range
+kLow init 2 ; lowest note for rnd range multiplier
+
+kLen limit kLen,0,15
+kpark_ zkr kparki
+kpark trigger kpark_, 0.001, 0
+if kpark == 1 then
+    kPark = 0
+endif
+
+kClk_ zkr kclki
+kRst_ zkr krsti
+kLp_  zkr kloopi
+krval zkr krecvali
+krec zkr kreci
+kNotei zkr knotei
+kTrigi zkr ktrigi
+kClk trigger kClk_, 0.001, 0
+kRst trigger kRst_, 0.001, 0
+kLp  trigger kLp_, 0.001, 0
+
+if (kRst==1)||(kLp==1) then
+  kReset = 1
+endif
+
+if (changed(kN0)==1) then
+  kNote[0] = kN0
+endif
+if (changed(kN1)==1) then
+  kNote[1] = kN1
+endif
+if (changed(kN2)==1) then
+  kNote[2] = kN2
+endif
+if (changed(kN3)==1) then
+  kNote[3] = kN3
+endif
+if (changed(kN4)==1) then
+  kNote[4] = kN4
+endif
+if (changed(kN5)==1) then
+  kNote[5] = kN5
+endif
+if (changed(kN6)==1) then
+  kNote[6] = kN6
+endif
+if (changed(kN7)==1) then
+  kNote[7] = kN7
+endif
+if (changed(kN8)==1) then
+  kNote[8] = kN8
+endif
+if (changed(kN9)==1) then
+  kNote[9] = kN9
+endif
+if (changed(kNA)==1) then
+  kNote[10] = kNA
+endif
+if (changed(kNB)==1) then
+  kNote[11] = kNB
+endif
+if (changed(kNC)==1) then
+  kNote[12] = kNC
+endif
+if (changed(kND)==1) then
+  kNote[13] = kND
+endif
+if (changed(kNE)==1) then
+  kNote[14] = kNE
+endif
+if (changed(kNF)==1) then
+  kNote[15] = kNF
+endif
+
+if (changed(kG0)==1) then
+  kGate[0] = kG0
+endif
+if (changed(kG1)==1) then
+  kGate[1] = kG1
+endif
+if (changed(kG2)==1) then
+  kGate[2] = kG2
+endif
+if (changed(kG3)==1) then
+  kGate[3] = kG3
+endif
+if (changed(kG4)==1) then
+  kGate[4] = kG4
+endif
+if (changed(kG5)==1) then
+  kGate[5] = kG5
+endif
+if (changed(kG6)==1) then
+  kGate[6] = kG6
+endif
+if (changed(kG7)==1) then
+  kGate[7] = kG7
+endif
+if (changed(kG8)==1) then
+  kGate[8] = kG8
+endif
+if (changed(kG9)==1) then
+  kGate[9] = kG9
+endif
+if (changed(kGA)==1) then
+  kGate[10] = kGA
+endif
+if (changed(kGB)==1) then
+  kGate[11] = kGB
+endif
+if (changed(kGC)==1) then
+  kGate[12] = kGC
+endif
+if (changed(kGD)==1) then
+  kGate[13] = kGD
+endif
+if (changed(kGE)==1) then
+  kGate[14] = kGE
+endif
+if (changed(kGF)==1) then
+  kGate[15] = kGF
+endif
+
+; CLEAR
+kClr_ trigger kClr,0.5,0
+if kClr_ != 1 goto Next
+  kndxx = 0
+  until kndxx == 16 do
+    kNote[kndxx] = 0
+    kndxx += 1
+  od
+Next:
+
+; RANDOM
+krnd_ trigger krnd,0.5,0
+if krnd_ != 1 goto Next1
+  kndxx = 0
+  until kndxx == 16 do
+    kVal rand 6*kOct, 0.5
+    kVal = limit(int(6*kOct + 1 + kVal + kLow*12),0,127)
+    kNote[kndxx] = kVal
+    kndxx += 1
+  od
+Next1:
+
 if kClk != 1 goto skip
-	if (kCyc == 0)&&(kndx > kLen) then
-		kndx = 16
-	else
-		kndx += 1
-		kndx = kndx%(kLen+1)
-	endif
+if (kCyc == 0)&&(kndx = kLen) then
+  kLink = 1
+  kPark = 0
+  kgoto skip
+elseif (kReset==1) then
+  kPark = 1
+  kLink = 0
+  kndx = 0
+  kReset = 0
+  kgoto skip
+else
+  if (krec==1) then
+      kNote[kndx] = krval
+  endif
+  kndx += 1
+  if kndx > kLen then
+    kLink = 1
+  endif
+  kndx = kndx%(kLen+1)
+endif
 skip:
-kNoteo = kNote[kndx]
+
+if krec == 0 then
+  kNoteo = kNote[kndx]
+else
+  kNoteo = krval
+endif
 kTrigo = kGate[kndx]
 
 if kPulse == 1 goto Gate
 if (kClk != 0) && (kTrigo == 1) then
-	kTrigo = 1
-else 
-	kTrigo = 0
+    kTrigo = 1
+else
+    kTrigo = 0
 endif
 Gate:
-zkw kNoteo, knoteo
-zkw kTrigo, ktrigo
-
+kNoteo table kNoteo,giLVLlev ; 0...127 -> -64...+64
+zkw limit((kPark*kNoteo/64 + kNotei),-4,4), knoteo
+zkw limit((kPark*kTrigo + kTrigi),0,4), ktrigo
+zkw kLink, klinko
+if (kCyc==1) then
+  kLink = 0
+endif
 endop
