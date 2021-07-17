@@ -1,82 +1,187 @@
 ;@ ins k k k k k k
 ;@ ins k k k
-opcode SeqEvent, 0, kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ;...
-  kTr1[] init 16
-  kTr2[] init 16
-  kCnt init 0
-  
-;fix names
-  kIn0,kIn1,kIn2,kIn3,
-  kIn4,kIn5,kIn6,kIn7,
-  kIn8,kIn9,kInA,kInB,
-  kInC,kInD,kInE,kInF,
-  kTr0,kTr1,kTr2,kTr3,
-  kTr4,kTr5,kTr6,kTr7,
-  kTr8,kTr9,kTrA,kTrB,
-  kTrC,kTrD,kTrE,kTrF,
-  kLen,kClr,kRnd,kPol
-  xin
+opcode seqEvent,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+;16 steps,16 events,cycles,length,pulse,clear,rand
+;inputs:
+; clk,rst,loop,park,trig1,trig2
+;outputs:
+; link,trig1,trig2
 
-  k1Tr[0] = k1Tr0
-  k1Tr[1] = k1Tr1
-  k1Tr[2] = k1Tr2
-  k1Tr[3] = k1Tr3
-  k1Tr[4] = k1Tr4
-  k1Tr[5] = k1Tr5
-  k1Tr[6] = k1Tr6
-  k1Tr[7] = k1Tr7
-  k1Tr[8] = k1Tr8
-  k1Tr[9] = k1Tr9
-  k1Tr[A] = k1TrA
-  k1Tr[B] = k1TrB
-  k1Tr[C] = k1TrC
-  k1Tr[D] = k1TrD
-  k1Tr[E] = k1TrE
-  k1Tr[F] = k1TrF
+kN0,kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kNA,kNB,kNC,kND,kNE,kNF,
+kG0,kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kGA,kGB,kGC,kGD,kGE,kGF,
+kCyc,kLen,kPulseUp,kPulseLo,
+kclki,krsti,kloopi,kparki,ktrig1i,ktrig2i, klinko,ktrig1o,ktrig2o xin
 
-  k2Tr[0] = k2Tr0
-  k2Tr[1] = k2Tr1
-  k2Tr[2] = k2Tr2
-  k2Tr[3] = k2Tr3
-  k2Tr[4] = k2Tr4
-  k2Tr[5] = k2Tr5
-  k2Tr[6] = k2Tr6
-  k2Tr[7] = k2Tr7
-  k2Tr[8] = k2Tr8
-  k2Tr[9] = k2Tr9
-  k2Tr[A] = k2TrA
-  k2Tr[B] = k2TrB
-  k2Tr[C] = k2TrC
-  k2Tr[D] = k2TrD
-  k2Tr[E] = k2TrE
-  k2Tr[F] = k2TrF
+; INIT
+kPark init 1
+kndx init 0
+kNote[] fillarray i(kN0),i(kN1),i(kN2),i(kN3),i(kN4),i(kN5),i(kN6),i(kN7),i(kN8),i(kN9),i(kNA),i(kNB),i(kNC),i(kND),i(kNE),i(kNF)
+kGate[] fillarray i(kG0),i(kG1),i(kG2),i(kG3),i(kG4),i(kG5),i(kG6),i(kG7),i(kG8),i(kG9),i(kGA),i(kGB),i(kGC),i(kGD),i(kGE),i(kGF)
+kLink init 0
+kTrigo init 0
+klnkpls init 0
+kReset init 0
 
-  kt1 trigger kClk, 0, 0
-  kt2 trigger kRst, 0, 0
-  kPark init 1
-  
-  if (kt2 != 0) then
-  	k1Tr = k1Tr*0
-  	k2Tr = k2Tr*0
-  	kPark = 1 ; RESET PARKING IF ANY
+kLen limit kLen,0,15
+kpark_ zkr kparki
+kpark trigger kpark_, 0.001, 0
+if kpark == 1 then
+    kPark = 0
+endif
+
+kClk_ zkr kclki
+kRst_ zkr krsti
+kLp_  zkr kloopi
+kTrig1i zkr ktrig1i
+kTrig2i zkr ktrig2i
+kClk trigger kClk_, 0.001, 0
+kRst trigger kRst_, 0.001, 0
+kLp  trigger kLp_, 0.001, 0
+
+if (kRst==1)||(kLp==1) then
+  kReset = 1
+endif
+
+if (changed(kN0)==1) then
+  kNote[0] = kN0
+endif
+if (changed(kN1)==1) then
+  kNote[1] = kN1
+endif
+if (changed(kN2)==1) then
+  kNote[2] = kN2
+endif
+if (changed(kN3)==1) then
+  kNote[3] = kN3
+endif
+if (changed(kN4)==1) then
+  kNote[4] = kN4
+endif
+if (changed(kN5)==1) then
+  kNote[5] = kN5
+endif
+if (changed(kN6)==1) then
+  kNote[6] = kN6
+endif
+if (changed(kN7)==1) then
+  kNote[7] = kN7
+endif
+if (changed(kN8)==1) then
+  kNote[8] = kN8
+endif
+if (changed(kN9)==1) then
+  kNote[9] = kN9
+endif
+if (changed(kNA)==1) then
+  kNote[10] = kNA
+endif
+if (changed(kNB)==1) then
+  kNote[11] = kNB
+endif
+if (changed(kNC)==1) then
+  kNote[12] = kNC
+endif
+if (changed(kND)==1) then
+  kNote[13] = kND
+endif
+if (changed(kNE)==1) then
+  kNote[14] = kNE
+endif
+if (changed(kNF)==1) then
+  kNote[15] = kNF
+endif
+
+if (changed(kG0)==1) then
+  kGate[0] = kG0
+endif
+if (changed(kG1)==1) then
+  kGate[1] = kG1
+endif
+if (changed(kG2)==1) then
+  kGate[2] = kG2
+endif
+if (changed(kG3)==1) then
+  kGate[3] = kG3
+endif
+if (changed(kG4)==1) then
+  kGate[4] = kG4
+endif
+if (changed(kG5)==1) then
+  kGate[5] = kG5
+endif
+if (changed(kG6)==1) then
+  kGate[6] = kG6
+endif
+if (changed(kG7)==1) then
+  kGate[7] = kG7
+endif
+if (changed(kG8)==1) then
+  kGate[8] = kG8
+endif
+if (changed(kG9)==1) then
+  kGate[9] = kG9
+endif
+if (changed(kGA)==1) then
+  kGate[10] = kGA
+endif
+if (changed(kGB)==1) then
+  kGate[11] = kGB
+endif
+if (changed(kGC)==1) then
+  kGate[12] = kGC
+endif
+if (changed(kGD)==1) then
+  kGate[13] = kGD
+endif
+if (changed(kGE)==1) then
+  kGate[14] = kGE
+endif
+if (changed(kGF)==1) then
+  kGate[15] = kGF
+endif
+
+if kClk != 1 goto skip
+if (kCyc == 0)&&(kndx = kLen) then
+  kLink = 1
+  kPark = 0
+  kgoto skip
+elseif (kReset==1) then
+  kPark = 1
+  kLink = 0
+  kndx = 0
+  kReset = 0
+  kgoto skip
+else
+  kndx += 1
+  if kndx > kLen then
+    kLink = 1
   endif
+  kndx = kndx%(kLen+1)
+endif
+skip:
 
-  ;NO TRIGGER IMPLEMENTED
-  kCnt += (kt1>0?1:0)
-  if (kCnt != kLen) then kgoto Continue
-  	kLink = 1
-  	if (kLoop == 1) then 
-  		kCnt = kCnt%kLen
-  	elseif
-  		kCnt -= 1
-  	endif
+kTrig1o = kNote[kndx]
+kTrig2o = kGate[kndx]
 
-Continue:
+if kPulseUp == 1 goto Gate1
+if (kClk != 0) && (kTrig1o == 1) then
+    kTrig1o = 1
+else
+    kTrig1o = 0
+endif
+Gate1:
+if kPulseLo == 1 goto Gate2
+if (kClk != 0) && (kTrig2o == 1) then
+    kTrig2o = 1
+else
+    kTrig2o = 0
+endif
+Gate2:
 
-  zkw k1Tr[kCnt]*kPark,1 ;CHANGE
-  zkw k2Tr[kCnt]*kPark,2 ;CHANGE
-
-
-  
-
+zkw limit((kPark*kTrig1o + kTrig1i),0,4), ktrig1o
+zkw limit((kPark*kTrig2o + kTrig2i),0,4), ktrig2o
+zkw kLink, klinko
+if (kCyc==1) then
+  kLink = 0
+endif
 endop
