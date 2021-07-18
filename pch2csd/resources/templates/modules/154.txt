@@ -1,0 +1,235 @@
+;@ ins k k k
+;@ outs k k
+opcode seqCtr,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+;16 steps,16 events, pulse,pol,xfade,rnd,clear
+;inputs:
+; ctrl,val,trig
+;outputs:
+; val,trig
+
+kN0,kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kNA,kNB,kNC,kND,kNE,kNF,
+kG0,kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kGA,kGB,kGC,kGD,kGE,kGF,
+kPulse,kPol,kXF,kRnd,kClr
+kctri,kvali,ktrigi, kvalo,ktrigo xin
+
+; INIT
+kVal[] fillarray i(kN0),i(kN1),i(kN2),i(kN3),i(kN4),i(kN5),i(kN6),i(kN7),i(kN8),i(kN9),i(kNA),i(kNB),i(kNC),i(kND),i(kNE),i(kNF)
+kGate[] fillarray i(kG0),i(kG1),i(kG2),i(kG3),i(kG4),i(kG5),i(kG6),i(kG7),i(kG8),i(kG9),i(kGA),i(kGB),i(kGC),i(kGD),i(kGE),i(kGF)
+ifn1 ftgen 0, 0, 64, -2, 0
+ifn2 ftgen 0, 0, 64, -2, 0
+kPark init 1  ; there's no park out, but is used for GUI
+kValo init 0
+kTrigo init 0
+
+kCtr zkr kctri
+kVali zkr kvali
+kTrigi zkr ktrigi
+
+if (changed(kN0)==1) then
+  kVal[0] = kN0
+  goto Changed1
+endif
+if (changed(kN1)==1) then
+  kVal[1] = kN1
+  goto Changed1
+endif
+if (changed(kN2)==1) then
+  kVal[2] = kN2
+  goto Changed1
+endif
+if (changed(kN3)==1) then
+  kVal[3] = kN3
+  goto Changed1
+endif
+if (changed(kN4)==1) then
+  kVal[4] = kN4
+  goto Changed1
+endif
+if (changed(kN5)==1) then
+  kVal[5] = kN5
+  goto Changed1
+endif
+if (changed(kN6)==1) then
+  kVal[6] = kN6
+  goto Changed1
+endif
+if (changed(kN7)==1) then
+  kVal[7] = kN7
+  goto Changed1
+endif
+if (changed(kN8)==1) then
+  kVal[8] = kN8
+  goto Changed1
+endif
+if (changed(kN9)==1) then
+  kVal[9] = kN9
+  goto Changed1
+endif
+if (changed(kNA)==1) then
+  kVal[10] = kNA
+  goto Changed1
+endif
+if (changed(kNB)==1) then
+  kVal[11] = kNB
+  goto Changed1
+endif
+if (changed(kNC)==1) then
+  kVal[12] = kNC
+  goto Changed1
+endif
+if (changed(kND)==1) then
+  kVal[13] = kND
+  goto Changed1
+endif
+if (changed(kNE)==1) then
+  kVal[14] = kNE
+  goto Changed1
+endif
+if (changed(kNF)==1) then
+  kVal[15] = kNF
+  goto Changed1
+endif
+
+if (changed(kG0)==1) then
+  kGate[0] = kG0
+  goto Changed2
+endif
+if (changed(kG1)==1) then
+  kGate[1] = kG1
+  goto Changed2
+endif
+if (changed(kG2)==1) then
+  kGate[2] = kG2
+  goto Changed2
+endif
+if (changed(kG3)==1) then
+  kGate[3] = kG3
+  goto Changed2
+endif
+if (changed(kG4)==1) then
+  kGate[4] = kG4
+  goto Changed2
+endif
+if (changed(kG5)==1) then
+  kGate[5] = kG5
+  goto Changed2
+endif
+if (changed(kG6)==1) then
+  kGate[6] = kG6
+  goto Changed2
+endif
+if (changed(kG7)==1) then
+  kGate[7] = kG7
+  goto Changed2
+endif
+if (changed(kG8)==1) then
+  kGate[8] = kG8
+  goto Changed2
+endif
+if (changed(kG9)==1) then
+  kGate[9] = kG9
+  goto Changed2
+endif
+if (changed(kGA)==1) then
+  kGate[10] = kGA
+  goto Changed2
+endif
+if (changed(kGB)==1) then
+  kGate[11] = kGB
+  goto Changed2
+endif
+if (changed(kGC)==1) then
+  kGate[12] = kGC
+  goto Changed2
+endif
+if (changed(kGD)==1) then
+  kGate[13] = kGD
+  goto Changed2
+endif
+if (changed(kGE)==1) then
+  kGate[14] = kGE
+  goto Changed2
+endif
+if (changed(kGF)==1) then
+  kGate[15] = kGF
+  goto Changed2
+endif
+
+goto SkipChanged2
+
+Changed2:
+    kndxx = 0
+    until kndxx == 16 do
+      ktmp = kGate[kndxx]
+      tabw ktmp, 4*kndxx,   ifn2
+      tabw ktmp, 4*kndxx+1, ifn2
+      tabw ktmp, 4*kndxx+2, ifn2
+      tabw ktmp, 4*kndxx+3, ifn2
+      kndxx += 1
+    od
+
+SkipChanged2:
+; CLEAR
+kClr_ trigger kClr,0.5,0
+if kClr_ != 1 goto Next
+  kndxx = 0
+  until kndxx == 64 do
+    tabw 64, kndxx, ifn1
+    kndxx += 1
+  od
+Next:
+
+; RANDOM
+krnd_ trigger krnd,0.5,0
+if krnd_ != 1 goto Next1
+  kndxx = 0
+  until kndxx == 64 do
+    tabw limit(int(rand(64)+64),0,127), kndxx, ifn1
+    kndxx += 1
+  od
+Next1:
+
+goto SkipChanged1
+
+Changed1:
+; copy arrays to tables if changed
+    kndxx = 0
+    until kndxx == 16 do
+      ktmp = kVal[kndxx]
+      tabw ktmp, 4*kndxx,   ifn1
+      tabw ktmp, 4*kndxx+1, ifn1
+      tabw ktmp, 4*kndxx+2, ifn1
+      tabw ktmp, 4*kndxx+3, ifn1
+      kndxx += 1
+    od
+
+SkipChanged1:
+
+; read tables
+if (kCtr < 0) || (kCtr > 63) then
+  kPark = 0
+else
+  kPark = 1
+  kValo table kCtr, ifn1
+  kTrigo table kCtr, ifn2
+endif
+
+if kPulse == 1 goto Gate
+if (kClk != 0) && (kTrigo == 1) then
+    kTrigo = 1
+else
+    kTrigo = 0
+endif
+Gate:
+
+if kPol != 1 goto Bipol
+kValo table kValo,giLVLlev ; 0...127 -> -64...+64
+zkw limit((kPark*kValo/64 + kVali),-4,4), kvalo
+kgoto Over
+Bipol:
+zkw limit((kPark*kValo/127 + kVali),-4,4), kvalo
+Over:
+
+zkw limit((kPark*kTrigo + kTrigi),0,4), ktrigo
+zkw kLink, klinko
+endop
