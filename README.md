@@ -14,21 +14,11 @@ pages:
 
 ## Installation
 
-Assuming you have Python 3.5 and
-[pip](https://pip.pypa.io/en/stable/installing/) installed:
+For the time being we recommend to instal the tool from the GitHub repo directly. Python 3.5+ and
+[pip](https://pip.pypa.io/en/stable/installing/) are required.
 
 ```
-sudo pip3 install pch2csd
-```
-
-Before the project has got more stable, we automatically build and upload every
-commit made to the repository, so you may want want to update the tool once in a
-while.  With newer versions you'll probably get new features and modules
-available, as well as bugs fixed. To update the tool just run the following
-command:
-
-```
-sudo pip3 install -U pch2csd
+pip install -U git+https://github.com/gleb812/pch2csd.git
 ```
 
 ## Usage 
