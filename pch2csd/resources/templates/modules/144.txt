@@ -1,5 +1,5 @@
 ;@ ins k k k k k k
-;@ ins k k k
+;@ outs k k k
 opcode seqEvent,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 ;16 steps,16 events,cycles,length,pulse,clear,rand
 ;inputs:
