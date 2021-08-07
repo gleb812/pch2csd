@@ -13,3 +13,4 @@ After making a contribution, please add yourself to the list in this file.
 - Richard van Bemmelen (aka zappfinger)
 - Ekaterina Kalmykova
 - Nicholas C. Raftis III
+- Alexander Tsimbalov
