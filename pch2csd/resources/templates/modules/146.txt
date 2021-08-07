@@ -1,3 +1,4 @@
+;@ map LVLlev
 ;@ ins k k k k k k
 ;@ outs k k k
 opcode seqLev,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
@@ -194,11 +195,11 @@ endif
 Gate:
 
 if kPol != 1 goto Bipol
-kNoteo table kNoteo,giLVLlev ; 0...127 -> -64...+64
-zkw limit((kPark*kNoteo/64 + kVali),-4,4), knoteo
+zkw limit((kPark*kNoteo/127 + kVali),-4,4), kvalo
 kgoto Over
 Bipol:
-zkw limit((kPark*kNoteo/127 + kVali),-4,4), knoteo
+kNoteo table kNoteo,giLVLlev ; 0...127 -> -64...+64
+zkw limit((kPark*kNoteo/64 + kVali),-4,4), kvalo
 Over:
 zkw limit((kPark*kTrigo + kTrigi),0,4), ktrigo
 zkw kLink, klinko
