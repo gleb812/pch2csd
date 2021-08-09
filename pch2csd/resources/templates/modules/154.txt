@@ -10,7 +10,7 @@ opcode seqCtr,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 
 kN0,kN1,kN2,kN3,kN4,kN5,kN6,kN7,kN8,kN9,kNA,kNB,kNC,kND,kNE,kNF,
 kG0,kG1,kG2,kG3,kG4,kG5,kG6,kG7,kG8,kG9,kGA,kGB,kGC,kGD,kGE,kGF,
-kPulse,kPol,kXF,kRnd,kClr
+kPulse,kPol,kXF,kRnd,kClr,
 kctri,kvali,ktrigi, kvalo,ktrigo xin
 
 ; INIT
@@ -26,190 +26,200 @@ kCtr zkr kctri
 kVali zkr kvali
 kTrigi zkr ktrigi
 
+kChanged1 init 1
+kChanged2 init 1
+
+if kChanged1 != 1 goto Over1
+; copy arrays to tables if changed
+kndxx = 0
+until kndxx == 16 do
+ktmp = kVal[kndxx]
+tabw ktmp, 4*kndxx,   ifn1
+tabw ktmp, 4*kndxx+1, ifn1
+tabw ktmp, 4*kndxx+2, ifn1
+tabw ktmp, 4*kndxx+3, ifn1
+kndxx += 1
+od
+Over1:
+
+if kChanged2 != 1 goto Over2
+; copy arrays to tables if changed
+kndxx = 0
+until kndxx == 16 do
+ktmp = kGate[kndxx]
+tabw ktmp, 4*kndxx,   ifn2
+tabw ktmp, 4*kndxx+1, ifn2
+tabw ktmp, 4*kndxx+2, ifn2
+tabw ktmp, 4*kndxx+3, ifn2
+kndxx += 1
+od
+Over2:
+
 if (changed(kN0)==1) then
-  kVal[0] = kN0
-  goto Changed1
+kVal[0] = kN0
+goto Changed1
 endif
 if (changed(kN1)==1) then
-  kVal[1] = kN1
-  goto Changed1
+kVal[1] = kN1
+goto Changed1
 endif
 if (changed(kN2)==1) then
-  kVal[2] = kN2
-  goto Changed1
+kVal[2] = kN2
+goto Changed1
 endif
 if (changed(kN3)==1) then
-  kVal[3] = kN3
-  goto Changed1
+kVal[3] = kN3
+goto Changed1
 endif
 if (changed(kN4)==1) then
-  kVal[4] = kN4
-  goto Changed1
+kVal[4] = kN4
+goto Changed1
 endif
 if (changed(kN5)==1) then
-  kVal[5] = kN5
-  goto Changed1
+kVal[5] = kN5
+goto Changed1
 endif
 if (changed(kN6)==1) then
-  kVal[6] = kN6
-  goto Changed1
+kVal[6] = kN6
+goto Changed1
 endif
 if (changed(kN7)==1) then
-  kVal[7] = kN7
-  goto Changed1
+kVal[7] = kN7
+goto Changed1
 endif
 if (changed(kN8)==1) then
-  kVal[8] = kN8
-  goto Changed1
+kVal[8] = kN8
+goto Changed1
 endif
 if (changed(kN9)==1) then
-  kVal[9] = kN9
-  goto Changed1
+kVal[9] = kN9
+goto Changed1
 endif
 if (changed(kNA)==1) then
-  kVal[10] = kNA
-  goto Changed1
+kVal[10] = kNA
+goto Changed1
 endif
 if (changed(kNB)==1) then
-  kVal[11] = kNB
-  goto Changed1
+kVal[11] = kNB
+goto Changed1
 endif
 if (changed(kNC)==1) then
-  kVal[12] = kNC
-  goto Changed1
+kVal[12] = kNC
+goto Changed1
 endif
 if (changed(kND)==1) then
-  kVal[13] = kND
-  goto Changed1
+kVal[13] = kND
+goto Changed1
 endif
 if (changed(kNE)==1) then
-  kVal[14] = kNE
-  goto Changed1
+kVal[14] = kNE
+goto Changed1
 endif
 if (changed(kNF)==1) then
-  kVal[15] = kNF
-  goto Changed1
+kVal[15] = kNF
+goto Changed1
 endif
+kChanged1 = 0
 
 if (changed(kG0)==1) then
-  kGate[0] = kG0
-  goto Changed2
+kGate[0] = kG0
+goto Changed2
 endif
 if (changed(kG1)==1) then
-  kGate[1] = kG1
-  goto Changed2
+kGate[1] = kG1
+goto Changed2
 endif
 if (changed(kG2)==1) then
-  kGate[2] = kG2
-  goto Changed2
+kGate[2] = kG2
+goto Changed2
 endif
 if (changed(kG3)==1) then
-  kGate[3] = kG3
-  goto Changed2
+kGate[3] = kG3
+goto Changed2
 endif
 if (changed(kG4)==1) then
-  kGate[4] = kG4
-  goto Changed2
+kGate[4] = kG4
+goto Changed2
 endif
 if (changed(kG5)==1) then
-  kGate[5] = kG5
-  goto Changed2
+kGate[5] = kG5
+goto Changed2
 endif
 if (changed(kG6)==1) then
-  kGate[6] = kG6
-  goto Changed2
+kGate[6] = kG6
+goto Changed2
 endif
 if (changed(kG7)==1) then
-  kGate[7] = kG7
-  goto Changed2
+kGate[7] = kG7
+goto Changed2
 endif
 if (changed(kG8)==1) then
-  kGate[8] = kG8
-  goto Changed2
+kGate[8] = kG8
+goto Changed2
 endif
 if (changed(kG9)==1) then
-  kGate[9] = kG9
-  goto Changed2
+kGate[9] = kG9
+goto Changed2
 endif
 if (changed(kGA)==1) then
-  kGate[10] = kGA
-  goto Changed2
+kGate[10] = kGA
+goto Changed2
 endif
 if (changed(kGB)==1) then
-  kGate[11] = kGB
-  goto Changed2
+kGate[11] = kGB
+goto Changed2
 endif
 if (changed(kGC)==1) then
-  kGate[12] = kGC
-  goto Changed2
+kGate[12] = kGC
+goto Changed2
 endif
 if (changed(kGD)==1) then
-  kGate[13] = kGD
-  goto Changed2
+kGate[13] = kGD
+goto Changed2
 endif
 if (changed(kGE)==1) then
-  kGate[14] = kGE
-  goto Changed2
+kGate[14] = kGE
+goto Changed2
 endif
 if (changed(kGF)==1) then
-  kGate[15] = kGF
-  goto Changed2
+kGate[15] = kGF
+goto Changed2
 endif
 
+kChanged2 = 0
 goto SkipChanged2
-
 Changed2:
-    kndxx = 0
-    until kndxx == 16 do
-      ktmp = kGate[kndxx]
-      tabw ktmp, 4*kndxx,   ifn2
-      tabw ktmp, 4*kndxx+1, ifn2
-      tabw ktmp, 4*kndxx+2, ifn2
-      tabw ktmp, 4*kndxx+3, ifn2
-      kndxx += 1
-    od
-
+kChanged2 = 1
 SkipChanged2:
+
 ; CLEAR
 kClr_ trigger kClr,0.5,0
 if kClr_ != 1 goto Next
-  kndxx = 0
-  until kndxx == 64 do
-    tabw 64, kndxx, ifn1
-    kndxx += 1
-  od
+kndxx = 0
+until kndxx == 64 do
+tabw 64, kndxx, ifn1
+kndxx += 1
+od
 Next:
 
 ; RANDOM
-krnd_ trigger krnd,0.5,0
+krnd_ trigger kRnd,0.5,0
 if krnd_ != 1 goto Next1
-  kndxx = 0
-  until kndxx == 64 do
-    tabw limit(int(rand(64)+64),0,127), kndxx, ifn1
-    kndxx += 1
-  od
+kndxx = 0
+until kndxx == 64 do
+tabw k(limit(int(rand(64)+64),0,127)), kndxx, ifn1
+kndxx += 1
+od
 Next1:
-
 goto SkipChanged1
-
 Changed1:
-; copy arrays to tables if changed
-    kndxx = 0
-    until kndxx == 16 do
-      ktmp = kVal[kndxx]
-      tabw ktmp, 4*kndxx,   ifn1
-      tabw ktmp, 4*kndxx+1, ifn1
-      tabw ktmp, 4*kndxx+2, ifn1
-      tabw ktmp, 4*kndxx+3, ifn1
-      kndxx += 1
-    od
-
+kChanged1 = 1
 SkipChanged1:
 
 ; read tables
 if (kCtr < 0) || (kCtr > 63) then
   kPark = 0
-else
+  else
   kPark = 1
   kTrigo table kCtr, ifn2
   if kXF < 2 then
@@ -217,7 +227,7 @@ else
   elseif kXF == 2 then  ; xFade 50%
     kValo1 table kCtr, ifn1
     kValo2 table kCtr, ifn1,0,1,1
-    kValo = (kValo1 + kValo2)/2
+  kValo = (kValo1 + kValo2)/2
   else  ; xFade 100%
     kValo1 table kCtr, ifn1
     kValo2 table kCtr, ifn1,0,1,1
@@ -227,22 +237,20 @@ else
   endif
 endif
 
+kClk trigger kCtr%4,0.1,1
 if kPulse == 1 goto Gate
-if (kClk != 0) && (kTrigo == 1) then
-    kTrigo = 1
-else
-    kTrigo = 0
+if (kClk == 1) && (kTrigo == 1) then
+  kTrigo = 1
+else kTrigo = 0
 endif
 Gate:
 
 if kPol != 1 goto Bipol
-zkw limit((kPark*kNoteo/127 + kVali),-4,4), kvalo
+zkw limit((kPark*kValo/127 + kVali),-4,4), kvalo
 kgoto Over
 Bipol:
-kNoteo table kNoteo,giLVLlev ; 0...127 -> -64...+64
-zkw limit((kPark*kNoteo/64 + kVali),-4,4), kvalo
+kValo table kValo,giLVLlev ; 0...127 -> -64...+64
+zkw limit((kPark*kValo/64 + kVali),-4,4), kvalo
 Over:
-
 zkw limit((kPark*kTrigo + kTrigi),0,4), ktrigo
-zkw kLink, klinko
 endop
