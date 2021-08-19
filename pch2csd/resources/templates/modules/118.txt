@@ -13,8 +13,8 @@ opcode Digitizer, 0, kkkkkkk
 if kbits == 12 goto Over  ; bit reduction off
   ; BIT REDUCTION
   kIn /= 4  ; full quantizer range is [-4;+4]
-  kOut1 = int(kIn * 4096) >> kbits
-  kIn = kOut1/(2^(12 - kbits))
+  kOut1 = int(kIn * 4096) >> 12-kbits
+  kIn = kOut1/(2^kbits)
 Over:
   ; FOLDOVER
   krate_ limit krate + kModIn*kratem, 0, 127
@@ -35,8 +35,8 @@ opcode Digitizer, 0, kkkkkkk
 if kbits == 12 goto Over  ; bit reduction off
   ; BIT REDUCTION
   aIn /= 4  ; full quantizer range is [-4;+4]
-  aOut1 = int(aIn * 4096) >> kbits
-  aIn = aOut1/(2^(12 - kbits))
+  aOut1 = int(aIn * 4096) >> 12-kbits
+  aIn = aOut1/(2^kbits)
 Over:
   ; FOLDOVER
   arate_ limit a(krate) + aModIn*kratem, 0, 127
