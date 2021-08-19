@@ -20,7 +20,7 @@ kNote = gkNote
 goto KBT
 NoKBT:
 kNote = 0	; freq in Hz
-KBT:	
+KBT:
 
 kPitch init 0
 if kRateIn == 0 goto Run
@@ -43,5 +43,5 @@ endif
 kout oscilikt 1, kM_ + kRate, kWave+1
 kout = kout*k1[kOutType]*k3[kOutType]+k2[kOutType]
 
-zkw kout*kON*64, kOut
+zkw kout*kON, kOut
 endop
