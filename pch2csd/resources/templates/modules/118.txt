@@ -1,4 +1,4 @@
-;@ map giEFXraS
+;@ map EFXraS
 
 ;@ ins k k
 ;@ outs k
@@ -36,7 +36,7 @@ if kbits == 12 goto Over  ; bit reduction off
   ；BIT REDUCTION
   aIn /= 4  ; full quantizer range is [-4;+4]
   aOut1 = int(aIn * 4096) >> kbits
-  aOut_ = aOut1/(2^(12 - kbits)) 
+  aOut_ = aOut1/(2^(12 - kbits))
 Over:
   ; FOLDOVER
   arate_ limit a(krate) + aModIn*kratem, 0, 127
