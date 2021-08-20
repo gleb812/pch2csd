@@ -6,7 +6,7 @@
 opcode Digitizer, 0, kkkkkkk
   setksmps 1   ; because fold opcode is a-rate only
   kbits,krate,kratem,kon,  kin,kmod,kout xin
-
+  ; TODO sample rate change is slightly different
   kModIn 	zkr kmod
   kIn 	  zkr kin
 

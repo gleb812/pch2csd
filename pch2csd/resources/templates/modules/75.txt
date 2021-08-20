@@ -1,0 +1,27 @@
+;@ map OSCunD
+
+;@ ins k
+;@ outs k
+opcode NoteQuant, 0, kkkk
+  kRange, kNote, kin,kout xin
+  kIn zkr kin
+  krange table kRange, giOSCunD
+
+  kA = kIn * krange
+  if frac(kA) <= 0.5 then
+    kA = int(kA)
+  else
+    kA = int(kA)+1
+  endif
+
+  if kNote < 2 goto Over
+    kB = kA/kNote
+    kC = kNote*int(kB)
+    if (kA - kC) > kNote/2 then
+      kA = kC+1
+    else
+      kA = kC
+    endif
+  Over:
+    zkw kA/64, kout   ; -1...+1
+endop
