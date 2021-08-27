@@ -1,0 +1,14 @@
+;@ map WAHWAF WAHWAR WAHWAG
+;@ ins a k
+;@ outs a
+opcode WahWah, 0, kkkkkk
+  kMod, kSweep, kOn, kin,km_in,ko xin
+  aIn zar kin
+  kmod zkr km_in
+  kF limit kSweep + kmod*kMod, 0, 127
+  kgain table kF, giWAHWAG
+  kfreq table kF, giWAHWAF
+  kres table kF, giWAHWAR
+  a1,a2,aOut,a3 statevar aIn, kfreq,kres
+  zaw aR * kOn * kgain, ko
+endop
