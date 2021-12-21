@@ -332,6 +332,17 @@ class InsOutsValid(UdoValidation):
             self.messages += ["error ({}): the UDO must have at least one "
                               "of 'ins' or 'outs' annotations".format(tpl.filename)]
 
+        is_polymorphic = len(tpl.opcodes) > 1
+        if not is_polymorphic:
+            return
+
+        ins_inconsistent = len(tpl.ins) > 0 and (len(tpl.ins) != len(tpl.opcodes))
+        outs_inconsistent = len(tpl.outs) > 0 and (len(tpl.outs) != len(tpl.opcodes))
+
+        if ins_inconsistent or outs_inconsistent:
+            self.messages += ["error ({}): in polymorphic modules, all opcodes must "
+                              "have 'ins' and/or 'outs' annotation".format(tpl.filename)]
+
 
 class ToDoCollect(UdoValidation):
     def __init__(self, data, tpl):
