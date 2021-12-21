@@ -332,12 +332,18 @@ class InsOutsValid(UdoValidation):
             self.messages += ["error ({}): the UDO must have at least one "
                               "of 'ins' or 'outs' annotations".format(tpl.filename)]
 
+        too_many_ins = len(tpl.ins) > len(tpl.opcodes)
+        too_many_outs = len(tpl.ins) > len(tpl.opcodes)
+        if too_many_ins or too_many_outs:
+            self.messages += ["error ({}): too many 'ins' and/or 'outs' annotations "
+                              "found in the template".format(tpl.filename)]
+
         is_polymorphic = len(tpl.opcodes) > 1
         if not is_polymorphic:
             return
 
-        ins_inconsistent = len(tpl.ins) > 0 and (len(tpl.ins) != len(tpl.opcodes))
-        outs_inconsistent = len(tpl.outs) > 0 and (len(tpl.outs) != len(tpl.opcodes))
+        ins_inconsistent = len(tpl.ins) > 0 and (len(tpl.ins) < len(tpl.opcodes))
+        outs_inconsistent = len(tpl.outs) > 0 and (len(tpl.outs) < len(tpl.opcodes))
 
         if ins_inconsistent or outs_inconsistent:
             self.messages += ["error ({}): in polymorphic modules, all opcodes must "
