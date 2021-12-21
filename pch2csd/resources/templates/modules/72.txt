@@ -1,0 +1,19 @@
+;@ map OSCunD
+
+;@ ins k
+;@ outs k
+opcode NoteScaler, 0, kkk
+; reduced version of NoteQuant
+  kRange, kin,kout xin
+  kIn zkr kin
+  krange table kRange, giOSCunD
+
+  kA = kIn * krange
+  if frac(kA) <= 0.5 then
+    kA = int(kA)
+  else
+    kA = int(kA)+1
+  endif
+
+    zkw kA/64, kout   ; -1...+1
+endop

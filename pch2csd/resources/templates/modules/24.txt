@@ -11,16 +11,26 @@ opcode LfoC, 0, kkkkkkkk
 
 ;                0    1     2     3  4   5
 k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
-k2[] fillarray 0.5, -0.5, -0.5, 0.5, 0,  0
+k2[] fillarray 0.5, 0.5, -0.5, -0.5, 0,  0
 k3[] fillarray 1,   -1,     1,   -1, 1, -1
 
-	kRate,kMode,kOutType,kRange,kON,kWave, kRateIn,kOut xin
+kRate,kMode,kOutType,kRange,kON,kWave, kRateIn,kOut xin
 
 
-  kRate table kRate, giRNDlow ; only low range so far
+if kRange == 0 then
+  kRate table kRate,giRNDsub
+  kRate = 1/kRate
+elseif kRange == 1 then
+  kRate table kRate,giRNDlow
+  kRate = 1/kRate
+elseif kRange == 2 then
+  kRate table kRate,giRNDhir
+else
+  kRate table kRate,giRNDbpm
+endif
 
-	kout oscilikt 1, kRate, 1 ; only sine so far
-	kout = (kout*k1[kOutType]+k2[kOutType])*k3[kOutType]
+kout oscilikt 1, kRate, kWave+1
+kout = kout*k1[kOutType]*k3[kOutType]+k2[kOutType]
 
-	zkw kout*kON, kOut
+zkw kout*kON, kOut
 endop

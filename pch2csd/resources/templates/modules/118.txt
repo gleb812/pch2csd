@@ -1,0 +1,46 @@
+;@ map EFXraS
+
+;@ ins k k
+;@ outs k
+
+opcode Digitizer, 0, kkkkkkk
+  setksmps 1   ; because fold opcode is a-rate only
+  kbits,krate,kratem,kon,  kin,kmod,kout xin
+  ; TODO sample rate change is slightly different
+  kModIn 	zkr kmod
+  kIn 	  zkr kin
+
+if kbits == 12 goto Over  ; bit reduction off
+  ; BIT REDUCTION
+  kIn /= 4  ; full quantizer range is [-4;+4]
+  kOut1 = int(kIn * 4096) >> 12-kbits
+  kIn = kOut1/(2^kbits)
+Over:
+  ; FOLDOVER
+  krate_ limit krate + kModIn*kratem, 0, 127
+  kRate table krate_, giEFXraS
+  aOut fold a(kIn), sr/kRate
+  zkw k(aOut)*kon, kout
+endop
+
+;@ ins a a
+;@ outs a
+
+opcode Digitizer, 0, kkkkkkk
+  kbits,krate,kratem,kon,  kin,kmod,kout xin
+
+  aModIn 	zar kmod
+  aIn 	  zar kin
+
+if kbits == 12 goto Over  ; bit reduction off
+  ; BIT REDUCTION
+  aIn /= 4  ; full quantizer range is [-4;+4]
+  aOut1 = int(aIn * 4096) >> 12-kbits
+  aIn = aOut1/(2^kbits)
+Over:
+  ; FOLDOVER
+  arate_ limit a(krate) + aModIn*kratem, 0, 127
+  kRate table k(arate_), giEFXraS
+  aOut fold aIn, sr/kRate
+  zaw aOut*kon, kout
+endop

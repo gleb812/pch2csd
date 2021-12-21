@@ -14,7 +14,7 @@ pages:
 
 ## Installation
 
-For the time being we recommend to instal the tool from the GitHub repo directly. Python 3.5+ and
+For the time being we recommend to install the tool from the GitHub repo directly. Python 3.5+ and
 [pip](https://pip.pypa.io/en/stable/installing/) are required.
 
 ```

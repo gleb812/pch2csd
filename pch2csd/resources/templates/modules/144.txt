@@ -1,7 +1,7 @@
 ;@ ins k k k k k k
-;@ ins k k k
-opcode seqEvent,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
-;16 steps,16 events,cycles,length,pulse,clear,rand
+;@ outs k k k
+opcode seqEvent,0,kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+;16 steps,16 events,cycles,length,pulseU,pulseL
 ;inputs:
 ; clk,rst,loop,park,trig1,trig2
 ;outputs:

@@ -1,0 +1,47 @@
+;@ ins k k
+;@ outs k
+; TODO
+opcode saturate, 0, kkkkkkk
+  klev, kmodlev, kOn, kCurve, kin, kmod, kout xin
+  k1 zkr kin
+  kM zkr kmod
+
+  kval[] fillarray 2.57,4.16,5.5,6.6
+  kcoef[] fillarray 9.9,9.6,9.6,9.8
+  ktrig changed kCurve
+  if ktrig == 1 then
+  reinit UPDATE
+  endif
+  UPDATE:
+  gi1 ftgen 0,0,16384,"tanh",-i(kval[kCurve]),i(kval[kCurve]),0
+  rireturn
+
+  kind = (k1 + 1)/2 ; offset
+  kshp tablei kind, gi1, 1
+  klev limit (klev + kM * kmodlev)/kcoef[kCurve], 0, 1
+  zkw kOn*(klev*kshp + (1 - klev)*k1), kout
+endop
+
+;@ ins a a
+;@ outs a
+
+opcode saturate, 0, kkkkkkk
+  klev, kmodlev, kOn, kCurve, kin, kmod, kout xin
+  a1 zar kin
+  aM zar kmod
+
+  kval[] fillarray 2.57,4.16,5.5,6.6
+  kcoef[] fillarray 9.9,9.6,9.6,9.8
+  ktrig changed kCurve
+  if ktrig == 1 then
+  reinit UPDATE
+  endif
+  UPDATE:
+  gi1 ftgen 0,0,16384,"tanh",-i(kval[kCurve]),i(kval[kCurve]),0
+  rireturn
+
+  aind = (a1 + 1)/2 ; offset
+  ashp tablei aind, gi1, 1
+  klev limit (klev + kM * kmodlev)/kcoef[kCurve], 0, 1
+  zaw kOn*(klev*ashp + (1 - klev)*a1), kout
+endop
