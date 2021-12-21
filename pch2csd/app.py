@@ -104,6 +104,7 @@ def convert_pch2(fn: str):
     csd_save_path = os.path.join(dirname, os.path.basename(path) + '.csd')
     with open(csd_save_path, 'w') as f:
         f.write(csd.get_code())
+    return csd_save_path
 
 
 def gen_udo_status_doc():
@@ -161,7 +162,8 @@ def main():
             gen_udo_status_doc()
         else:
             try:
-                convert_pch2(args.arg)
+                saved_csd = convert_pch2(args.arg)
+                print('conversion done, created file: {}'.format(saved_csd))
             except Exception as e:
                 print(e)
                 if args.debug:
