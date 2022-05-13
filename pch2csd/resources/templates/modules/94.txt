@@ -1,0 +1,31 @@
+;@ ins a
+;@ outs a a
+
+;TODO: check, esp. Detune and Amnt
+
+opcode stChorus, 0, kkkkkk
+  kdet,kamnt,kon, kin,koL,koR xin
+
+  aIn zar kin
+  kVol table kamnt, giCLA001
+  kDet table kdet, giCLA001
+
+  ; Chorus LFOs    ifn=2 Tri bipolar
+  amodL1 oscil 0.0022*kDet, 1, 2,0.25
+  amodL2 oscil 0.0032*kDet, 1, 2
+  amodR1 oscil 0.0022*kDet, 1, 2,0.25
+  amodR2 oscil 0.0032*kDet, 1, 2
+
+  abuf delayr 1
+  atapL1 deltapi 0.02+amodL1
+  atapL2 deltapi 0.02+amodL2
+  atapR1 deltapi 0.02-amodR1
+  atapR2 deltapi 0.02-amodR2
+  delayw aIn
+
+  aL = aIn*(1-kVol*.5) + (atapL1+atapL2)*kVol*0.5
+  aR = aIn*(1-kVol*.5) + (atapR1+atapR2)*kVol*0.5
+
+  zaw aL*kon, koL
+  zaw aR*kon, koR
+endop
