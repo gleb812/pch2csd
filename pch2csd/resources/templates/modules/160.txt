@@ -1,0 +1,26 @@
+;@ ins k
+;@ outs k
+
+; TODO red mod
+
+opcode ZeroCnt, 0, kk
+  kin,kout xin
+  kIn zkr kin
+
+  kcnt init 0
+  kind init 64
+
+  kcnt += 1
+  ktr trigger k1, 0, 0
+  if ktr != 1 goto Halt
+  	kfreq = kr/kcnt
+  	kcnt = 0
+  	kind = 127
+  	Next:
+  	knum table kind, giLFOlow
+  	if (kfreq > knum) && (knum >= 0) goto Halt
+  		kind -= 1
+  		kgoto Next
+  Halt:
+  zkw (kind-64)/64, kout
+endop
