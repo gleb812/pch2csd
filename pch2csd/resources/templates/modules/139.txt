@@ -7,7 +7,7 @@ kin, kctrl,kout xin
 
   kLow init 0
   kOut init 0
-  ; TODO what is LOW level?
+  ; LOW level [-64..0]; HIGH level [1...64]
   kTrack trigger kCtrl, 0.001, 1
   if kTrack != 1 goto Over
     kLow = 1

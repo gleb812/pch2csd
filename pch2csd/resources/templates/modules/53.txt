@@ -1,6 +1,6 @@
 ;@ ins k k
 ;@ outs k
-opcode sH, 0, 0
+opcode sH, 0, kkk
 kin, kctrl,kout xin
   kCtrl zkr kctrl
   kIn zkr kin
@@ -16,7 +16,7 @@ endop
 
 ;@ ins a a
 ;@ outs a
-opcode sH, 0, 0
+opcode sH, 0, kkk
 kin, kctrl,kout xin
   setksmps 1
   aCtrl zar kctrl
