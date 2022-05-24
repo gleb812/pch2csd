@@ -1,11 +1,38 @@
 ;@ ins k
 ;@ outs k
 
-; TODO red mod
+; TODO check, esp. red type
 
 opcode ZeroCnt, 0, kk
   kin,kout xin
   kIn zkr kin
+
+  kcnt init 0
+  kind init 64
+
+  kcnt += 1
+  ktr trigger kIn, 0, 0
+  if ktr != 1 goto Halt
+  	kfreq = kr/kcnt
+  	kcnt = 0
+  	kind = 127
+  	Next:
+  	knum table kind, giLFOlow
+  	if (kfreq > knum) && (knum >= 0) goto Halt
+  		kind -= 1
+  		kgoto Next
+  Halt:
+  zkw (kind-64)/64, kout
+endop
+
+;@ ins a
+;@ outs k
+
+opcode ZeroCnt, 0, kk
+  setksmps 1
+  kin,kout xin
+  aIn zar kin
+  kIn = k(aIn)
 
   kcnt init 0
   kind init 64
@@ -17,7 +44,7 @@ opcode ZeroCnt, 0, kk
   	kcnt = 0
   	kind = 127
   	Next:
-  	knum table kind, giLFOlow
+  	knum table kind, giOSCfrq
   	if (kfreq > knum) && (knum >= 0) goto Halt
   		kind -= 1
   		kgoto Next
