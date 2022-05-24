@@ -19,6 +19,11 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kTime init 0
 	kAM init 64
 
+	kA table kA, ENVtim
+  kD table kD, ENVtim
+	kR table kR, ENVtim
+	kS table kS, ENVlev
+
 	kA /= 1000
 	kD /= 1000
 	kS /= 64
@@ -135,6 +140,11 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kTime0 init 0
 	kTime init 0
 	kAM init 64
+
+	kA table kA, ENVtim
+	kD table kD, ENVtim
+	kR table kR, ENVtim
+	kS table kS, ENVlev
 
 	kA /= 1000
 	kD /= 1000
