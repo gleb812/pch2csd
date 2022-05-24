@@ -1,4 +1,4 @@
-
+;@ map ENVtim ENVlev
 ;@ ins k k k
 ;@ outs k k
 opcode EnvADSR, 0, kkkkkkkkkkkkk
