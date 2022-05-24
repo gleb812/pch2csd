@@ -1,24 +1,15 @@
-;@ map d BUT004
-;@ map d ENVtim
-;@ map d ENVtim
-;@ map d OSCunD
-;@ map d ENVtim
-;@ map d BUT006
-;@ map d BUT002
-;@ map d BUT002
-;@ args kkkkkkkk,akk,ka
 
 ;@ ins k k k
 ;@ outs k k
 opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
-	
+
 	k1[] fillarray 1,-1, 1,-1, 2,-2
 	k2[] fillarray 0, 1,-1, 0,-1, 1
-	
+
 	aIn zar kin
 	kGate zkr kGatei
-	
+
 	kEnv init 0
 	kEnv0 init 0
 	kEnv1 init 0
@@ -27,12 +18,12 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kTime0 init 0
 	kTime init 0
 	kAM init 64
-	
+
 	kA /= 1000
 	kD /= 1000
 	kS /= 64
 	kR /= 1000
-	
+
 	if kAMi < 2 goto NoAM
 		kAM zkr kAMi
 NoAM:
@@ -51,20 +42,20 @@ Next:
 				kEnv = 0
 				kTime = 0
 				kEnv0 = 0
-				kTime0 = 0		
+				kTime0 = 0
 				kgoto OutRes
 NoRes:
 			kTime0 = 0
 			kEnv0 = kEnv
 			kTime = 0
-		endif		
+		endif
 OutRes:
 		if kstate == 2 goto Decay
 		if kstate == 3 goto ESustain
-	
+
 		kstate = 1 ;Attack
-		
-		if kShape == 0 then 
+
+		if kShape == 0 then
 			kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
 		elseif kShape == 2 then
 			kEnv = kEnv0 +(1-kEnv0)*(exp((kTime-kTime0)/(kA*kr - kTime0)*1.791759)-1)/5
@@ -73,42 +64,42 @@ OutRes:
 		endif
 		kTime += 1
 		kEnv limit kEnv, 0, 1
-		
+
 	if kEnv < 1 goto EnvOut
 		kstate = 2; Decay
 		kTime = 0
 		kEnv0 = 1
 		kTime0 = 0
-Decay: 
+Decay:
 		if kShape < 3 then
 			kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
 		else
 			kEnv -= (kEnv0 - kS)/(kr*kD-kTime0)
-		endif		
+		endif
 		kTime += 1
 	if (kEnv > kS) goto EnvOut
 		kstate = 3 ; Sustain
 ESustain:
 		kEnv = kS
 		kgoto EnvOut
-	
+
 Free:
 	if kstate == 0 goto EnvOut
-	
+
 	if kstate == 4 goto Release
 		kstate = 4
 		kEnv0 = kEnv
 		kTime0 = 0
 		kTime = 0
-	
-Release:	
+
+Release:
 	if kShape < 3 then
 			kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
 		else
 			kEnv -= kEnv0/(kr*kR-kTime0)
-	endif		
+	endif
 		kTime += 1
-	
+
 	kEnv limit kEnv, 0, 1
 	if kEnv != 0 goto EnvOut
 		kstate = 0
@@ -124,15 +115,18 @@ EnvOut:
 		;out a(kEnv1)*0.97 ;TEST
 endop
 
+;@ ins a k k
+;@ outs k a
+
 opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
-	
+
 	k1[] fillarray 1,-1, 1,-1, 2,-2
 	k2[] fillarray 0, 1,-1, 0,-1, 1
-	
+
 	aIn zar kin
 	kGate zkr kGatei
-	
+
 	kEnv init 0
 	kEnv0 init 0
 	kEnv1 init 0
@@ -141,12 +135,12 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kTime0 init 0
 	kTime init 0
 	kAM init 64
-	
+
 	kA /= 1000
 	kD /= 1000
 	kS /= 64
 	kR /= 1000
-	
+
 	if kAMi < 2 goto NoAM
 		kAM zkr kAMi
 NoAM:
@@ -165,20 +159,20 @@ Next:
 				kEnv = 0
 				kTime = 0
 				kEnv0 = 0
-				kTime0 = 0		
+				kTime0 = 0
 				kgoto OutRes
 NoRes:
 			kTime0 = 0
 			kEnv0 = kEnv
 			kTime = 0
-		endif		
+		endif
 OutRes:
 		if kstate == 2 goto Decay
 		if kstate == 3 goto ESustain
-	
+
 		kstate = 1 ;Attack
-		
-		if kShape == 0 then 
+
+		if kShape == 0 then
 			kEnv = kEnv0 + (1.013-kEnv0)*(1 - exp(-4*(kTime-kTime0)/(kA*kr)))
 		elseif kShape == 2 then
 			kEnv = kEnv0 +(1-kEnv0)*(exp((kTime-kTime0)/(kA*kr - kTime0)*1.791759)-1)/5
@@ -187,42 +181,42 @@ OutRes:
 		endif
 		kTime += 1
 		kEnv limit kEnv, 0, 1
-		
+
 	if kEnv < 1 goto EnvOut
 		kstate = 2; Decay
 		kTime = 0
 		kEnv0 = 1
 		kTime0 = 0
-Decay: 
+Decay:
 		if kShape < 3 then
 			kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
 		else
 			kEnv -= (kEnv0 - kS)/(kr*kD-kTime0)
-		endif		
+		endif
 		kTime += 1
 	if (kEnv > kS) goto EnvOut
 		kstate = 3 ; Sustain
 ESustain:
 		kEnv = kS
 		kgoto EnvOut
-	
+
 Free:
 	if kstate == 0 goto EnvOut
-	
+
 	if kstate == 4 goto Release
 		kstate = 4
 		kEnv0 = kEnv
 		kTime0 = 0
 		kTime = 0
-	
-Release:	
+
+Release:
 	if kShape < 3 then
 			kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
 		else
 			kEnv -= kEnv0/(kr*kR-kTime0)
-	endif		
+	endif
 		kTime += 1
-	
+
 	kEnv limit kEnv, 0, 1
 	if kEnv != 0 goto EnvOut
 		kstate = 0
