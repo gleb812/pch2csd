@@ -1,35 +1,35 @@
 ;@ map d ENVtim
 ;@ map d MID000
 
-;TODO Completed. Check for optimization
 ;@ ins k k k
 ;@ outs k k
 opcode EnvD, 0, kkkkkkk
-	kD,kType,  kTrig,kAMi,kIn,kEnvO,kout xin
-	
+	kD_,kType,  kTrig,kAMi,kIn,kEnvO,kout xin
+
 	k1[] fillarray 1,-1, 1,-1
 	k2[] fillarray 0, 1,-1, 0
 	kstate init 0
 	kEnv init 0
-	kAM init 64
+	kAM init 1
 	kTime init 0
-	
+
 	aIn zar kIn
 	kGate zkr kTrig
-	
+
+	kD table kD_,giENVtim
 	kD /= 1000
-	
+
 	if kAMi < 2 goto NoAM
 		kAM zkr kAMi
-NoAM:	
+NoAM:
 	kTime limit kTime,0,kD*kr
-	if kTime != kD*kr goto skip 	
+	if kTime != kD*kr goto skip
 		kTime = 0
 		kstate = 0
 		kEnv = 0
 skip:
 kGateT trigger kGate, 0.000001, 0
-	if kGateT == 1 then 
+	if kGateT == 1 then
 		if kstate == 1 then
 			kTime = 0
 			kEnv = 1
@@ -44,8 +44,8 @@ kGateT trigger kGate, 0.000001, 0
 			kEnv = exp(-4.2*kTime/(kD*kr))
 		endif
 	endif
-	
-	kEnv *= kAM/64
+
+	kEnv *= kAM
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
 	zaw kEnv1*aIn, kout
@@ -54,31 +54,32 @@ endop
 ;@ ins k k a
 ;@ outs k a
 opcode EnvD, 0, kkkkkkk
-	kD,kType,  kTrig,kAMi,kIn,kEnvO,kout xin
-	
+	kD_,kType,  kTrig,kAMi,kIn,kEnvO,kout xin
+
 	k1[] fillarray 1,-1, 1,-1
 	k2[] fillarray 0, 1,-1, 0
 	kstate init 0
 	kEnv init 0
 	kAM init 64
 	kTime init 0
-	
+
 	aIn zar kIn
 	kGate zkr kTrig
-	
+
+	kD table kD_,giENVtim
 	kD /= 1000
-	
+
 	if kAMi < 2 goto NoAM
 		kAM zkr kAMi
-NoAM:	
+NoAM:
 	kTime limit kTime,0,kD*kr
-	if kTime != kD*kr goto skip 	
+	if kTime != kD*kr goto skip
 		kTime = 0
 		kstate = 0
 		kEnv = 0
 skip:
 kGateT trigger kGate, 0.000001, 0
-	if kGateT == 1 then 
+	if kGateT == 1 then
 		if kstate == 1 then
 			kTime = 0
 			kEnv = 1
@@ -93,8 +94,8 @@ kGateT trigger kGate, 0.000001, 0
 			kEnv = exp(-4.2*kTime/(kD*kr))
 		endif
 	endif
-	
-	kEnv *= kAM/64
+
+	kEnv *= kAM
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
 	zaw kEnv1*aIn, kout
