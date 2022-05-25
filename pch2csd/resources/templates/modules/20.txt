@@ -2,7 +2,7 @@
 ;@ ins k k k
 ;@ outs k k
 opcode EnvADSR, 0, kkkkkkkkkkkkk
-	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
+	kShape,kA_,kD_,kS_,kR_,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
 
 	k1[] fillarray 1,-1, 1,-1, 2,-2
 	k2[] fillarray 0, 1,-1, 0,-1, 1
@@ -17,16 +17,16 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kShapeLst init 0
 	kTime0 init 0
 	kTime init 0
-	kAM init 64
+	kAM init 1
 
-	kA table kA, ENVtim
-  kD table kD, ENVtim
-	kR table kR, ENVtim
-	kS table kS, ENVlev
+	kA table kA_, giENVtim
+  kD table kD_, giENVtim
+	kR table kR_, giENVtim
+	kS table kS_, giENVlev
 
 	kA /= 1000
 	kD /= 1000
-	kS /= 64
+	kS /= 127
 	kR /= 1000
 
 	if kAMi < 2 goto NoAM
@@ -41,7 +41,7 @@ NoKB:
 		kEnv0 = kEnv
   		kShapeLst = kShape
 Next:
-	if kGate == 0 goto Free
+	if kGate <= 0 goto Free
 		if kstate = 4 then
 			if kReset == 0 goto NoRes
 				kEnv = 0
@@ -113,7 +113,7 @@ Release:
 		kTime0 = 0
 EnvOut:
 
-	kEnv *= kAM/64
+	kEnv *= kAM
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
 	zaw kEnv1*aIn, kout
@@ -124,7 +124,7 @@ endop
 ;@ outs k a
 
 opcode EnvADSR, 0, kkkkkkkkkkkkk
-	kShape,kA,kD,kS,kR,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
+	kShape,kA_,kD_,kS_,kR_,kType,kKB,kReset,  kin,kGatei,kAMi,kEnvO,kout xin
 
 	k1[] fillarray 1,-1, 1,-1, 2,-2
 	k2[] fillarray 0, 1,-1, 0,-1, 1
@@ -139,16 +139,16 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	kShapeLst init 0
 	kTime0 init 0
 	kTime init 0
-	kAM init 64
+	kAM init 1
 
-	kA table kA, ENVtim
-	kD table kD, ENVtim
-	kR table kR, ENVtim
-	kS table kS, ENVlev
+	kA table kA_, giENVtim
+	kD table kD_, giENVtim
+	kR table kR_, giENVtim
+	kS table kS_, giENVlev
 
 	kA /= 1000
 	kD /= 1000
-	kS /= 64
+	kS /= 127
 	kR /= 1000
 
 	if kAMi < 2 goto NoAM
@@ -163,7 +163,7 @@ NoKB:
 		kEnv0 = kEnv
   		kShapeLst = kShape
 Next:
-	if kGate == 0 goto Free
+	if kGate <= 0 goto Free
 		if kstate = 4 then
 			if kReset == 0 goto NoRes
 				kEnv = 0
@@ -235,7 +235,7 @@ Release:
 		kTime0 = 0
 EnvOut:
 
-	kEnv *= kAM/64
+	kEnv *= kAM
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
 	zaw kEnv1*aIn, kout
