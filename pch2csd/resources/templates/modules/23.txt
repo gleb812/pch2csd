@@ -1,0 +1,203 @@
+;@ map ENVtim ENVlev
+;@ ins k k k k k k k
+;@ outs k k
+
+; TODO test if mod works
+
+opcode ModADSR, 0, kkkkkkkkkkkkk
+	kA_,kD_,kS_,kR_,kAm,kDm,kSm,kRm,  kType,kKB,  kGatei,kamod,kdmod,ksmod,krmod,kin,kAMi,kEnvO,kout xin
+
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	kIn zkr kin
+	kGate zkr kGatei
+
+  kAmod zkr kamod
+  kDmod zkr kdmod
+  kSmod zkr ksmod
+  kRmod zkr krmod
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	kA table kA_+ kAmod*kAm, giENVtim
+  kD table kD_+ kDmod*kDm, giENVtim
+	kR table kR_+ kSmod*kSm, giENVtim
+	kS table kS_+ kRmod*kRm, giENVlev
+
+	kA /= 1000
+	kD /= 1000
+	kS /= 127
+	kR /= 1000
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+Next:
+	if kGate <= 0 goto Free
+		if kstate = 4 then
+NoRes:
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif
+OutRes:
+		if kstate == 2 goto Decay
+		if kstate == 3 goto ESustain
+
+		kstate = 1 ;Attack
+		kEnv += 1/(kr*kA)
+
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Decay
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+Decay:
+		kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
+		kTime += 1
+	if (kEnv > kS) goto EnvOut
+		kstate = 3 ; Sustain
+ESustain:
+		kEnv = kS
+		kgoto EnvOut
+
+Free:
+	if kstate == 0 goto EnvOut
+
+	if kstate == 4 goto Release
+		kstate = 4
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+
+Release:
+		kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		kTime += 1
+
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
+
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zkw kEnv1*kIn, kout
+endop
+
+;@ ins k k k k k a k
+;@ outs k a
+opcode ModADSR, 0, kkkkkkkkkkkkk
+	kA_,kD_,kS_,kR_,kAm,kDm,kSm,kRm,  kType,kKB,  kGatei,kamod,kdmod,ksmod,krmod,kin,kAMi,kEnvO,kout xin
+
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	aIn zar kin
+	kGate zkr kGatei
+
+  kAmod zkr kamod
+  kDmod zkr kdmod
+  kSmod zkr ksmod
+  kRmod zkr krmod
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	kA table kA_+ kAmod*kAm, giENVtim
+  kD table kD_+ kDmod*kDm, giENVtim
+	kR table kR_+ kSmod*kSm, giENVtim
+	kS table kS_+ kRmod*kRm, giENVlev
+
+	kA /= 1000
+	kD /= 1000
+	kS /= 127
+	kR /= 1000
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+Next:
+	if kGate <= 0 goto Free
+		if kstate = 4 then
+NoRes:
+			kTime0 = 0
+			kEnv0 = kEnv
+			kTime = 0
+		endif
+OutRes:
+		if kstate == 2 goto Decay
+		if kstate == 3 goto ESustain
+
+		kstate = 1 ;Attack
+		kEnv += 1/(kr*kA)
+
+		kTime += 1
+		kEnv limit kEnv, 0, 1
+
+	if kEnv < 1 goto EnvOut
+		kstate = 2; Decay
+		kTime = 0
+		kEnv0 = 1
+		kTime0 = 0
+Decay:
+		kEnv = 0.9993*kS + (kEnv0 - 0.9993*kS)*(exp(-8*(kTime-kTime0)/(kD*kr)))
+		kTime += 1
+	if (kEnv > kS) goto EnvOut
+		kstate = 3 ; Sustain
+ESustain:
+		kEnv = kS
+		kgoto EnvOut
+
+Free:
+	if kstate == 0 goto EnvOut
+
+	if kstate == 4 goto Release
+		kstate = 4
+		kEnv0 = kEnv
+		kTime0 = 0
+		kTime = 0
+
+Release:
+		kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kR*kr)))
+		kTime += 1
+
+	kEnv limit kEnv, 0, 1
+	if kEnv != 0 goto EnvOut
+		kstate = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+EnvOut:
+
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+endop

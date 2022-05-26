@@ -7,7 +7,7 @@ opcode EnvADSR, 0, kkkkkkkkkkkkk
 	k1[] fillarray 1,-1, 1,-1, 2,-2
 	k2[] fillarray 0, 1,-1, 0,-1, 1
 
-	aIn zar kin
+	kIn zkr kin
 	kGate zkr kGatei
 
 	kEnv init 0
@@ -116,8 +116,7 @@ EnvOut:
 	kEnv *= kAM
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
-	zaw kEnv1*aIn, kout
-		;out a(kEnv1)*0.97 ;TEST
+	zkw kEnv1*kIn, kout
 endop
 
 ;@ ins a k k
@@ -239,5 +238,4 @@ EnvOut:
 	kEnv1 = kEnv*k1[kType]+k2[kType]
 	zkw kEnv1, kEnvO
 	zaw kEnv1*aIn, kout
-		;out a(kEnv1)*0.97 ;TEST
 endop
