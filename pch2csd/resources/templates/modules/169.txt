@@ -1,64 +1,174 @@
+;@ map ENVtim
 ;@ ins k k k k k k
 ;@ outs k k
-opcode ModAHD, 0, kkkkkkk
-  kAtt, kDec, kSW, kH, kMAtt, kMH, kMDec xin
-; NOT FORGET ABOUT KEYBOARD KB
-; NO SHAPE IMPLEMENTED
-  kIn zkr 1 ; CHANGE
-  kAM zkr 2; CHANGE
-  kTrig zkr 3; CHANGE
-  kMAIn zkr 4 ; CHANGE
-  kMHIn zkr 5; CHANGE
-  kMDIn zkr 6; CHANGE
-  
-  kTab[][] init 2,4 ;MAYBE GLOBAL?
-  kTab fillarray 1,-1,  1, -1,  0, 1,  -1, 0 ;double check
-  
 
-  kEnv init 0
-  kTimer init 0
-  kSet init 0	
-  kStage init 0	
+opcode ModAHD, 0, kkkkkkkkkkkkkkkk
+kA_,kH_,kD_,kAM,kHM,kDM,kType,kKB, kTrig_,kAi,kHi,kDi,kin,kAMi,kEnvO,kout xin
 
-; CHECK MODULATIONS
-  kAtt -= kMAIn * kMAtt
-  kH -= kMHIn * kMH
-  kDec -= kMDIn * kMDec
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
 
+	kIn zkr kin
+  kam zkr kAi
+  khm zkr kHi
+  kdm zkr kDi
 
-  if kTrig == 0 then goto Run 
-  	kSet = 1
-  	kStage = 1			
-Run:  
-  kTimer += kSet/kr ; KR TIME STEP
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
 
+	kA table kA_+kam*kAM, giENVtim
+	kD table kD_+khm*kHM, giENVtim
+	kH table kH_+kdm*kDM, giENVtim
 
-  if kStage == 1 then
-  	kEnv += kAtt/kr ; CHANGE SOMETHING use KAtt here	
-  	if kAtt <= kTimer then
-  		kStage = 2
-  		kTimer = 0
-  	endif		
-  endif
+	kA /= 1000
+	kD /= 1000
+	kH /= 1000
 
-  if kStage == 2 then
-  	kEnv = 1
-  	if kH <= kTimer then
-  		kStage = 3
-  		kTimer = 0
-  	endif
-  endif
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+kTrig zkr kTrig_
+	if kKB!= 1 goto NoKB
+		kTrig += gkGate
+NoKB:
+		kTime0 = kTime
+		kEnv0 = kEnv
 
-  if kStage == 3 then
-  	kEnv -= kDec/kr
-  	if kDec <= kTimer then
-  		kStage = 0
-  		kTimer = 0
-  	endif
-  endif
+kTrigT trigger kTrig, 0.000001, 0
+if kTrigT == 1 then
+	if kstate == 0 then
+		kEnv = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+		kstate = 1
+	endif
+endif
+	if kstate == 0 goto EnvOut
+	if kstate == 2 goto Hold
+	if kstate == 3 goto Decay
+Attack:
+	kEnv += 1/(kr*kA)
+	kTime += 1
+	kEnv limit kEnv, 0, 1
 
+	if kEnv < 1 goto EnvOut
+	kstate = 2; Hold
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+Hold:
+	kTime += 1
+	if (kTime/kr) < kH goto EnvOut
+	kstate = 3 ; Decay
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+Decay:
+	kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kD*kr)))
+	kTime += 1
 
-  kEnvH = kTab[1][kSW]*kEnv*(1-kAM)+kTab[2][kSW] ; CHECK AM RANGE
-  zkw kEnvH, 1 ; CHANGE
-  zkw kIn*kEnvH, 2 ; CHANGE
+	kEnv limit kEnv, 0, 1
+	if (kTime/kr) < kD  goto EnvOut
+	kstate = 0  ; back to waiting for trig
+	kTime = 0
+	kEnv0 = 0
+	kTime0 = 0
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zkw kEnv1*kIn, kout
+endop
+
+@ ins k k k k a k
+;@ outs k a
+
+opcode ModAHD, 0, kkkkkkkkkkkkkkkk
+kA_,kH_,kD_,kAM,kHM,kDM,kType,kKB, kTrig_,kAi,kHi,kDi,kin,kAMi,kEnvO,kout xin
+
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	aIn zar kin
+  kam zkr kAi
+  khm zkr kHi
+  kdm zkr kDi
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	kA table kA_+kam*kAM, giENVtim
+	kD table kD_+khm*kHM, giENVtim
+	kH table kH_+kdm*kDM, giENVtim
+
+	kA /= 1000
+	kD /= 1000
+	kH /= 1000
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+kTrig zkr kTrig_
+	if kKB!= 1 goto NoKB
+		kTrig += gkGate
+NoKB:
+		kTime0 = kTime
+		kEnv0 = kEnv
+
+kTrigT trigger kTrig, 0.000001, 0
+if kTrigT == 1 then
+	if kstate == 0 then
+		kEnv = 0
+		kTime = 0
+		kEnv0 = 0
+		kTime0 = 0
+		kstate = 1
+	endif
+endif
+	if kstate == 0 goto EnvOut
+	if kstate == 2 goto Hold
+	if kstate == 3 goto Decay
+Attack:
+	kEnv += 1/(kr*kA)
+	kTime += 1
+	kEnv limit kEnv, 0, 1
+
+	if kEnv < 1 goto EnvOut
+	kstate = 2; Hold
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+Hold:
+	kTime += 1
+	if (kTime/kr) < kH goto EnvOut
+	kstate = 3 ; Decay
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+Decay:
+	kEnv = kEnv0*(exp(-8*(kTime-kTime0)/(kD*kr)))
+	kTime += 1
+
+	kEnv limit kEnv, 0, 1
+	if (kTime/kr) < kD  goto EnvOut
+	kstate = 0  ; back to waiting for trig
+	kTime = 0
+	kEnv0 = 0
+	kTime0 = 0
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
 endop

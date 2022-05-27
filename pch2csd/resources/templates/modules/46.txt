@@ -42,8 +42,7 @@ Next:
 
 kTrigT trigger kTrig, 0.000001, 0
 if kTrigT == 1 then
-	;if (kReset == 1) || (kstate == 0) then
-	if kstate == 0 then
+	if (kReset == 1) || (kstate == 0) then
 		kEnv = 0
 		kTime = 0
 		kEnv0 = 0
@@ -141,8 +140,7 @@ Next:
 
 kTrigT trigger kTrig, 0.000001, 0
 if kTrigT == 1 then
-	;if (kReset == 1) || (kstate == 0) then
-	if kstate == 0 then
+	if (kReset == 1) || (kstate == 0) then
 		kEnv = 0
 		kTime = 0
 		kEnv0 = 0
