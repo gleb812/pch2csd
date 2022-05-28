@@ -1,0 +1,119 @@
+;@ ins a a
+;@ outs a
+; TODO check follower time, check emphasis and monitor
+opcode ChebyshevArray,aaaaaaaaaaaaaaaa,a
+ain xin
+; BAND 1
+a0 clfilt ain,200, 0, 4, 1, 3, -60
+; BAND2
+a1 clfilt ain,220, 1, 6, 1, 3, -60
+a1 clfilt a1,322, 0, 6, 1, 3, -60
+; BAND3
+a2 clfilt ain,322, 1, 8, 1, 3, -60
+a2 clfilt a2,460, 0, 8, 1, 3, -60
+; BAND4
+a3 clfilt ain,460, 1, 8, 1, 3, -60
+a3 clfilt a3,602, 0, 8, 1, 3, -60
+; BAND5
+a4 clfilt ain,602, 1, 10, 1, 3, -60
+a4 clfilt a4,785, 0, 10, 1, 3, -60
+; BAND6
+a5 clfilt ain,785, 1, 10, 1, 3, -60
+a5 clfilt a5,966, 0, 10, 1, 3, -60
+; BAND7
+a6 clfilt ain,966, 1, 10, 1, 3, -60
+a6 clfilt a6,1200, 0, 10, 1, 3, -60
+; BAND8
+a7 clfilt ain,1200, 1, 10, 1, 3, -60
+a7 clfilt a7,1460, 0, 10, 1, 3, -60
+; BAND9
+a8 clfilt ain,1460, 1, 10, 1, 3, -60
+a8 clfilt a8,1770, 0, 10, 1, 3, -60
+; BAND10
+a9 clfilt ain,1770, 1, 10, 1, 3, -60
+a9 clfilt a9,2140, 0, 10, 1, 3, -60
+; BAND11
+aA clfilt ain,2140, 1, 10, 1, 3, -60
+aA clfilt aA,2610, 0, 10, 1, 3, -60
+; BAND12
+aB clfilt ain,2610, 1, 10, 1, 3, -60
+aB clfilt aB,3130, 0, 10, 1, 3, -60
+; BAND13
+aC clfilt ain,3130, 1, 10, 1, 3, -20
+aC clfilt aC,3860, 0, 10, 1, 3, -20
+; BAND14
+aD clfilt ain,3860, 1, 10, 1, 3, -20
+aD clfilt aD,4890, 0, 10, 1, 3, -20
+; BAND15
+aE clfilt ain,4890, 1, 10, 1, 3, -20
+aE clfilt aE,6400, 0, 10, 1, 3, -20
+; BAND16
+aF clfilt ain,6400, 1, 8, 1, 3, -20
+aF clfilt aF,8590, 0, 12, 1, 3, -20
+xout a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aA,aB,aC,aD,aE,aF
+endop
+
+opcode Vocoder,0,kkkkkkkkkkkkkkkkkkkkkkk
+k0,k1,k2,k3,k4,k5,k6,k7,k8,k9,kA,kB,kC,kD,kE,kF,kEmp,kMon,kCtrli,kCarri,kout xin
+aCarrier zar kCarri
+aCtrl zar kCtrli
+
+aO[] init 16
+a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aA,aB,aC,aD,aE,aF init 0
+a0_,a1_,a2_,a3_,a4_,a5_,a6_,a7_,a8_,a9_,aA_,aB_,aC_,aD_,aE_,aF_ init 0
+kEmp_[] init 0
+kEmp0[] init 1
+kEmp1[] fillarray 1,1,1,1,1,1,1,1,1.5,2,2,2,4,4,4,4   ; CHECK THESE AMPS for emphasis
+
+if kEmp == 0 then
+  kEmp_ = kEmp0
+else
+  kEmp = kEmp1
+endif
+
+if kMon != 1 goto Over
+aOut = aCtrl
+goto Monitor
+Over:
+a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aA,aB,aC,aD,aE,aF ChebyshevArray aCarrier
+a0_,a1_,a2_,a3_,a4_,a5_,a6_,a7_,a8_,a9_,aA_,aB_,aC_,aD_,aE_,aF_ ChebyshevArray aCtrl
+; envelope followers
+idt = 0.01
+aO[0] follow a0_, idt
+aO[1] follow a1_, idt
+aO[2] follow a2_, idt
+aO[3] follow a3_, idt
+aO[4] follow a4_, idt
+aO[5] follow a5_, idt
+aO[6] follow a6_, idt
+aO[7] follow a7_, idt
+aO[8] follow a8_, idt
+aO[9] follow a9_, idt
+aO[10] follow aA_, idt
+aO[11] follow aB_, idt
+aO[12] follow aC_, idt
+aO[13] follow aD_, idt
+aO[14] follow aE_, idt
+aO[15] follow aF_, idt
+
+a0 *= aO[k0]
+a1 *= aO[k1]
+a2 *= aO[k2]
+a3 *= aO[k3]
+a4 *= aO[k4]
+a5 *= aO[k5]
+a6 *= aO[k6]
+a7 *= aO[k7]
+a8 *= aO[k8]
+a9 *= aO[k9]
+aA *= aO[kA]
+aB *= aO[kB]
+aC *= aO[kC]
+aD *= aO[kD]
+aE *= aO[kE]
+aF *= aO[kF]
+
+aOut sum a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aA,aB,aC,aD,aE,aF
+Monitor:
+zaw aOut,kout
+endop

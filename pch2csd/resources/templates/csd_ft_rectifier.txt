@@ -1,3 +1,1 @@
 ;---------------------------------
-; Function tables for rectifier
-; DELETE IT EUGENE!
