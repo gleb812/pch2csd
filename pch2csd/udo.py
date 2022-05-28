@@ -1,5 +1,6 @@
 import abc
 import os
+import re
 import sys
 from typing import TextIO, Tuple, List
 
@@ -117,6 +118,8 @@ class OutsAnnotation(InsAnnotation):
 
 
 class Opcode:
+    re_opcode_name = re.compile('opcode\\s+(\\w+)[,\\s]?.*$')
+
     def __init__(self, src: List[str], lines: Tuple[int, int]):
         assert len(src) == (lines[1] - lines[0] + 1)
         assert src[0].strip().startswith('opcode')
@@ -124,6 +127,10 @@ class Opcode:
 
         self.src = [s.strip() for s in src]
         self.lines = lines
+
+        m = Opcode.re_opcode_name.match(src[0])
+        assert m, f'Cannot parse opcode line {src[0]}'
+        self.name = m.group(1)
 
 
 class UdoTemplate:
@@ -273,7 +280,8 @@ class UdoIntypesConsistent(UdoValidation):
 
     def _validate(self, data: ProjectData, tpl: UdoTemplate):
         try:
-            in_udo = [o.src[0].split(',')[2].strip() for o in tpl.opcodes]
+            in_udo = [o.src[0].split(',')[2].strip()
+                      for o in tpl.opcodes if o.name == tpl.mod_type_name]
         except IndexError:
             self.messages += ["error ({}): can't read one or more " \
                               "UDO signatures".format(tpl.filename)]
@@ -338,12 +346,13 @@ class InsOutsValid(UdoValidation):
             self.messages += ["error ({}): too many 'ins' and/or 'outs' annotations "
                               "found in the template".format(tpl.filename)]
 
-        is_polymorphic = len(tpl.opcodes) > 1
+        module_opcodes = [o for o in tpl.opcodes if o.name == tpl.mod_type_name]
+        is_polymorphic = len(module_opcodes) > 1
         if not is_polymorphic:
             return
 
-        ins_inconsistent = len(tpl.ins) > 0 and (len(tpl.ins) < len(tpl.opcodes))
-        outs_inconsistent = len(tpl.outs) > 0 and (len(tpl.outs) < len(tpl.opcodes))
+        ins_inconsistent = len(tpl.ins) > 0 and (len(tpl.ins) < len(module_opcodes))
+        outs_inconsistent = len(tpl.outs) > 0 and (len(tpl.outs) < len(module_opcodes))
 
         if ins_inconsistent or outs_inconsistent:
             self.messages += ["error ({}): in polymorphic modules, all opcodes must "
