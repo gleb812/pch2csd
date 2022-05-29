@@ -1,0 +1,15 @@
+; nothing to map
+
+;@ outs k k k
+opcode status, 0, kkk
+  kopatch,kovaract,kovonum xin
+; TODO some decision on Voice No is needed
+; so far we assume having monophonic version with only one variation
+; once we are going towards polyphony, the global variable for number of voices
+; could be routed here
+  k1 init 1
+	zkw k1, kopatch
+	zkw 1, kovaract ; always HIGH in case of Csound
+	zkw 0, kovonum ; need to think here
+  k1 = 0
+	endop
