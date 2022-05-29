@@ -86,7 +86,7 @@ EnvOut:
 	zkw kEnv1*kIn, kout
 endop
 
-@ ins k k k k a k
+;@ ins k k k k a k
 ;@ outs k a
 
 opcode ModAHD, 0, kkkkkkkkkkkkkkkk
