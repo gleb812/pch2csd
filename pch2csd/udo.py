@@ -118,7 +118,7 @@ class OutsAnnotation(InsAnnotation):
 
 
 class Opcode:
-    re_opcode_def = re.compile('opcode\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*$')
+    re_opcode_def = re.compile('opcode\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*;?.*$')
 
     def __init__(self, src: List[str], lines: Tuple[int, int]):
         assert len(src) == (lines[1] - lines[0] + 1)
