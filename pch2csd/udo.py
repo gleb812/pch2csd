@@ -118,7 +118,7 @@ class OutsAnnotation(InsAnnotation):
 
 
 class Opcode:
-    re_opcode_name = re.compile('opcode\\s+(\\w+)[,\\s]?.*$')
+    re_opcode_def = re.compile('opcode\\s+(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*;?.*$')
 
     def __init__(self, src: List[str], lines: Tuple[int, int]):
         assert len(src) == (lines[1] - lines[0] + 1)
@@ -128,9 +128,11 @@ class Opcode:
         self.src = [s.strip() for s in src]
         self.lines = lines
 
-        m = Opcode.re_opcode_name.match(src[0])
+        m = Opcode.re_opcode_def.match(src[0])
         assert m, f'Cannot parse opcode line {src[0]}'
         self.name = m.group(1)
+        self.outtypes = m.group(2).replace('0', '')
+        self.intypes = m.group(3).replace('0', '')
 
 
 class UdoTemplate:
@@ -274,31 +276,42 @@ class MapTablesExist(UdoValidation):
             self.messages = [msg.format(tpl.filename, ', '.join(invalid_tables))]
 
 
+class AtLeastOneOpcodeIsNamedAsModule(UdoValidation):
+    def __init__(self, data, tpl):
+        super().__init__(data, tpl)
+
+    def _validate(self, data: ProjectData, tpl: UdoTemplate):
+        opcode_names = [o.name for o in tpl.opcodes]
+        if tpl.mod_type_name not in opcode_names:
+            self.messages += [
+                "error ({}): no opcodes with name {} were found in the template; " \
+                "opcodes present: {}".format(
+                    tpl.filename, tpl.mod_type_name, ', '.join(n for n in opcode_names))
+            ]
+
+
 class UdoIntypesConsistent(UdoValidation):
     def __init__(self, data, tpl):
         super().__init__(data, tpl)
 
     def _validate(self, data: ProjectData, tpl: UdoTemplate):
-        try:
-            in_udo = [o.src[0].split(',')[2].strip()
-                      for o in tpl.opcodes if o.name == tpl.mod_type_name]
-        except IndexError:
-            self.messages += ["error ({}): can't read one or more " \
-                              "UDO signatures".format(tpl.filename)]
+        intypes_list = [o.intypes for o in tpl.opcodes
+                        if o.name == tpl.mod_type_name]
+        if len(intypes_list) == 0:
             return
 
-        in_len = [len(i) for i in in_udo]
-        if len(set(in_len)) != 1:
+        if len({len(i) for i in intypes_list}) != 1:
             self.messages += ["error ({}): UDO variants have different "
                               "number of intypes".format(tpl.filename)]
-        else:
-            intypes_atleast = len(tpl.modes) \
-                              + len(tpl.ins[0].types) \
-                              + len(tpl.outs[0].types)
-            if in_len[0] < intypes_atleast:
-                self.messages += ["error ({}): according to annotations "
-                                  "there should be at least {} 'intypes' "
-                                  "in the UDO".format(tpl.filename, intypes_atleast)]
+            return
+
+        expected_intypes_len = len(tpl.modes) \
+                               + len(tpl.ins[0].types) \
+                               + len(tpl.outs[0].types)
+        if len(intypes_list[0]) < expected_intypes_len:
+            self.messages += ["error ({}): according to annotations "
+                              "there should be at least {} 'intypes' "
+                              "in the UDO".format(tpl.filename, expected_intypes_len)]
 
 
 class ParamsModesConsistent(UdoValidation):
@@ -385,6 +398,7 @@ class UdoTemplateValidation:
             return exists.messages
         validators = ValidationChain([AnnotationParsed,
                                       MapTablesExist,
+                                      AtLeastOneOpcodeIsNamedAsModule,
                                       InsOutsValid,
                                       UdoIntypesConsistent])
         validators.do(data, tpl)
