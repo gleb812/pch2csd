@@ -1,11 +1,12 @@
 ;@ map DLY500
 ;@ map CLA001
+;@ map FLTfrq
 
 ;@ ins a
 ;@ outs a
 opcode DelayA, 0, kkkkkkkk
 	kTime, kFB, kFilter, kDW, kOn, kRange, kIn, kOut xin
-; TODO add filter
+; TODO check filter values
 	ain zar kIn
 
 	if kRange == 0 then
@@ -20,11 +21,13 @@ opcode DelayA, 0, kkkkkkkk
 
 	kFdbk table kFB, giCLA001
 	kDW table kDW, giCLA001
+	kFilter table kFilter, giFLTfrq
 
 	abuf delayr 2.7 ;max time
 	atap deltapi kTime
 	delayw ain+atap*kFdbk
 
-	;no filter
+	atap tone atap, kFilter
+
 	zaw atap*kDW+ain*(1-kDW), kOut
 endop
