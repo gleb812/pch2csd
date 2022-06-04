@@ -1,0 +1,57 @@
+;@ map RNDsub RNDlow RNDhir RNDbpm LFOphs
+
+;@ ins k k k k
+;@ outs k k
+opcode LfoB, 0, kkkkkkkkkkkkkkkk
+; Modulation not implemented
+; kMod - blue - -64..+64
+; TODO double check everything
+
+;                0    1     2     3  4   5
+k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
+k2[] fillarray 0.5, 0.5, -0.5, -0.5, 0,  0
+k3[] fillarray 1,   -1,     1,   -1, 1, -1
+kRate,kModLev,kRange,kKBT,kWave,kMode,kPhase,kON,kOutType,kPhaseM, kRateIn,kRateVar,kRst,kPhaseIn,kOut,kSync xin
+
+kRate_ zkr kRateIn
+kPhaseIn_ zkr kPhaseIn
+kPhaseM /= 127
+kRateIn_ zkr kRateIn
+
+kRst_ zkr kRst
+kRst_ trigger kRst_,0.0001, 0
+kPhase table kPhase + kPhaseM * kPhaseIn_, giLFOphs
+kPhase /= 360
+kRateVar /= 127
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 0	; freq in Hz
+KBT:
+
+; CHECK RATES~!!!!!!!! RATE MODE WRONG ?
+kPitch init 0
+if kRateIn == 0 goto Run
+kPitch zkr kRateIn
+Run:
+kM_ = kPitch + kModLev*kRate_ + kNote
+
+if kRange == 0 then
+  kRate table kRate,giRNDsub
+  kRate = 1/kRate
+elseif kRange == 1 then
+  kRate table kRate,giRNDlow
+  kRate = 1/kRate
+elseif kRange == 2 then
+  kRate table kRate,giRNDhir
+else
+  kRate table kRate,giRNDbpm
+endif
+
+aout oscilikts 1, kM_ + kRate, kWave+1,a(kRst_),kPhase
+kout = k(aout)*k1[kOutType]*k3[kOutType]+k2[kOutType]
+
+zkw kout*kON, kOut
+endop

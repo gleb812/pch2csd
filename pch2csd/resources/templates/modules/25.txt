@@ -1,0 +1,94 @@
+;@ map RNDsub RNDlow RNDhir RNDbpm LFOphs
+
+;@ ins k k k k k k
+;@ outs k k
+opcode LfoShpA, 0, kkkkkkkkkkkkkkkkkkkk
+setksmps 1
+; TODO double check everything
+; Modulation not implemented
+; kMod - blue - -64..+64
+
+;                0    1     2     3  4   5
+k1[] fillarray 0.5, 0.5,  0.5,  0.5, 1,  1
+k2[] fillarray 0.5, 0.5, -0.5, -0.5, 0,  0
+k3[] fillarray 1,   -1,     1,   -1, 1, -1
+kRate,kRange,kKBT,kRateM,kON,kShape,kPhaseM,kPhase,kShapeM,kMode,kOutType,kWave, kRateIn,kRateVar,kRst,kShapeIn,kPhaseIn,kDir, kOut,ksynco xin
+
+kRate_ zkr kRateIn
+kPhaseIn_ zkr kPhaseIn
+kPhaseM /= 127
+kShapeM /= 127
+kShapeIn_ zkr kShapeIn
+kRateIn_ zkr kRateIn
+
+
+kRst_ zkr kRst
+kRst_ trigger kRst_,0.0001, 0
+async = a(kRst_)
+kPhase table kPhase + kPhaseM * kPhaseIn_, giLFOphs
+kPhase /= 360
+kRateVar /= 127
+
+if kKBT != 1 goto NoKBT
+kNote = gkNote
+goto KBT
+NoKBT:
+kNote = 0	; freq in Hz
+KBT:
+
+; CHECK RATES~!!!!!
+kPitch init 0
+if kRateIn == 0 goto Run
+kPitch zkr kRateIn
+Run:
+kM_ = kPitch + kRateM*kRate_ + kNote
+
+if kRange == 0 then
+  kRate table kRate,giRNDsub
+  kRate = 1/kRate
+elseif kRange == 1 then
+  kRate table kRate,giRNDlow
+  kRate = 1/kRate
+elseif kRange == 2 then
+  kRate table kRate,giRNDhir
+else
+  kRate table kRate,giRNDbpm
+endif
+;==========================================
+kShape /= 127   ; check values
+kShape += kShapeIn_*kShapeM   ; shape modulation
+kShape limit kShape, 0, 1
+aph, asyncout syncphasor kM_ + kRate, async
+
+if kWave == 0 then   ; Sine
+  ktable = 1  ; giSin
+  kShape = kShape*2 - 1
+  aph pdhalf aph, kShape, 0
+elseif kWave == 1 then ; CosBell
+  ktable = 11 ; giCos
+  aph pdhalf aph, kShape, 1
+elseif kWave == 2 then ; TriBell
+  ktable = 24  ; giTriF
+  aph pdhalf aph, kShape, 1
+elseif kWave == 3 then ; Saw2Tri
+  ktable = 24  ; giTriF
+  kShape = kShape*2 - 1
+  aph pdhalf aph, kShape, 0
+elseif kWave == 4 then ; Srq2Tri
+  ktable = 2  ; giTri
+  kShape *= .25
+  ksig loopsegp k(aph),0,kShape,.25,.5-2*kShape,.25,kShape*2,.75,.5-2*kShape,.75,kShape,1
+  aph = a(ksig)
+else   ; Sqr
+  ktable = 4  ; giSqr50
+  kShape = kShape*2 - 1
+  aph pdhalf aph+kPhase, kShape, 0
+endif
+
+aout tablekt aph,ktable,1
+
+kout = k(aout)*k1[kOutType]*k3[kOutType]+k2[kOutType]
+
+zkw kout*kON, kOut
+zkw k(asyncout)*kON, ksynco
+endop
