@@ -38,17 +38,17 @@ if kPitchIn == 0 goto Run
 kPitch zkr kPitchIn
 Run:
 if kTuneMode!=3 then
-  kCoarse table kcoarse, giOSCsem
+  kCoarse table kCoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
 else
-    if kcoarse <= 32 then
-      kFreq table kcoarse, giOSCprt
+    if kCoarse <= 32 then
+      kFreq table kCoarse, giOSCprt
       kFine table kFine, giOSCcnt
       kFreq *= cent(kFine)
     else
-      kPart table kcoarse, giOSCprt
+      kPart table kCoarse, giOSCprt
       kFine table kFine, giOSCcnt
       kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
       kFreq = cpsmidinn(kM_)*kPart
@@ -142,17 +142,17 @@ aPitch zkr kPitchIn
 kPitch = k(aPitch)
 Run:
 if kTuneMode!=3 then
-  kCoarse table kcoarse, giOSCsem
+  kCoarse table kCoarse, giOSCsem
   kFine table kFine, giOSCcnt
   kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
   kFreq = cpsmidinn(kM_+kCoarse)
 else
-    if kcoarse <= 32 then
-      kFreq table kcoarse, giOSCprt
+    if kCoarse <= 32 then
+      kFreq table kCoarse, giOSCprt
       kFine table kFine, giOSCcnt
       kFreq *= cent(kFine)
     else
-      kPart table kcoarse, giOSCprt
+      kPart table kCoarse, giOSCprt
       kFine table kFine, giOSCcnt
       kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
       kFreq = cpsmidinn(kM_)*kPart
