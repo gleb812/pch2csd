@@ -1,0 +1,38 @@
+;@ outs k k k k k k
+opcode Device, 0, kkkkkk
+	kwh, kat, kcp, ksp, kps, kg1, kg2 xin
+	kWheel,kCtrlP,kModW1,kModW1,kSusP,kTouch init 0
+
+	; please notice: original Device module returns G2 Keyboard messages only, i.e.
+	; it doesn't respond to MIDI IN of G2. It makes it unusable for rack version.
+	; Here we assume that you connect your MIDI controller and it imitates G2 keyboard.
+	; Therefore, in our version this module just reads MIDI IN messages i.e.
+	; Mod Wheel (CC1), Control Pedal (CC11), Sustain Pedal (CC64), ModWheel1 (CC96), ModWheel2 (CC97),
+	; Channel Pressure, and Pitch Wheel (only MSB).
+
+	kWheel ctrl7 1, 1, 0, 1
+	kCtrlP ctrl7 1, 11, 0, 1
+	kModW1 ctrl7 1, 96, 0, 1
+	kModW2 ctrl7 1, 97, 0, 1
+
+	kSusP ctrl7 1, 64, 0, 1
+	if kSusP != 0 then
+	 	kSusP = 1
+	else kSusP = 0
+	endif
+
+	kcode, kchan, kdata1,kdata2 midiin
+	if kcode != 208 goto Next
+			kTouch = kdata1/127
+Next:
+	if kcode != 224 goto Out
+		kPitch = 2*kdata1/127 - 1
+Out:
+	zkw kWheel,kwh
+	zkw kCtrlP,kcp
+	zkw kModW1,kg1
+	zkw kModW2,kg2
+	zkw kSusP,ksp
+	zkw kTouch,kat
+	zkw kPitch,kps
+endop
