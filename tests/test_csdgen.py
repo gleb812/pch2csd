@@ -1,5 +1,6 @@
 from unittest import TestCase, skip
 
+from pch2csd.app import convert_pch2
 from pch2csd.csdgen import Udo, Csd, ZakSpace
 from pch2csd.parse import parse_pch2
 from pch2csd.patch import transform_in2in_cables
@@ -111,3 +112,8 @@ class TestUdoGen(TestCase):
 
         self.assertEqual(len(amp_params), 2)
         self.assertEqual(amp_params[0], 83)
+
+
+class TestTextBlockGen(TestCase):
+    def test_note_nodes__no_exception(self):
+        convert_pch2(get_test_resource('test_text.pch2'))

@@ -42,6 +42,10 @@ class Udo:
         else:
             return '{}_v{}'.format(self.mod.type_name, self.udo_variant)
 
+    def get_mod_name(self):
+        if self.mod.name is not None:
+            return self.mod.name
+
     def get_src(self) -> str:
         src = list(self.tpl.opcodes[self.udo_variant].src)
         assert src[0].startswith('opcode')
@@ -72,7 +76,7 @@ class Udo:
         else:
             return params.values
 
-    def get_statement_parts(self) -> Tuple[str, str, str, str, str]:
+    def get_statement_parts(self) -> Tuple[str, str, str, str, str, str]:
         name, params, modes, inlets, outlets = self.get_name(), '', '', '', ''
         params = ','.join([str(f) for f in self.get_params()])
         modes = ','.join([str(m) for m in self.mod.modes])
@@ -87,7 +91,7 @@ class Udo:
         if inlets != '' and outlets != '':
             inlets += ','
 
-        return name, params, modes, inlets, outlets
+        return name, self.get_mod_name(), params, modes, inlets, outlets
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
@@ -170,6 +174,7 @@ class Csd:
     def get_code(self) -> str:
         return '\n\n'.join(s.strip()
                            for s in [self.header,
+                                     self.textpad,
                                      self.zakinit,
                                      self.ft_statements,
                                      self.ft_maps,
@@ -183,6 +188,21 @@ class Csd:
         path = get_template_path('csd_header')
         with open(path, 'r') as f:
             return preprocess_csd_code(f.read())
+
+    @property
+    def textpad(self) -> str:
+        s = StringIO()
+        if self.patch.textpad is not None and self.patch.textpad != '':
+            s.write('\n')
+            s.write(';---------------------------------\n')
+            s.write('; Textpad\n')
+            s.write(';\n')
+            for line in self.patch.textpad.splitlines():
+                s.write('; ')
+                s.write(line)
+                s.write('\n')
+            s.write('\n')
+        return s.getvalue()
 
     @property
     def footer(self) -> str:
@@ -248,7 +268,7 @@ class Csd:
         s.write('instr {}\n'.format(2 - loc.value))
         statements = [udo.get_statement_parts() for udo in self.udos
                       if udo.mod.location == loc]
-        table_head = ('; Module', 'Parameters', 'Modes', 'Inlets', 'Outlets')
+        table_head = ('; Module', 'Name', 'Parameters', 'Modes', 'Inlets', 'Outlets')
         table_str = tabulate(statements, table_head, tablefmt='plain')
         s.write(table_str)
         s.write('\nendin')

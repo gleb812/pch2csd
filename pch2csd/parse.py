@@ -1,5 +1,5 @@
-from io import FileIO
 from struct import unpack
+from typing import BinaryIO
 
 from bitarray import bitarray
 
@@ -9,7 +9,7 @@ from .resources import ProjectData
 from .util import BitArrayStream
 
 
-def parse_header(pch2: FileIO, patch: Patch):
+def parse_header(pch2: BinaryIO, patch: Patch):
     while pch2.read(1) != b'\0':
         pass
     version, h_type = unpack('>BB', pch2.read(2))
@@ -66,6 +66,27 @@ def parse_module_parameters(blob: bitarray, patch: Patch):
         patch.mod_params.append(mod_params)
 
 
+def parse_module_names(blob: bitarray, patch: Patch):
+    MAX_MODULE_NAME_LEN = 16
+
+    bits = BitArrayStream(blob)
+    # We got extra 6 bits apart from location, unlike elsewhere
+    loc, _, num_modules = bits.read_ints([2, 6, 8])
+    loc = Location.from_int(loc)
+
+    for _ in range(num_modules):
+        mod_id = bits.read_ints([8])[0]
+        mod_name = bits.read_null_term_str(MAX_MODULE_NAME_LEN)
+        mod = patch.find_module(mod_id, loc)
+        if mod is not None:
+            mod.name = mod_name
+
+
+def parse_textpad(blob: bitarray, patch: Patch):
+    bits = BitArrayStream(blob)
+    patch.textpad = blob.tobytes().decode()
+
+
 def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
     if head == 0x4a:
         parse_module_list(blob, patch)
@@ -76,6 +97,10 @@ def parse_data_object(head: int, blob: bitarray, patch: Patch, ctx: dict):
             # skipping patch settings
             parse_module_parameters(blob, patch)
         ctx['head_4d_count'] += 1
+    elif head == 0x5a:
+        parse_module_names(blob, patch)
+    elif head == 0x6f:
+        parse_textpad(blob, patch)
 
 
 def parse_pch2(data: ProjectData, pch2_file: str, convert_in2in=True) -> Patch:

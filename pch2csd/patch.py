@@ -41,7 +41,7 @@ class PatchDescription(ReprStrMixin):
 
 
 class Module(AttrEqMixin, ReprStrMixin):
-    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int, modes=None):
+    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int, modes=None, name=None):
         if modes is None:
             modes = []
         self.type = mod_type
@@ -49,6 +49,7 @@ class Module(AttrEqMixin, ReprStrMixin):
         self.id = id
         self.location = loc
         self.modes = modes
+        self.name = name
 
     def __eq__(self, other):
         return self.attrs_equal(other)
@@ -170,6 +171,7 @@ class Patch(ReprStrMixin):
         self.modules = []  # List[Module]
         self.cables = []  # List[Cable]
         self.mod_params = []  # List[ModuleParameters]
+        self.textpad = None
 
     def find_module(self, id: int, loc=Location.VOICE_AREA) -> Optional[Module]:
         for m in self.modules:

@@ -1,0 +1,3 @@
+opcode Name, 0, 0
+; Dummy note opcode
+endop

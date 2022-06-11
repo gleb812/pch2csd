@@ -13,8 +13,8 @@ class TestParsing(TestCase):
 
     def test_gleb2_pch(self):
         gleb_2_pch = get_test_resource('Gleb2.pch2')
-        expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1),
-                            Module(self.data, Location.VOICE_AREA, 96, 2, [2])]
+        expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1, [], '2-Out1'),
+                            Module(self.data, Location.VOICE_AREA, 96, 2, [2], 'OscD1')]
         expected_cables = [Cable(Location.VOICE_AREA, CableType.IN_TO_IN,
                                  CableColor.WHITE, 1, 1, 1, 0)]
         expected_mod_params = [ModuleParameters(Location.VOICE_AREA, 1, 3, [0, 1, 0]),
@@ -26,8 +26,8 @@ class TestParsing(TestCase):
 
     def test_gleb2_pch__unequal(self):
         gleb_2_pch = get_test_resource('Gleb2.pch2')
-        expected_modules_correct = [Module(self.data, Location.VOICE_AREA, 4, 1),
-                                    Module(self.data, Location.VOICE_AREA, 96, 2, [2])]
+        expected_modules_correct = [Module(self.data, Location.VOICE_AREA, 4, 1, [], '2-Out1'),
+                                    Module(self.data, Location.VOICE_AREA, 96, 2, [2], 'OscD1')]
         expected_modules = [Module(self.data, Location.VOICE_AREA, 4, 1),
                             Module(self.data, Location.VOICE_AREA, 100, 2)]
         expected_cables = [
@@ -36,6 +36,15 @@ class TestParsing(TestCase):
         self.assertTrue(parsed.modules == expected_modules_correct)
         self.assertFalse(parsed.modules == expected_modules)
         self.assertFalse(parsed.cables == expected_cables)
+
+    def test_text_pch__has_correct_text(self):
+        text_pch = get_test_resource('test_text.pch2')
+        parsed = parse_pch2(self.data, text_pch)
+        module_names = [mod.name for mod in parsed.modules]
+        self.assertSequenceEqual(
+            module_names,
+            ['OscA1', '2-Out1', '0123456789', 'ABCDEFGHIJKLMNOP', 'QRSTUVWXYZ']
+        )
 
 
 class TestCableTracing(TestCase):

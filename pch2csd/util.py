@@ -49,10 +49,27 @@ class BitArrayStream:
         self.pos += int_len
         return num
 
+    def _read_byte(self):
+        b = self.bits[self.pos:self.pos + 8].tobytes()
+        self.pos += 8
+        return b[0]
+
     def read_ints(self, bit_chunks: List[int]):
         if sum(bit_chunks) + self.pos > len(self.bits):
             raise ValueError("Don't have enough data to read")
         return [self._read_int(i) for i in bit_chunks]
+
+    def read_null_term_str(self, num_max_chars=None):
+        byte_list = []
+        while self.pos < len(self.bits):
+            if num_max_chars is not None and len(byte_list) >= num_max_chars:
+                break
+            byte = self._read_byte()
+            if byte != 0:
+                byte_list.append(byte)
+            else:
+                break
+        return bytes(byte_list).decode()
 
 
 def preprocess_csd_code(code: str) -> str:
