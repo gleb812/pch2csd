@@ -33,7 +33,7 @@ setup(
     install_requires=['bitarray', 'tabulate'],
     entry_points={
         'console_scripts': [
-            'pch2csd = pch2csd.app:main'
+            'pch2csd = pch2csd'
         ]
     },
     options={

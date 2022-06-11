@@ -1,7 +1,7 @@
 from glob import glob
 from unittest import TestCase
 
-from pch2csd.app import print_pch2, convert_pch2, validate_udo
+from pch2csd.__main__ import print_pch2, convert_pch2, validate_udo
 from tests.util import get_test_resource
 
 
@@ -21,5 +21,5 @@ class TestApp(TestCase):
             pass  # allow program to exit while we haven't created all modules
 
     def test_gen_udo_status_doc__not_fails(self):
-        from pch2csd.app import gen_udo_status_doc
+        from pch2csd.__main__ import gen_udo_status_doc
         gen_udo_status_doc()

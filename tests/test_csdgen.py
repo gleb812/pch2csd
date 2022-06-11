@@ -1,6 +1,6 @@
 from unittest import TestCase, skip
 
-from pch2csd.app import convert_pch2
+from pch2csd.__main__ import convert_pch2
 from pch2csd.csdgen import Udo, Csd, ZakSpace
 from pch2csd.parse import parse_pch2
 from pch2csd.patch import transform_in2in_cables
