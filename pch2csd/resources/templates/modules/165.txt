@@ -2,7 +2,7 @@
 ;@ outs a a a a a a a
 
 ; TODO check
-opcode DXRouter,0,
+opcode DXRouter,0,kkkkkkkkkkkkkk
   kAlg,kF, ki1,ki2,ki3,ki4,ki5,ki6, ko1,ko2,ko3,ko4,ko5,ko6,kmaino xin
   a1 zar ki1
   a2 zar ki2

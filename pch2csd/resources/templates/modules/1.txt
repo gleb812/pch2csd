@@ -1,19 +1,28 @@
-; nothing to map
+;@ map CLA001
 
 ;@ outs k k k k k k
 opcode Keyboard, 0, kkkkkk
-	kpitch, kgate, klin, krel, knote, kexp xin	
-	kstatus, kchan, kdata1, kdata2 midiin
+	kpitch, kgate, klin, krel, knote, kexp xin
 
-	kSet init 0
-	if (kstatus != 144) goto Halt
+	kSet 		init 0
+	kVelLin init 0
+	kNote 	init 0
+
+	if (gkstatus != 144) goto Halt
 		kSet = 1
+		kVelLin table kdata2, giCLA001
+		kNote table kdata1, giCLA001
 	goto Run
-	
-	Halt:
-	if (kstatus != 128) goto Run	
+
+Halt:
+	if (gkstatus != 128) goto Run
 		kSet = 0
-	
-	Run:
+
+Run:
 	zkw kSet,kgate
+	zkw kSet,kpitch
+	zkw kNote,knote
+	zkw kVelLin ,klin
+	zkw kSet,kexp
+	zkw kSet,krel
 endop

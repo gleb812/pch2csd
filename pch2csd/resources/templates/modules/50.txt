@@ -1,7 +1,7 @@
 ;@ map LVLlev LVLpos
 
 ;@ outs k
-opcode ConstSwM, 0, kkkk
+opcode ConstSwT, 0, kkkk
 kLev, kOn, kPolSw, kout xin
 
 if kPolSw != 0 kgoto Uni
@@ -13,5 +13,5 @@ Over:
   zkw kOn * kLev/64, kout
 endop
 
-; Updated 10.04.20
+; Updated 31.05.22
 ; in case of Csound it is equal to #188 ConstSwM

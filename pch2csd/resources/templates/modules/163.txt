@@ -2,11 +2,11 @@
 
 ;@ ins k k a a a
 ;@ outs a
-opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
+opcode OscShpA, 0, kkkkkkkkkkkkkkkkk
 ;setksmps 1
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
+kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kFMPTrk,kShape,kShapeM,kWave,kON, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
 
 kMod zkr kModIn ;????
 aFM zar kFMIn
@@ -83,17 +83,6 @@ elseif kWave  == 4 then
   ksig loopseg kF,ksync,0,  0,250-kVal, 1,250+kVal, 0,250+kVal,  -1,250-kVal, 0,0
   aout = a(ksig)
 elseif kWave  == 5 then
-kVal = 0.5 * kVal / 127
-  aphase, asyncout syncphasor kF, async
-  aphase2 = aphase + kVal
-  asaw1 tablei aphase, giSaw, 1
-  asaw2 tablei aphase2, giSaw, 1, 0, 1
-  aout = asaw1 + asaw2
-elseif kWave  == 6 then
-  kVal = 500 * kVal / 127
-  ksig loopseg kF,ksync,0,  1,500-kVal, 1,0, -1,500+kVal,  -1,0
-  aout = a(ksig)
-elseif kWave  == 7 then
   kVal = 990 * kVal / 127
   ksig loopseg kF,ksync,0,  0,0, 1,1000-kVal, 1,0, -1,1000-kVal, -1,0, 0,kVal*2
   aout = a(ksig)
@@ -104,11 +93,11 @@ endop
 
 ;@ ins a a a a a
 ;@ outs a
-opcode OscShpB, 0, kkkkkkkkkkkkkkkkk
+opcode OscShpA, 0, kkkkkkkkkkkkkkkkk
 ;setksmps 1
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
-kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kShape,kShapeM,kON,kFMPTrk,kWave, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
+kCoarse,kFine,kKBT,kModLev,kTuneMode,kFM,kFMPTrk,kShape,kShapeM,kWave,kON, kPitchIn,kModIn,kSyncIn,kFMIn,kShapeIn,kOut xin
 
 aMod zkr kModIn ;????
 kMod = k(aMod)
@@ -187,17 +176,6 @@ elseif kWave  == 4 then
   ksig loopseg kF,ksync,0,  0,250-kVal, 1,250+kVal, 0,250+kVal,  -1,250-kVal, 0,0
   aout = a(ksig)
 elseif kWave  == 5 then
-kVal = 0.5 * kVal / 127
-  aphase, asyncout syncphasor kF, async
-  aphase2 = aphase + kVal
-  asaw1 tablei aphase, giSaw, 1
-  asaw2 tablei aphase2, giSaw, 1, 0, 1
-  aout = asaw1 + asaw2
-elseif kWave  == 6 then
-  kVal = 500 * kVal / 127
-  ksig loopseg kF,ksync,0,  1,500-kVal, 1,0, -1,500+kVal,  -1,0
-  aout = a(ksig)
-elseif kWave  == 7 then
   kVal = 990 * kVal / 127
   ksig loopseg kF,ksync,0,  0,0, 1,1000-kVal, 1,0, -1,1000-kVal, -1,0, 0,kVal*2
   aout = a(ksig)

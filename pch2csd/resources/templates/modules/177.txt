@@ -1,4 +1,4 @@
-;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7
+;@ map DLY_5m DLY25m DLY100 DLY500 DLY_1s DLY_2s DLY2p7 FLTfrq
 ;@ map CLA001
 
 ;@ ins a k k
@@ -9,8 +9,10 @@ opcode DelayB, 0, kkkkkkkkkkk
   ain    zar kin
   kDWmod zkr kdwmod
   kFBmod zkr kfbmod
-; TODO check modulation levels and filter types
+; TODO check modulation levels and filter values
 
+  kLP table kLP, giFLTfrq
+  kHP table kHP, giFLTfrq
   kFB_ table kFB + kFBmodL*kFBmod,giCLA001
   kDW_ table kDW + kDWmodL*kDWmod,giCLA001
 
@@ -41,11 +43,12 @@ opcode DelayB, 0, kkkkkkkkkkk
   ain    zar kin
   aDWmod zar kdwmod
   aFBmod zar kfbmod
-; TODO check modulation levels and filter types
 
   aFB_ table kFB + kFBmodL*aFBmod,giCLA001
   aDW_ table kDW + kDWmodL*aDWmod,giCLA001
-
+  kLP table kLP, giFLTfrq
+  kHP table kHP, giFLTfrq
+  
   if kRange == 0 then
     kTime table kTime, giDLY500
   elseif kRange == 1 then

@@ -2,7 +2,7 @@
 
 ;@ ins kk
 ;@ outs k
-opcode RandomA, 0, kkkkkkkkk
+opcode RandomB, 0, kkkkkkkkk
   kRate,kMode,kKBT,kRateM,kStep,kON,kType,kRange,kEdge,kin1,kin2,kout xin
   kMod zkr kin1
   kModM zkr kin2
