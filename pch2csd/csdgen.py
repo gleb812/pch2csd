@@ -91,7 +91,12 @@ class Udo:
         if inlets != '' and outlets != '':
             inlets += ','
 
-        return name, self.get_mod_name(), params, modes, inlets, outlets
+        mod_name = self.get_mod_name()
+        commented_mod_name = ''
+        if mod_name is not None and mod_name != '':
+            commented_mod_name = '/* ' + mod_name + ' */'
+
+        return name, commented_mod_name, params, modes, inlets, outlets
 
     def _init_zak_connections(self):
         ins, outs = self.in_types, self.out_types
