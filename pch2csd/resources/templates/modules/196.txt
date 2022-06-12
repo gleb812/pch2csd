@@ -4,7 +4,7 @@
 ; TODO Check Decay time
 
 ;@ ins k k a
-;@ args a
+;@ outs a
 opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
