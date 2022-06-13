@@ -43,10 +43,10 @@ Next:
   atapR deltapi kTimeR
   delayw ain+atapR*kFBR
 
-  ;aoutL tone atapL, kLP ; check filter type etc
-  ;aoutL atone aoutL, kHP ; check filter type etc
-  ;aoutR tone atapR, kLP ; check filter type etc
-  ;aoutR atone aoutR, kHP ; check filter type etc
+  aoutL tone atapL, kLP ; check filter type etc
+  aoutL atone aoutL, kHP ; check filter type etc
+  aoutR tone atapR, kLP ; check filter type etc
+  aoutR atone aoutR, kHP ; check filter type etc
 
 if kOn == 1 goto Out
   zaw ain, kol
