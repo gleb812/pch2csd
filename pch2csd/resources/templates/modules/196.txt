@@ -8,7 +8,7 @@ opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kMod - blue - -64..+64
 ; OSCPERC = OSCA + ENVD
 ; TODO Check Decay time
-kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
+kcoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
 
 	kstate init 0
 	kEnv init 0
@@ -93,7 +93,7 @@ opcode OscPerc, 0, kkkkkkkkkkkkk
 ; kModLev - 0...1
 ; kMod - blue - -64..+64
 ; OSCPERC = OSCA + ENVD
-kCoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
+kcoarse,kFine,kTuneMode,kKBT,kModLev,kD,kClick,kPunch,kON,kPitchIn,kModIn,kTrig,kOut xin
 
 	kstate init 0
 	kEnv init 0
