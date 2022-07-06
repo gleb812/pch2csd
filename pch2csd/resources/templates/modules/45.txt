@@ -154,11 +154,11 @@ if kForm > 64 then
 ;linear interp
 kF1 = (iF1[kSel2][kFreq]+iF1[kSel3][kFreq])*.5
 kF2 = (iF2[kSel2][kFreq]+iF2[kSel3][kFreq])*.5
-kF3 = (iF[kSel2][kFreq]+iF[kSel3][kFreq])*.5
+kF3 = (iF3[kSel2][kFreq]+iF3[kSel3][kFreq])*.5
 else
 kF1 = (iF1[kSel2][kFreq]+iF1[kSel1][kFreq])*.5
 kF2 = (iF2[kSel2][kFreq]+iF2[kSel1][kFreq])*.5
-kF3 = (iF[kSel2][kFreq]+iF[kSel1][kFreq])*.5
+kF3 = (iF3[kSel2][kFreq]+iF3[kSel1][kFreq])*.5
 endif
 
 alow,ahigh,a1 svfilter ain, kF1, iQ[kRes]
