@@ -1,7 +1,7 @@
 ;@ ins a k a
 ;@ outs a
 
-opcode Voice,0,kkkkkkkkkkkkkk
+opcode FltVoice,0,kkkkkkkkkkkkkk
 ; TODO check transition function. now it is just linear
 kSel1,kSel2,kSel3,kLevel,kForm,kFormM,kFreq,kFreqM,kRes,kOn, kIn,kModIn,kFModIn,kOut xin
 ain zar kIn
