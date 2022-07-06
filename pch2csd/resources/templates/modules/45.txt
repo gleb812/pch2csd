@@ -166,5 +166,5 @@ alow,ahigh,a2 svfilter ain, kF2, iQ[kRes]
 alow,ahigh,a3 svfilter ain, kF3, iQ[kRes]
 
 aout = a1 + a2 + a3
-xout aout*kLevel*kOn,kOut
+zaw aout*kLevel*kOn,kOut
 endop
