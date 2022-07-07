@@ -63,15 +63,11 @@ Out:
 skip:
 	kGateT trigger kGate, 0.000001, 0
 	if kGateT == 1 then
-		if kstate == 1 then
-			kTime = 0
-			kEnv = 1
-			kEnvP = kPunch+1
-		else
+	kTime = 0
+	kEnv = 1
+	kEnvP = kPunch+1
+		if kstate != 1 then	
 			kstate = 1
-			kEnv = 1
-			kTime = 0
-			kEnvP = kPunch+1
 		endif
 	else
 		if kstate == 1 then
@@ -82,7 +78,8 @@ skip:
 		endif
 	endif
 ; we use oscilikts 'cos we need phase sync
-aout oscilikts 0.5, kFreq*kEnvP, 1, aGate, kClick
+async = a(kGateT)
+aout oscilikts 0.5, kFreq*kEnvP, 1, async, kClick
 	zaw aout*kON*kEnv, kOut
 
 endop
