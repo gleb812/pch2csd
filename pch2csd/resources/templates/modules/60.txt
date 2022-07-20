@@ -18,8 +18,7 @@ opcode Mux81X, 0, kkkkkkkkkkk
   endif
 
   kCross[][] init 77,18
-  kCross fillarray
-  1,1,1,1,1,1,1,1,0.6310,0.0000,0,0,0,0,0,0,0,0,
+  kCross fillarray 1,1,1,1,1,1,1,1,0.6310,0.0000,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5821,0.0079,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5821,0.0138,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5754,0.0195,0,0,0,0,0,0,0,0,
@@ -100,25 +99,25 @@ opcode Mux81X, 0, kkkkkkkkkkk
   kCtrl *= 127
 
   if kCtrl < 19 then
-    kOut = ki1*kCross[kx][kCtrl] + ki2*kCross[kx][18-kCtrl]
+    kOut = ki1*kCross[kCtrl][kx] + ki2*kCross[18-kCtrl][kx]
     goto Over
   elseif kCtrl < 37 then
-    kOut = ki2*kCross[kx][kCtrl-19] + ki3*kCross[kx][37-kCtrl-19]
+    kOut = ki2*kCross[kCtrl-19][kx] + ki3*kCross[37-kCtrl-19][kx]
     goto Over
   elseif kCtrl < 55 then
-    kOut = ki3*kCross[kx][kCtrl-37] + ki4*kCross[kx][55-kCtrl-37]
+    kOut = ki3*kCross[kCtrl-37][kx] + ki4*kCross[55-kCtrl-37][kx]
     goto Over
   elseif kCtrl < 73 then
-    kOut = ki4*kCross[kx][kCtrl-55] + ki5*kCross[kx][73-kCtrl-55]
+    kOut = ki4*kCross[kCtrl-55][kx] + ki5*kCross[73-kCtrl-55][kx]
     goto Over
   elseif kCtrl < 91 then
-    kOut = ki5*kCross[kx][kCtrl-73] + ki6*kCross[kx][91-kCtrl-73]
+    kOut = ki5*kCross[kCtrl-73][kx] + ki6*kCross[91-kCtrl-73][kx]
     goto Over
   elseif kCtrl < 109 then
-    kOut = ki6*kCross[kx][kCtrl-91] + ki7*kCross[kx][109-kCtrl-91]
+    kOut = ki6*kCross[kCtrl-91][kx] + ki7*kCross[109-kCtrl-91][kx]
     goto Over
   else
-    kOut = ki7*kCross[kx][kCtrl-109] + ki8*kCross[kx][127-kCtrl]
+    kOut = ki7*kCross[kCtrl-109][kx] + ki8*kCross[127-kCtrl][kx]
   endif
 Over:
   zkw kOut, ko
@@ -144,8 +143,7 @@ opcode Mux81X, 0, kkkkkkkkkkk
   endif
 
   kCross[][] init 77,18
-  kCross fillarray
-  1,1,1,1,1,1,1,1,0.6310,0.0000,0,0,0,0,0,0,0,0,
+  kCross fillarray 1,1,1,1,1,1,1,1,0.6310,0.0000,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5821,0.0079,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5821,0.0138,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,0.5754,0.0195,0,0,0,0,0,0,0,0,
@@ -226,25 +224,25 @@ opcode Mux81X, 0, kkkkkkkkkkk
   kCtrl *= 127
 
   if kCtrl < 19 then
-    aOut = ai1*kCross[kx][kCtrl] + ai2*kCross[kx][18-kCtrl]
+    aOut = ai1*kCross[kCtrl][kx] + ai2*kCross[18-kCtrl][kx]
     goto Over
   elseif kCtrl < 37 then
-    aOut = ai2*kCross[kx][kCtrl-19] + ai3*kCross[kx][37-kCtrl-19]
+    aOut = ai2*kCross[kCtrl-19][kx] + ai3*kCross[37-kCtrl-19][kx]
     goto Over
   elseif kCtrl < 55 then
-    aOut = ai3*kCross[kx][kCtrl-37] + ai4*kCross[kx][55-kCtrl-37]
+    aOut = ai3*kCross[kCtrl-37][kx] + ai4*kCross[55-kCtrl-37][kx]
     goto Over
   elseif kCtrl < 73 then
-    aOut = ai4*kCross[kx][kCtrl-55] + ai5*kCross[kx][73-kCtrl-55]
+    aOut = ai4*kCross[kCtrl-55][kx] + ai5*kCross[73-kCtrl-55][kx]
     goto Over
   elseif kCtrl < 91 then
-    aOut = ai5*kCross[kx][kCtrl-73] + ai6*kCross[kx][91-kCtrl-73]
+    aOut = ai5*kCross[kCtrl-73][kx] + ai6*kCross[91-kCtrl-73][kx]
     goto Over
   elseif kCtrl < 109 then
-    aOut = ai6*kCross[kx][kCtrl-91] + ai7*kCross[kx][109-kCtrl-91]
+    aOut = ai6*kCross[kCtrl-91][kx] + ai7*kCross[109-kCtrl-91][kx]
     goto Over
   else
-    aOut = ai7*kCross[kx][kCtrl-109] + ai8*kCross[kx][127-kCtrl]
+    aOut = ai7*kCross[kCtrl-109][kx] + ai8*kCross[127-kCtrl][kx]
   endif
 Over:
   zaw aOut, ko
