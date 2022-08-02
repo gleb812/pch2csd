@@ -14,3 +14,4 @@ After making a contribution, please add yourself to the list in this file.
 - Ekaterina Kalmykova
 - Nicholas C. Raftis III
 - Alexander Tsimbalov
+- Kirill Prokhorov
