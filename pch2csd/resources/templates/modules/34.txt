@@ -51,9 +51,9 @@ ix5 fillarray 0,0,0,0,0,0,-0.000029125,0.00088495,-0.0057206,0.013525,-0.0053247
 
   if kShape == 0 then ; x2
    aout = a1 - ix2[klev][0] + ix2[klev][1]*a1 + ix2[klev][2]*a1*a1 + ix2[klev][3]*a1*a1*a1
-  if kShape == 1 then ; x3
+  elseif kShape == 1 then ; x3
    aout = a1*a1 - ix3[klev][0] + ix3[klev][1]*a1 + ix3[klev][2]*a1*a1 + ix3[klev][3]*a1*a1*a1
-  if kShape = 2 then  ; x4
+  elseif kShape = 2 then  ; x4
    aout = a1*a1*a1 - ix4[klev][0] + ix4[klev][1]*a1 + ix4[klev][2]*a1*a1 + ix4[klev][3]*a1*a1*a1 + ix4[klev][4]*a1^4 + ix4[klev][5]*a1^5
   else            ; x5
    aout = a1^3.5 - ix5[klev][0] + ix5[klev][1]*a1 + ix5[klev][2]*a1*a1 + ix5[klev][3]*a1*a1*a1 + ix5[klev][4]*a1^4 + ix5[klev][5]*a1^5
