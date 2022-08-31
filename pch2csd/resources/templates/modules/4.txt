@@ -12,15 +12,12 @@ kpad = kPad + 1
 aL zar kL
 aR zar kR
 
-aL limit aL, -4, 4  ; +12 dB overhead limitation
-aR limit aR, -4, 4
-aL *= .25 ; back to 0dbfs = 1
-aR *= .25
-
+aL limit aL, -0.5, 0.5  ; built-in limiter -6 dB
+aR limit aR, -0.5, 0.5
 aOL = aL*kMute*kpad
 aOR = aR*kMute*kpad
 
-outs kM1[ksource]*aOL,kM1[ksource]*aOR  ; SOURCE 0
+outs kM1[ksource]*aOL,kM1[ksource]*aOR        ; SOURCE 0
 gaFX1 += kM3[ksource]*aOL                     ; SOURCE 2
 gaFX2 += kM3[ksource]*aOR
 gaFX3 += kM4[ksource]*aOL                     ; SOURCE 3

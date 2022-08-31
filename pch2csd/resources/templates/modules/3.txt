@@ -10,14 +10,10 @@ a2 zar k2
 a3 zar k3
 a4 zar k4
 
-a1 limit a1, -4, 4  ; +12 dB overhead limitation
-a2 limit a2, -4, 4
-a3 limit a3, -4, 4
-a4 limit a4, -4, 4
-a1 *= .25 ; back to 0dbfs = 1
-a2 *= .25
-a3 *= .25
-a4 *= .25
+a1 limit a1, -0.5, 0.5  ; built-in limiter
+a2 limit a2, -0.5, 0.5
+a3 limit a3, -0.5, 0.5
+a4 limit a4, -0.5, 0.5
 
 aO1 = a1*kMute*kpad
 aO2 = a2*kMute*kpad
