@@ -17,9 +17,9 @@ ix5 fillarray 0,0,0,0,0,-0.000048849,0.000142798,-0.000001954,0.00000007,-0.0000
 
 if kShape == 0 then ; x2
  kout = k1 - ix2[klev][0] - ix2[klev][1]*k1 - ix2[klev][2]*k1*k1 - ix2[klev][3]*k1*k1*k1
-if kShape == 1 then ; x3
+elseif kShape == 1 then ; x3
  kout = k1 - ix3[klev][0] - ix3[klev][1]*k1 - ix3[klev][2]*k1*k1 - ix3[klev][3]*k1*k1*k1
-if kShape = 2 then  ; x4
+elseif kShape = 2 then  ; x4
  kout = k1 - ix4[klev][0] - ix4[klev][1]*k1 - ix4[klev][2]*k1*k1 - ix4[klev][3]*k1*k1*k1 - ix4[klev][4]*k1^4
 else                ; x5
  kout = k1 - ix5[klev][0] - ix5[klev][1]*k1 - ix5[klev][2]*k1*k1 - ix5[klev][3]*k1*k1*k1 - ix5[klev][4]*k1^4
