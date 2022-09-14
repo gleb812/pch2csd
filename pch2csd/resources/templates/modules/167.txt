@@ -1,0 +1,52 @@
+;@ map OSCcnt
+;@ map EFXsem
+
+;@ ins a k
+;@ outs a
+; TODO
+opcode PShift, 0, kkkkkkkk
+  kSemi,kFine,kModLev,kDelay,kOn, kin,kpitchi,kout xin
+  setksmps  1
+  aIn zar kin
+  kMod zkr kpitchi
+
+  kSemi table kSemi, giEFXsem
+  kFine table kFine, giOSCcnt
+  kpsc = cent(kFine*100+kSemi)   ; проверить полутоны или что
+
+  kfdb init 0  ; CHECK
+
+  i1 ftgen  0, 0, 4096, 10, 0
+  iwin ftgen  0, 0, 4096, 9, 0.5, 1, 0
+
+  ilen = ftlen(gi1) 	; delay length (samples)
+  ihl = ilen/2      	; delay half-length
+  krp init 	0        	; read pointer
+  kwp init 	0        	; write pointer
+  awp = kwp         	; a-type copy of kwp
+  kbsdiff = abs(krp - kwp) ; absolute difference
+  if kbsdiff > ihl 	then
+    if krp > kwp 		then
+  	 kbsdiff = kwp+ilen - krp
+  	else
+  	 kbsdiff = krp+ilen - kwp
+    endif
+  endif
+  kenv table 	kbsdiff, iwin 			; Crossfade Enevelope
+  as1  table 	krp, i1, 0, 0, 1
+  as2  table 	krp, i1, 0, ihl, 1
+  amix = as1*kenv + as2*(1-kenv)
+  tablew 	asig+amix*kfdb, awp, i1
+  kwp += 1
+  krp += kpsc
+  if kwp > ilen then
+  	 kwp = 0
+  endif
+  if krp > ilen then
+  	 krp = 0
+  endif
+  zaw amix * kOn, kout
+endop
+
+; Gleb Rogozinsky  September 2022
+; Based on Victor Lazzarini's code (2005) from Boulanger collection
