@@ -16,15 +16,15 @@ opcode LevScaler, 0, kkkkkkkk
 
   kin zkr kIn
 
-  kL table kL,giNTELev
-  kR table kR,giNTELev
+  kL table kL,giNTElev
+  kR table kR,giNTElev
 
   kDif = knote - kBP
 
   if kDif > 0 then  ; RIGHT
     kLev = kDif*10^(kR/240)
   elseif kDif < 0 then  ; LEFT
-    kLev = -kDif*10^(kR/240)
+    kLev = -kDif*10^(kL/240)
   else
     kLev = 1
   endif
@@ -50,15 +50,15 @@ opcode LevScaler, 0, kkkkkkkk
 
   ain zar kIn
 
-  kL table kL,giNTELev
-  kR table kR,giNTELev
+  kL table kL,giNTElev
+  kR table kR,giNTElev
 
   kDif = knote - kBP
 
   if kDif > 0 then  ; RIGHT
     kLev = kDif*10^(kR/240)
   elseif kDif < 0 then  ; LEFT
-    kLev = -kDif*10^(kR/240)
+    kLev = -kDif*10^(kL/240)
   else
     kLev = 1
   endif
