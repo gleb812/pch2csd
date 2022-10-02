@@ -1,0 +1,69 @@
+;@ map NTElev
+
+;@ ins k k
+;@ outs k k
+opcode LevScaler, 0, kkkkkkkk
+  kL,kBP,kR,kKBT,kNote,kIn,kLevel,kOut xin
+
+  if kKBT != 1 goto NoKBT
+    kNote = gkNote
+    goto KBT
+  NoKBT:
+    knote zkr kNote
+    knote = int(knote*127)
+  KBT:
+
+
+  kin zkr kIn
+
+  kL table kL,giNTELev
+  kR table kR,giNTELev
+
+  kDif = knote - kBP
+
+  if kDif > 0 then  ; RIGHT
+    kLev = kDif*10^(kR/240)
+  elseif kDif < 0 then  ; LEFT
+    kLev = -kDif*10^(kR/240)
+  else
+    kLev = 1
+  endif
+  kin *= kLev
+
+  zkw kin, kOut
+  zkw kLev, kLevel
+endop
+
+;@ ins k a
+;@ outs k a
+opcode LevScaler, 0, kkkkkkkk
+  kL,kBP,kR,kKBT,kNote,kIn,kLevel,kOut xin
+
+  if kKBT != 1 goto NoKBT
+    kNote = gkNote
+    goto KBT
+  NoKBT:
+    knote zkr kNote
+    knote = int(knote*127)
+  KBT:
+
+
+  ain zar kIn
+
+  kL table kL,giNTELev
+  kR table kR,giNTELev
+
+  kDif = knote - kBP
+
+  if kDif > 0 then  ; RIGHT
+    kLev = kDif*10^(kR/240)
+  elseif kDif < 0 then  ; LEFT
+    kLev = -kDif*10^(kR/240)
+  else
+    kLev = 1
+  endif
+  ain *= kLev
+
+  zaw ain, kOut
+  zkw kLev, kLevel
+endop
