@@ -22,9 +22,9 @@ opcode LevScaler, 0, kkkkkkkk
   kDif = knote - kBP
 
   if kDif > 0 then  ; RIGHT
-    kLev = kDif*10^(kR/240)
+    kLev = kR * kDif / (127 - kBP)
   elseif kDif < 0 then  ; LEFT
-    kLev = -kDif*10^(kL/240)
+    kLev = -kDif * kL / kBP
   else
     kLev = 1
   endif
@@ -56,9 +56,9 @@ opcode LevScaler, 0, kkkkkkkk
   kDif = knote - kBP
 
   if kDif > 0 then  ; RIGHT
-    kLev = kDif*10^(kR/240)
+    kLev = kDif * kR / (127 - kBP) 
   elseif kDif < 0 then  ; LEFT
-    kLev = -kDif*10^(kL/240)
+    kLev = -kDif * kL / kBP
   else
     kLev = 1
   endif
