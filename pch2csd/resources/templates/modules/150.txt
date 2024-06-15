@@ -1,0 +1,44 @@
+;@map EFXthC,EFXraC,EFXatC,EFXreC,EFXlvC
+;@ ins a a a 
+;@ outs a a
+; TODO check it
+opcode compress, 0, kkkkkkkkkkkk
+kthr,krat,katt,krel,kref,kside,kOn,kInL,kInR,kS_in,kOL,kOR xin
+aL zar kInL 
+aR zar kInR
+as_in zar kS_in
+
+ilook init 0.05 ; look-up time for tweaking
+kgatelev init -90  
+
+if kOn != 1 goto Bypass
+
+kthr table kthr,giEFXthC
+krat table krat,giEFXraC
+katt table katt,giEFXatC
+krel table krel,giEFXreC
+kref table kref,giEFXlvC
+
+if kS_in == 1 then
+	aL_ = as_in
+	aR_ = as_in
+else
+	aL_ = aL
+	aR_ = aR
+endif 
+
+
+aL compress2 aL, aL_, kgatelev,kthr,kthr,krat,katt,krel,ilook 
+aR compress2 aR, aR_, kgatelev,kthr,kthr,krat,katt,krel,ilook 
+
+; ref gain
+if kref > kthr then
+	kamp pow 10,(kref - kthr)/20
+	aL *= kamp
+	aR *= kamp
+endif
+
+Bypass:
+zaw aL, aR
+; Gleb Rogozinsky, June 2024
+endop
