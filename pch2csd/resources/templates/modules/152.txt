@@ -1,0 +1,62 @@
+
+;@ ins k
+;@ outs k
+; TODO Even mode is not implemented, Range needs check
+opcode KeyQuant, 0, kkkkkkkkkkkkkkkk
+kRange,kCapture,kE,kF,kFs,kG,kGs,kA,kAs,kB,kC,kCs,kD,kDs, kOut,kIn xin 
+
+kin zkr kIn 
+
+kNotes[] init 12
+ktrig changed kC,kCs,kD,kDs,kE,kF,kFs,kG,kGs,kA,kAs,kB
+if ktrig != 1 goto Over
+	kNotes[0] = kC
+	kNotes[1] = kCs
+	kNotes[2] = kD
+	kNotes[3] = kDs
+	kNotes[4] = kE
+	kNotes[5] = kF
+	kNotes[6] = kFs
+	kNotes[7] = kG
+	kNotes[8] = kGs
+	kNotes[9] = kA
+	kNotes[10] = kAs
+	kNotes[11] = kB
+Over:
+
+; scaling
+kin *= kRange/2
+; turn to MIDI
+kin += 63.5
+kin_m = int(kin)
+knote = kin_m % 12
+
+if kCapture != 1 goto Even ; Even is not implemented yet
+	if kNotes[knote] != 1 goto Next
+		kshift = 0
+		goto Out
+	Next:
+	kndx = 1
+	while kndx <= 6 do
+		knote_up = (knote + kndx)%12
+		if (knote - kndx) > 0 then
+			knote_dn = knote - kndx
+		else
+			knote_dn = 12 - knote - kndx
+		endif
+		if kNotes[knote_up] == 1 then
+			kshift = kndx 
+			goto Out
+		elseif kNotes[knote_dn] == 1 then
+			kshift = -kndx 
+			goto Out
+		else
+			kndx += 1
+		endif
+	od    
+Even:
+; 
+Out:
+kout = kin_m + kshift
+zkw kout, kOut
+endop
