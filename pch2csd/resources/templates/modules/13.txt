@@ -1,0 +1,48 @@
+;@ map STRdmp STRdec
+;@ ins a k k 
+;@ outs a
+
+opcode OscString, 0, kkkkkkkkkkkk
+kcoarse,kFine,kKBT,kModLev,kTuneMode,kDecay,kMoist,kON, kIn,kPitchIn,kModIn,kOut xin
+
+kMod zkr kModIn
+
+if kKBT != 1 goto NoKBT
+  kNote = gkNote
+  goto KBT
+NoKBT:
+  kNote = 64
+KBT:
+
+kPitch init 64
+if kPitchIn == 0 goto Run
+kPitch zkr kPitchIn
+Run:
+if kTuneMode!=3 then
+  kCoarse table kcoarse, giOSCsem
+  kFine table kFine, giOSCcnt
+  kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+  kFreq = cpsmidinn(kM_+kCoarse)
+else
+    if kcoarse <= 32 then
+      kFreq table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kFreq *= cent(kFine)
+    else
+      kPart table kcoarse, giOSCprt
+      kFine table kFine, giOSCcnt
+      kM_ = kPitch+kModLev*kMod+kNote+kFine*0.01
+      kFreq = cpsmidinn(kM_)*kPart
+    endif
+endif
+Out:
+
+kdecay table kDecay,STRdec
+kdamp table kMoist,giSTRdmp
+abuf delayr 1  ; check maximum buf len!! 
+atap deltap 1/kFreq
+atap tone atap,kdamp
+     delayw a1 + atap*kdecay
+
+zaw atap*kON, kOut
+endop
