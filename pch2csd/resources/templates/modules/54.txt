@@ -1,18 +1,21 @@
+;@ map FLTfrq FLTres
 ;@ ins a
 ;@ outs a
-opcode FltStatic, 0, iKK ; GC !!!
-  iType, kFreq, kRes xin
-  ain zar 2; CHANGE
-  ahp, alp, abp, abr statevar ain, kFreq, kRes 
-  ; balance ???
-  if (iType == 0) goto Lowpass
-  if (iType == 1) goto Highpass
-  aout = abp
+;TODO no GC (Gain Compensation) & check RES values
+opcode FltStatic, 0, kkkkkkk ; 
+  kFreq, kRes, kType, kOn, kIn, kOut xin
+  ain zar kIn
+  kres table kRes, giFLTres
+  kfreq table kFreq, giFLTfrq	
+  ahp, alp, abp, abr statevar ain, kfreq, kres 
+  if kType == 0 goto Lowpass
+  if kType == 1 goto Bandpass
+  aout = ahp
 Lowpass:
   aout = alp
   goto run
-Highpass:
-  aout = ahp
+Bandpass:
+  aout = abp
 run:
-  zaw aout, 2 ;CHANGE
+  zaw aout, kOut
 endop
