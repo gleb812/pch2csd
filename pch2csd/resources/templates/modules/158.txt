@@ -1,0 +1,102 @@
+;@ ins k k 
+;@ outs k
+;@ map NTEtim
+
+opcode Glide, 0, kkkkkk
+kTime,kGlide,kShape,kIn,kOn,kOut xin
+kin zkr kIn
+kon zkr kOn
+
+if kGlide == 0 then
+	kout = kin 
+	goto Bypass
+endif
+
+if kOn == 0 goto Run ; nothing connected to Glide in
+if kon == 0 then
+	kout = kin 
+	goto Bypass
+endif
+Run:
+
+
+kOut init 0 ; check
+ktime table kTime, giNTEtim
+
+kIn += 1.001
+kOut += 1.001
+
+if kIn == kOut goto Halt
+if kShape == 0 goto Log
+
+if kIn > kOut then
+	kOut += 1/(kr * kTime)
+	kOut limit kOut,0,kIn
+else
+	kOut -= 1/(kr * kTime)
+	kOut limit kOut,kIn,2
+endif
+goto Halt
+
+Log:
+    kLogIn = log(kIn)
+    kLogOut = log(kOut)
+    kLogOut += (kLogIn - kLogOut) / (kr * kTime)
+    kOut = exp(kLogOut)
+Halt:
+kOut -= 1.001
+Bypass:
+zkw kout,kOut
+endop
+
+;@ ins a a 
+;@ outs a
+opcode Glide, 0, kkkkkk
+kTime,kGlide,kShape,kIn,kOn,kOut xin
+setksmps 1
+ain zar kIn
+kin = k(ain)
+aon zar kOn
+kon = k(aon)
+
+if kGlide == 0 then
+	kout = kin 
+	goto Bypass
+endif
+
+if kOn == 0 goto Run ; nothing connected to Glide in
+if kon == 0 then
+	kout = kin 
+	goto Bypass
+endif
+Run:
+
+
+kOut init 0 ; check
+ktime table kTime, giNTEtim
+
+aIn += 1.001
+kOut += 1.001
+
+if kIn == kOut goto Halt
+if kShape == 0 goto Log
+
+if kIn > kOut then
+	kOut += 1/(kr * kTime)
+	kOut limit kOut,0,kIn
+else
+	kOut -= 1/(kr * kTime)
+	kOut limit kOut,kIn,2
+endif
+goto Halt
+
+Log:
+    kLogIn = log(kIn)
+    kLogOut = log(kOut)
+    kLogOut += (kLogIn - kLogOut) / (kr * kTime)
+    kOut = exp(kLogOut)
+Halt:
+kOut -= 1.001
+Bypass:
+zaw a(kout),kOut
+endop
