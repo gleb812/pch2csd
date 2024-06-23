@@ -7,7 +7,7 @@ opcode FltStatic, 0, kkkkkkk ;
   ain zar kIn
   kres table kRes, giFLTres
   kfreq table kFreq, giFLTfrq	
-  ahp, alp, abp, abr svfilter ain, kfreq, kres 
+  ahp, alp, abp svfilter ain, kfreq, kres 
   if kType == 0 goto Lowpass
   if kType == 1 goto Bandpass
   aout = ahp
