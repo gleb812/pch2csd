@@ -1,6 +1,6 @@
 # pch2csd - The Clavia Nord Modular G2 Patch Converter Project
 
-![](https://travis-ci.org/gleb812/pch2csd.svg?branch=master)
+![Build Status](https://github.com/gleb812/pch2csd/actions/workflows/ci.yml/badge.svg)
 
 The goal of this project is to (re)implement the Clavia Nord Modular G2 sound
 engine in Csound, a well-known sound and music computing system. Important wiki
