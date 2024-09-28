@@ -21,6 +21,11 @@ For the time being we recommend to install the tool from the GitHub repo directl
 pip install -U git+https://github.com/gleb812/pch2csd.git
 ```
 
+NB: Arch Linux users should use pipx instead of pip:
+```
+pipx install -U git+https://github.com/gleb812/pch2csd.git
+```
+
 ## Usage 
 
 Command line options:
