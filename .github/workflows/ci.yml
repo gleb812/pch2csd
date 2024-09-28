@@ -27,7 +27,7 @@ jobs:
       run: python setup.py test
 
     - name: Generate module status document
-      run: python3 -m pch2csd.app gen_udo_status_doc
+      run: python -m pch2csd gen_udo_status_doc
 
     - name: Commit and push changes to wiki
       run: |
