@@ -37,5 +37,11 @@ jobs:
         cp Module-implementation-status.md pch2csd.wiki/
         cd pch2csd.wiki
         git add Module-implementation-status.md
-        git commit -m 'Update Module Implementation Status'
-        git push
+        # Check if there are changes before committing
+        if [[ -n $(git status --porcelain) ]]; then
+          git commit -m 'Update Module Implementation Status'
+          git push --quiet
+        else
+          echo "No changes to commit."
+        fi
+
