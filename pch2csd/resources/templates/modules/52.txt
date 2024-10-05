@@ -3,7 +3,7 @@
 ;@ ins k k k
 ;@ outs k k
 
-opcode EnvMulti, k, kkkkkkkkkkkkkkkkkk
+opcode EnvMulti, 0, kkkkkkkkkkkkkkkkkk
 	kl1,kl2,kl3,kl4,kt1,kt2,kt3,kt4,
 	kReset,kSusPlac,kType,kKB,kShape,
 	kGatei,kin,kAMi,kEnvO,kout xin   
@@ -203,7 +203,7 @@ endop
 ;@ ins k a k
 ;@ outs k a
 
-opcode EnvMulti, k, kkkkkkkkkkkkkkkkkk
+opcode EnvMulti, 0, kkkkkkkkkkkkkkkkkk
 	kl1,kl2,kl3,kl4,kt1,kt2,kt3,kt4,
 	kReset,kSusPlac,kType,kKB,kShape,
 	kGatei,kin,kAMi,kEnvO,kout xin   

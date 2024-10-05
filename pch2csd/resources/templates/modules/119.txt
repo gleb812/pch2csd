@@ -3,7 +3,7 @@
 ;@ ins k k k
 ;@ outs k k
 
-opcode EnvADDSR, k, kkkkkkkkkkkkkkkk
+opcode EnvADDSR, 0, kkkkkkkkkkkkkkkk
 	kKB,kShape,kt1,kt2,kl2,kt3,kl3,kt4,
 	kSusPlac,kType,kReset,
 	kGatei,kAMi,kin,kEnvO,kout xin   
@@ -199,7 +199,7 @@ endop
 ;@ ins k k a
 ;@ outs k a
 
-opcode EnvADDSR, k, kkkkkkkkkkkkkkkk
+opcode EnvADDSR, 0, kkkkkkkkkkkkkkkk
 	kKB,kShape,kt1,kt2,kl2,kt3,kl3,kt4,
 	kSusPlac,kType,kReset,
 	kGatei,kAMi,kin,kEnvO,kout xin   

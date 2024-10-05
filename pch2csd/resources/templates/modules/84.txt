@@ -1,0 +1,248 @@
+
+;@ map ENVtim ENVlev
+;@ ins k k k
+;@ outs k k k
+; TODO Trig/Gate not yet implemented
+opcode EnvADR, 0, kkkkkkkkkkkk
+	kShape,kt1,kReset,kt2,
+	kTG,kType,kKB,kSus,
+	kGatei,kin,kAMi,kEnvO,kout,kendo xin   
+	kt1 table kt1, giENVtim
+	kt2 table kt1, giENVtim
+
+	kT[] fillarray kt1,kt2
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	kIn zkr kin
+	kGate zkr kGatei
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kEnd = 0 
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
+
+Next:
+	kgate1 trigger kGate, 0.1, 0
+	kgate0 trigger kGate, 0.1, 1
+	if kgate1 != 1 goto NextCheck
+		kstate = 1
+		goto Res
+NextCheck:
+	if kgate0 != 1 goto OutRes
+		if kstate == 10 then
+			kstate = 2
+			kTime = 0
+			kTime0 = 0
+			kgoto OutRes
+		endif
+		kstate = 0
+		goto OutRes 
+Res:
+	if kReset == 0 goto NoRes
+	kEnv = 1
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+	goto OutRes
+NoRes:
+	kTime0 = 0
+	kEnv0 = kEnv
+	kTime = 0
+OutRes:
+	if kstate == 1 goto T1L1
+	if kstate == 2 goto T2L2
+	if kstate == 10 goto EnvOut
+;state 0
+	kEnv = 0
+	goto EnvOut
+T1L1:
+	; attack
+	if kShape == 0 then
+		kEnv = (0.0003 + 1)*(1 - exp(-8*(kTime-kTime0)/(kT[0]*kr)))
+	elseif kShape == 2 then
+		kEnv = (exp((kTime-kTime0)/(kT[0]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += 1/(kT[0]*kr) 
+	endif
+	kTime += 1
+	kEnv limit kEnv, 0, 1
+	if kTime < kT[0]*kr goto EnvOut
+	kstate = 2; T2L2
+	if kSus == 1 then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+	kTime = 0
+	kEnv0 = 1 
+	kTime0 = 0
+
+T2L2:
+	if kShape == 0 then
+		kEnv = 1 + (0.0003 - 1)*(1 - exp(-8*(kTime-kTime0)/(kT[1]*kr)))
+	elseif kShape == 2 then
+		kEnv = 1 + (-1)*(exp((kTime-kTime0)/(kT[1]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (-1)/(kT[1]*kr) 
+	endif
+	kTime += 1
+
+	kEnv limit kEnv, 0, 1
+
+	if kTime < kT[1]*kr goto EnvOut
+	; End output 1
+	kEnd = 1
+	; ===
+	kstate = 0
+	kTime = 0
+	kEnv0 = 0 
+	kTime0 = 0
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zkw kEnv1*kIn, kout
+	zkw kEnd, kendo
+endop
+
+
+;@ map ENVtim ENVlev
+;@ ins k a k
+;@ outs k a k
+
+opcode EnvADR, 0, kkkkkkkkkkkk
+	kShape,kt1,kReset,kt2,
+	kTG,kType,kKB,kSus,
+	kGatei,kin,kAMi,kEnvO,kout,kendo xin   
+	kt1 table kt1, giENVtim
+	kt2 table kt1, giENVtim
+
+	kT[] fillarray kt1,kt2
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	aIn zar kin
+	kGate zkr kGatei
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kEnd = 0 
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
+
+Next:
+	kgate1 trigger kGate, 0.1, 0
+	kgate0 trigger kGate, 0.1, 1
+	if kgate1 != 1 goto NextCheck
+		kstate = 1
+		goto Res
+NextCheck:
+	if kgate0 != 1 goto OutRes
+		if kstate == 10 then
+			kstate = 2
+			kTime = 0
+			kTime0 = 0
+			kgoto OutRes
+		endif
+		kstate = 0
+		goto OutRes 
+Res:
+	if kReset == 0 goto NoRes
+	kEnv = 1
+	kTime = 0
+	kEnv0 = 1
+	kTime0 = 0
+	goto OutRes
+NoRes:
+	kTime0 = 0
+	kEnv0 = kEnv
+	kTime = 0
+OutRes:
+	if kstate == 1 goto T1L1
+	if kstate == 2 goto T2L2
+	if kstate == 10 goto EnvOut
+;state 0
+	kEnv = 0
+	goto EnvOut
+T1L1:
+	; attack
+	if kShape == 0 then
+		kEnv = (0.0003 + 1)*(1 - exp(-8*(kTime-kTime0)/(kT[0]*kr)))
+	elseif kShape == 2 then
+		kEnv = (exp((kTime-kTime0)/(kT[0]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += 1/(kT[0]*kr) 
+	endif
+	kTime += 1
+	kEnv limit kEnv, 0, 1
+	if kTime < kT[0]*kr goto EnvOut
+	kstate = 2; T2L2
+	if kSus == 1 then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+	kTime = 0
+	kEnv0 = 1 
+	kTime0 = 0
+
+T2L2:
+	if kShape == 0 then
+		kEnv = 1 + (0.0003 - 1)*(1 - exp(-8*(kTime-kTime0)/(kT[1]*kr)))
+	elseif kShape == 2 then
+		kEnv = 1 + (-1)*(exp((kTime-kTime0)/(kT[1]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (-1)/(kT[1]*kr) 
+	endif
+	kTime += 1
+
+	kEnv limit kEnv, 0, 1
+
+	if kTime < kT[1]*kr goto EnvOut
+	; End output 1
+	kEnd = 1
+	; ===
+	kstate = 0
+	kTime = 0
+	kEnv0 = 0 
+	kTime0 = 0
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+	zkw kEnd, kendo
+endop
+
