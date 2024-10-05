@@ -1,0 +1,399 @@
+
+;@ map ENVtim ENVlev
+;@ ins k k k
+;@ outs k k
+
+opcode EnvMulti, k, kkkkkkkkkkkkkkkkkk
+	kl1,kl2,kl3,kl4,kt1,kt2,kt3,kt4,
+	kReset,kSusPlac,kType,kKB,kShape,
+	kGatei,kin,kAMi,kEnvO,kout xin   
+	kt1 table kt1, giENVtim
+	kt2 table kt1, giENVtim
+	kt3 table kt1, giENVtim
+	kt4 table kt1, giENVtim
+	kl1 table kl1, giENVlev
+	kl2 table kl1, giENVlev
+	kl3 table kl1, giENVlev
+	kl4 table kl1, giENVlev
+
+	kL[] fillarray kl1,kl2,kl3,kl4
+	kT[] fillarray kt1,kt2,kt3,kt4
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	kIn zkr kin
+	kGate zkr kGatei
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	kSusPlac += 2 ; 0 -> 2 ...
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
+Next:
+	kgate1 trigger kGate, 0.1, 0
+	kgate0 trigger kGate, 0.1, 1
+	if kgate1 != 1 goto NextCheck
+		kstate = 1
+		goto Res
+NextCheck:
+	if kgate0 != 1 goto OutRes
+		if kstate == 10 then
+			kstate = kSusPlac
+			kTime = 0
+			kTime0 = 0
+			kgoto OutRes
+		endif
+		kstate = 0
+		goto OutRes 
+Res:
+	if kReset == 0 goto NoRes
+	kEnv = kL[0]
+	kTime = 0
+	kEnv0 = kL[0]
+	kTime0 = 0
+	goto OutRes
+NoRes:
+	kTime0 = 0
+	kEnv0 = kEnv
+	kTime = 0
+OutRes:
+	if kstate == 1 goto T1L1
+	if kstate == 2 goto T2L2
+	if kstate == 3 goto T3L3
+	if kstate == 4 goto T4L4
+	if kstate == 10 goto EnvOut
+;state 0
+	kEnv = kL[3]
+	goto EnvOut
+
+T1L1:
+	; Segment T1 - L1
+	kSign = signum(kL[0] - kL[3])  ; if L3 > L0 sign is -1
+	if kShape == 0 then
+		kEnv = kL[3] + (0.0003+kL[0]-kL[3])*(1 - exp(-8*(kTime-kTime0)/(kT[0]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[3] + (kL[0] - kL[3])*(exp((kTime-kTime0)/(kT[0]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[0] - kL[3])/(kT[0]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[3], kL[0]
+	else 	
+		kEnv limit kEnv, kL[0], kL[3]
+	endif
+
+	if kTime < kT[0]*kr goto EnvOut
+	kstate = 2; T2L2
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+
+	kTime = 0
+	kEnv0 = kL[0] 
+	kTime0 = 0
+
+T2L2:
+	kSign = signum(kL[1] - kL[0]) 
+
+	if kShape == 0 then
+		kEnv = kL[0] + (0.0003+kL[1]-kL[0])*(1 - exp(-8*(kTime-kTime0)/(kT[1]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[0] + (kL[1] - kL[0])*(exp((kTime-kTime0)/(kT[1]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[1] - kL[0])/(kT[1]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[0], kL[1]
+	else 	
+		kEnv limit kEnv, kL[1], kL[0]
+	endif
+
+	if kTime < kT[1]*kr goto EnvOut
+	kstate = 3; T3L3
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+
+	kTime = 0
+	kEnv0 = kL[1] 
+	kTime0 = 0
+
+T3L3:
+	kSign = signum(kL[2] - kL[1]) 
+	if kShape == 0 then
+		kEnv = kL[1] + (0.0003+kL[2]-kL[1])*(1 - exp(-8*(kTime-kTime0)/(kT[2]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[1] + (kL[2] - kL[1])*(exp((kTime-kTime0)/(kT[2]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[2] - kL[1])/(kT[2]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[1], kL[2]
+	else 	
+		kEnv limit kEnv, kL[2], kL[1]
+	endif
+
+	if kTime < kT[2]*kr goto EnvOut
+	kstate = 4; T2L4
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+	kTime = 0
+	kEnv0 = kL[2] 
+	kTime0 = 0
+
+T4L4:
+	kSign = signum(kL[3] - kL[2]) 
+	if kShape == 0 then
+		kEnv = kL[2] + (0.0003+kL[3]-kL[2])*(1 - exp(-8*(kTime-kTime0)/(kT[3]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[2] + (kL[3] - kL[2])*(exp((kTime-kTime0)/(kT[3]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[3] - kL[2])/(kT[3]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[2], kL[3]
+	else 	
+		kEnv limit kEnv, kL[3], kL[2]
+	endif
+
+	if kTime < kT[3]*kr goto EnvOut
+	kstate = 0
+	kTime = 0
+	kEnv0 = kL[3] 
+	kTime0 = 0
+
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zkw kEnv1*kIn, kout
+endop
+
+
+;@ map ENVtim ENVlev
+;@ ins k a k
+;@ outs k a
+
+opcode EnvMulti, k, kkkkkkkkkkkkkkkkkk
+	kl1,kl2,kl3,kl4,kt1,kt2,kt3,kt4,
+	kReset,kSusPlac,kType,kKB,kShape,
+	kGatei,kin,kAMi,kEnvO,kout xin   
+	kt1 table kt1, giENVtim
+	kt2 table kt1, giENVtim
+	kt3 table kt1, giENVtim
+	kt4 table kt1, giENVtim
+	kl1 table kl1, giENVlev
+	kl2 table kl1, giENVlev
+	kl3 table kl1, giENVlev
+	kl4 table kl1, giENVlev
+
+	kL[] fillarray kl1,kl2,kl3,kl4
+	kT[] fillarray kt1,kt2,kt3,kt4
+	k1[] fillarray 1,-1, 1,-1, 2,-2
+	k2[] fillarray 0, 1,-1, 0,-1, 1
+
+	aIn zar kin
+	kGate zkr kGatei
+
+	kEnv init 0
+	kEnv0 init 0
+	kEnv1 init 0
+	kstate init 0
+	kShapeLst init 0
+	kTime0 init 0
+	kTime init 0
+	kAM init 1
+
+	kSusPlac += 2 ; 0 -> 2 ...
+
+	if kAMi < 2 goto NoAM
+		kAM zkr kAMi
+NoAM:
+	if kKB!= 1 goto NoKB
+		kGate += gkGate
+		kGate limit kGate, -1, 1
+NoKB:
+	if kShape == kShapeLst goto Next
+		kTime0 = kTime
+		kEnv0 = kEnv
+  		kShapeLst = kShape
+Next:
+	kgate1 trigger kGate, 0.1, 0
+	kgate0 trigger kGate, 0.1, 1
+	if kgate1 != 1 goto NextCheck
+		kstate = 1
+		goto Res
+NextCheck:
+	if kgate0 != 1 goto OutRes
+		if kstate == 10 then
+			kstate = kSusPlac
+			kTime = 0
+			kTime0 = 0
+			kgoto OutRes
+		endif
+		kstate = 0
+		goto OutRes 
+Res:
+	if kReset == 0 goto NoRes
+	kEnv = kL[0]
+	kTime = 0
+	kEnv0 = kL[0]
+	kTime0 = 0
+	goto OutRes
+NoRes:
+	kTime0 = 0
+	kEnv0 = kEnv
+	kTime = 0
+OutRes:
+	if kstate == 1 goto T1L1
+	if kstate == 2 goto T2L2
+	if kstate == 3 goto T3L3
+	if kstate == 4 goto T4L4
+	if kstate == 10 goto EnvOut
+;state 0
+	kEnv = kL[3]
+	goto EnvOut
+
+T1L1:
+	; Segment T1 - L1
+	kSign = signum(kL[0] - kL[3])  ; if L3 > L0 sign is -1
+	if kShape == 0 then
+		kEnv = kL[3] + (0.0003+kL[0]-kL[3])*(1 - exp(-8*(kTime-kTime0)/(kT[0]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[3] + (kL[0] - kL[3])*(exp((kTime-kTime0)/(kT[0]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[0] - kL[3])/(kT[0]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[3], kL[0]
+	else 	
+		kEnv limit kEnv, kL[0], kL[3]
+	endif
+
+	if kTime < kT[0]*kr goto EnvOut
+	kstate = 2; T2L2
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+
+	kTime = 0
+	kEnv0 = kL[0] 
+	kTime0 = 0
+
+T2L2:
+	kSign = signum(kL[1] - kL[0]) 
+
+	if kShape == 0 then
+		kEnv = kL[0] + (0.0003+kL[1]-kL[0])*(1 - exp(-8*(kTime-kTime0)/(kT[1]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[0] + (kL[1] - kL[0])*(exp((kTime-kTime0)/(kT[1]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[1] - kL[0])/(kT[1]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[0], kL[1]
+	else 	
+		kEnv limit kEnv, kL[1], kL[0]
+	endif
+
+	if kTime < kT[1]*kr goto EnvOut
+	kstate = 3; T3L3
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+
+	kTime = 0
+	kEnv0 = kL[1] 
+	kTime0 = 0
+
+T3L3:
+	kSign = signum(kL[2] - kL[1]) 
+	if kShape == 0 then
+		kEnv = kL[1] + (0.0003+kL[2]-kL[1])*(1 - exp(-8*(kTime-kTime0)/(kT[2]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[1] + (kL[2] - kL[1])*(exp((kTime-kTime0)/(kT[2]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[2] - kL[1])/(kT[2]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[1], kL[2]
+	else 	
+		kEnv limit kEnv, kL[2], kL[1]
+	endif
+
+	if kTime < kT[2]*kr goto EnvOut
+	kstate = 4; T2L4
+	if kstate == kSusPlac then 
+		kstate = 10
+		kgoto EnvOut
+	endif
+	kTime = 0
+	kEnv0 = kL[2] 
+	kTime0 = 0
+
+T4L4:
+	kSign = signum(kL[3] - kL[2]) 
+	if kShape == 0 then
+		kEnv = kL[2] + (0.0003+kL[3]-kL[2])*(1 - exp(-8*(kTime-kTime0)/(kT[3]*kr)))
+	elseif kShape == 2 then
+		kEnv = kL[2] + (kL[3] - kL[2])*(exp((kTime-kTime0)/(kT[3]*kr - kTime0)*1.791759)-1)/5
+	else
+		kEnv += (kL[3] - kL[2])/(kT[3]*kr) 
+	endif
+	kTime += 1
+
+	if kSign >= 0 then
+		kEnv limit kEnv, kL[2], kL[3]
+	else 	
+		kEnv limit kEnv, kL[3], kL[2]
+	endif
+
+	if kTime < kT[3]*kr goto EnvOut
+	kstate = 0
+	kTime = 0
+	kEnv0 = kL[3] 
+	kTime0 = 0
+
+EnvOut:
+	kEnv *= kAM
+	kEnv1 = kEnv*k1[kType]+k2[kType]
+	zkw kEnv1, kEnvO
+	zaw kEnv1*aIn, kout
+endop
