@@ -1,4 +1,4 @@
-;@map EFXthC,EFXraC,EFXatC,EFXreC,EFXlvC
+;@ map EFXthC EFXraC EFXatC EFXreC EFXlvC
 ;@ ins a a a 
 ;@ outs a a
 ; TODO check it
