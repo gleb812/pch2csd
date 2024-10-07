@@ -2,7 +2,7 @@
 ;@ ins a a a 
 ;@ outs a a
 ; TODO check it
-opcode compress, 0, kkkkkkkkkkkk
+opcode Compress, 0, kkkkkkkkkkkk
 kthr,krat,katt,krel,kref,kside,kOn,kInL,kInR,kS_in,kOL,kOR xin
 aL zar kInL 
 aR zar kInR
