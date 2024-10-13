@@ -1,0 +1,29 @@
+;@ map EFXrat
+;@ ins a
+;@ outs a 
+
+
+opcode Phaser, 0, kkkkkk
+  ktype,kfreq,kfdbk,kon, kin,kout xin
+
+  aIn zar kin
+  kFeed table kfdbk, giCLA001
+  kFreq table kfreq, giEFXrat
+  kq init 0.25
+  ksep1 init 0.2
+  kstart1 init 1400
+  kmod1 init 11000
+  ksep2 init 2
+  kstart2 init 0
+  kmod2 init 220
+
+  if ktype == 1 goto Type2
+  ; TYPE I 
+  a2 phaser2 aIn,kstart1+kmod1*kFreq,kq,2,2,ksep1,kFeed
+  goto Outs
+Type2:
+  ; TYPE II
+  a2 phaser2 aIn,kstart2+kmod2*kFreq,kq,3,1,ksep2,kFeed
+Out:
+  zaw a2*kon, kout
+endop
