@@ -125,7 +125,7 @@ def print_pch2(fn: str):  # modified 08012026
         print("error: file should have extension '.pch2' or '.json'")
         exit(-1)
 
-def _print_patch_content(patch: Patch, filename: str):2
+def _print_patch_content(patch: Patch, filename: str):
     mod_table = [['Name', 'ID', 'Type', 'Parameters', 'Modes', 'Area', 'Hpos', 'Vpos']]
     for m in patch.modules:
         p = patch.find_mod_params(m.location, m.id)
