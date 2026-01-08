@@ -12,7 +12,7 @@ def read(fname):
 setup(
     name='pch2csd',
     version=pch2csd.__version__,
-    author='Gleb Rogozinsky, Mikhail Chesnokov, Eugene Cherny',
+    author='Gleb Rogozinski, Mikhail Chesnokov, Eugene Cherny',
     description='Convert Clavia Nord Modular G2 patches to the Csound code.',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -36,6 +36,7 @@ setup(
             'pch2csd = pch2csd.__main__:main'
         ]
     },
+    test_suite = 'tests',
     options={
         'build_scripts': {
             'executable': '/usr/bin/env python3'
