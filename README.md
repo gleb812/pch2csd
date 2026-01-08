@@ -43,6 +43,7 @@ optional arguments:
   -h, --help       show this help message and exit
   -d, --debug      print a stack trace in case of error
   -p, --print      parse the patch file and print its content
+  -j, --json       export patch data to JSON file
   -c, --check-udo  validate the UDO template file (overrides '-p')
   -v, --version    show program's version number and exit
   -e               show the elephant and exit
@@ -54,6 +55,13 @@ example:
 
 ```
 pch2csd test_poly_mix2.pch2
+```
+
+Starting from v. 0.2.dev pch2csd can also generate Csound files from JSON exports.
+This feature was implemented to support a JavaScript GUI for visual patch editing.
+
+```
+pch2csd test_poly_mix2.json
 ```
 
 Option `-p` can be used to print modules and cables present in of the patch.
