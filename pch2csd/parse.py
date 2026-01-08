@@ -31,7 +31,7 @@ def parse_module_list(blob: bitarray, patch: Patch):
         _ = bits.read_ints([8])
         num_modes = bits.read_ints([4])[0]
         modes = bits.read_ints([6] * num_modes)
-        mod = Module(patch.data, Location.from_int(loc), mod_type, mod_id, modes)
+        mod = Module(patch.data, Location.from_int(loc), mod_type, mod_id, modes, None, hpos, vpos) # added hpos, vpos 
         patch.modules.append(mod)
 
 
@@ -123,3 +123,12 @@ def parse_pch2(data: ProjectData, pch2_file: str, convert_in2in=True) -> Patch:
                                     for c in patch.cables]
                         if c is not None]
     return patch
+
+def parse_json(data: ProjectData, json_file: str) -> Patch:
+    import json
+    from .__main__ import json_to_patch 
+    
+    with open(json_file, 'r', encoding='utf-8') as f:
+        json_data = json.load(f)
+    
+    return json_to_patch(json_data, json_file)

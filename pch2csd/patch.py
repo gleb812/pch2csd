@@ -20,13 +20,22 @@ class Location(Enum):
 
     @staticmethod
     def from_str(s: str):
-        s = s.lower()
-        if s == 'voice':
-            return Location.VOICE_AREA
-        elif s == 'fx':
-            return Location.FX_AREA
+        if isinstance(s, str):
+            s = s.strip().upper()
+            if s == 'VOICE' or s == '1':
+                return Location.VOICE_AREA
+            elif s == 'FX' or s == '0':
+                return Location.FX_AREA
+            else:
+                try:
+                    i = int(s)
+                    return Location.from_int(i)
+                except ValueError:
+                    raise ValueError('Wrong location string: {}'.format(s))
+        elif isinstance(s, int):
+            return Location.from_int(s)
         else:
-            raise ValueError('Wrong location string: {}'.format(s))
+            raise ValueError('Wrong location type: {}'.format(type(s)))
 
     def short_str(self):
         if self.value == 0:
@@ -39,9 +48,9 @@ class PatchDescription(ReprStrMixin):
     def __init__(self):
         self.active_variation = 0  # TODO support variations
 
-
+# added hpos, vpos 02012025 by GG
 class Module(AttrEqMixin, ReprStrMixin):
-    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int, modes=None, name=None):
+    def __init__(self, data: ProjectData, loc: Location, mod_type: int, id: int, modes=None, name=None, hpos=None, vpos=None):
         if modes is None:
             modes = []
         self.type = mod_type
@@ -50,6 +59,8 @@ class Module(AttrEqMixin, ReprStrMixin):
         self.location = loc
         self.modes = modes
         self.name = name
+        self.hpos = hpos
+        self.vpos = vpos
 
     def __eq__(self, other):
         return self.attrs_equal(other)

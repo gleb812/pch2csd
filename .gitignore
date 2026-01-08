@@ -5,3 +5,5 @@ cmake-build-debug
 .ignore
 
 *.pch2.csd
+
+.egg-info
