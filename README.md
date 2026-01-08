@@ -64,6 +64,12 @@ This feature was implemented to support a JavaScript GUI for visual patch editin
 pch2csd test_poly_mix2.json
 ```
 
+A JSON export of the `.pch2` file is done using option `-j`:
+
+```
+pch2csd -j test_poly_mix2.pch2
+```
+
 Option `-p` can be used to print modules and cables present in of the patch.
 Module `ID` is a unique number of a module in the patch, module `Type` is a
 numerical representation of the module's type (also used to look up for
