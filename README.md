@@ -2,6 +2,16 @@
 
 ![Build Status](https://github.com/gleb812/pch2csd/actions/workflows/ci.yml/badge.svg)
 
+## Attention!
+
+In the beginning of 2026 we started a new project https://github.com/gleb812/csmodular
+It should be a graphical NM-like GUI for both pch2csd and original .pch2 projects.
+Later, we plan to extend it to universal Csound modular GUI. 
+It will be officially announced at ICSC2026 in Sicily. More news to come soon.
+Meanwhile, pch2csd remains the core wrapper for pch2, so the story continues... 
+
+## About
+
 The goal of this project is to (re)implement the Clavia Nord Modular G2 sound
 engine in Csound, a well-known sound and music computing system. Important wiki
 pages:
