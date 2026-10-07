@@ -1,4 +1,4 @@
-;@ map AMPEXP CLA001
+;@ map AMPEXP CLA001 AMPEXP
 ;@ map BUT002
 ;@ map BUT003
 
