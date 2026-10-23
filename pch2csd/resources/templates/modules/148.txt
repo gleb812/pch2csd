@@ -6,12 +6,12 @@ opcode NoteRcv, 0, kkkkk
    kdata init 0
    kGate init 0
 
-  if (gkstatus==144 && gkchan==kChnl && gkdata1==kNote) then
+  if (gkstat==144 && gkchan==kChnl && gkdata1==kNote) then
        kdata = gkdata2
        kGate = 1
   endif
 
-  if (gkstatus==128 && gkchan==kChnl && gkdata1==kNote) then
+  if (gkstat==128 && gkchan==kChnl && gkdata1==kNote) then
        kGate = 0
   endif
 
