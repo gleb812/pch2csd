@@ -8,7 +8,7 @@ opcode LevAdd, 0, kkkk
 
   if kPolSw != 0 goto Uni
     kLev table kLev, giLVLlev
-    goto Over
+    kgoto Over
   Uni:
     kLev table kLev, giLVLpos
 
@@ -26,7 +26,7 @@ opcode LevAdd, 0, kkkk
 
   if kPolSw != 0 goto Uni
     kLev table kLev, giLVLlev
-    goto Over
+    kgoto Over
   Uni:
     kLev table kLev, giLVLpos
 
