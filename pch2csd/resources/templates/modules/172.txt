@@ -21,7 +21,7 @@ opcode DlySingleA, 0, kkkk
     kTime table kTime, giDLY_2s
   elseif kRange == 6 then
     kTime table kTime, giDLY2p7
-
+  endif
   abuf delayr 2.7 ; max delay time
   aout deltapi kTime
   delayw ain
