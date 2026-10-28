@@ -20,6 +20,7 @@ opcode DlyEight, 0, kkkkkkkkkkk
     kTime table kTime, giDLY2s8
   elseif kRange == 6 then
     kTime table kTime, giDLY278
+  endif
 
   kTime /= 8
 
